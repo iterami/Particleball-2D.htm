@@ -134,8 +134,8 @@ function draw(){
                 /*delete the particle*/
                 particles.splice(i,1);
 
-                p0_move=0;
-                p1_move=0
+                p0_move = 0;
+                p1_move = 0
 
             }else{
                 /*loop through obstacles to find collisions*/
@@ -287,7 +287,7 @@ function draw(){
             y / 2 + 50
         );
         buffer.fillText(
-            'ESC=Main Menu',
+            'ESC = Main Menu',
             x,
             y / 2 + 90
         )
@@ -306,7 +306,7 @@ function draw(){
             y / 2 + 50
         );
         buffer.fillText(
-            'ESC=Main Menu',
+            'ESC = Main Menu',
             x,
             y / 2 + 90
         )
@@ -415,8 +415,8 @@ function setmode(newmode,newgame){
         }
 
         /*reset keypresses*/
-        key_left=0;
-        key_right=0;
+        key_left = 0;
+        key_right = 0;
 
         /*get half of width and height of game area*/
         var temp_half_width = settings[6] + 100;
@@ -539,7 +539,19 @@ function setmode(newmode,newgame){
         buffer = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><a href=/><b>Particleball</b></a></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick=setmode(1,1)>AI vs AI<li><a onclick=setmode(2,1)>Player vs AI</a></a></ul></div><hr><div class=c><input id=gamearea-height size=1 type=text value=' + settings[5] + '>*2+100 Height<br><input id=number-of-obstacles size=1 type=text value=' + settings[1] + '>*2 Obstacles<br><input id=obstacle-size size=1 type=text value=' + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles size=1 type=text value=' + settings[4] + '>Particles<br><input id=particle-speed size=1 type=text value=' + settings[7] + '>&gt;Particle Speed<br><input id=number-of-spawners size=1 type=text value=' + settings[2] + '>*2 Spawners<br><input id=gamearea-width size=1 type=text value=' + settings[6] + '>*2+100 Width</div></div></div><div style=display:inline-block;text-align:left><div class=c><input disabled size=3 style=border:0 type=text value=ESC>Main Menu<br><input id=move-keys maxlength=2 size=3 type=text value=' + settings[10] + '>Move ←→<br><input id=restart-key maxlength=1 size=3 type=text value=' + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value=' + settings[0] + '>Audio<br><label><input ' + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display===\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=ms-per-frame size=1 type=text value=' + settings[3] + '>ms/Frame</span></div></div>'
+        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><a href=/><b>Particleball</b></a></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick=setmode(1,1)>AI vs AI<li><a onclick=setmode(2,1)>Player vs AI</a></a></ul></div><hr><div class=c><input id=gamearea-height size=1 type=text value='
+            + settings[5] + '>*2+100 Height<br><input id=number-of-obstacles size=1 type=text value='
+            + settings[1] + '>*2 Obstacles<br><input id=obstacle-size size=1 type=text value='
+            + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles size=1 type=text value='
+            + settings[4] + '>Particles<br><input id=particle-speed size=1 type=text value='
+            + settings[7] + '>&gt;Particle Speed<br><input id=number-of-spawners size=1 type=text value='
+            + settings[2] + '>*2 Spawners<br><input id=gamearea-width size=1 type=text value='
+            + settings[6] + '>*2+100 Width</div></div></div><div style=display:inline-block;text-align:left><div class=c><input disabled size=3 style=border:0 type=text value=ESC>Main Menu<br><input id=move-keys maxlength=2 size=3 type=text value='
+            + settings[10] + '>Move ←→<br><input id=restart-key maxlength=1 size=3 type=text value='
+            + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+            + settings[0] + '>Audio<br><label><input '
+            + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display===\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=ms-per-frame size=1 type=text value='
+            + settings[3] + '>ms/Frame</span></div></div>'
     }
 }
 
@@ -559,24 +571,26 @@ var players = [];
 var p0_move = 0;
 var p1_move = 0;
 var scenery = [];
-var settings = [];
+var settings = [
+	ls.getItem('particleball0') === null ? 1 : parseFloat(ls.getItem('particleball0')),/*audio volume*/
+	ls.getItem('particleball1') === null ? 10 : parseFloat(ls.getItem('particleball1')),/*number of obstacles*/
+	ls.getItem('particleball2') === null ? 3 : parseFloat(ls.getItem('particleball2')),/*number of spawners*/
+	ls.getItem('particleball3') === null ? 25 : parseFloat(ls.getItem('particleball3')),/*ms-per-frame*/
+	ls.getItem('particleball4') === null ? 100 : parseFloat(ls.getItem('particleball4')),/*max particles*/
+	ls.getItem('particleball5') === null ? 200 : parseFloat(ls.getItem('particleball5')),/*game area height*/
+	ls.getItem('particleball6') === null ? 420 : parseFloat(ls.getItem('particleball6')),/*game area width*/
+	ls.getItem('particleball7') === null ? 1.5 : parseFloat(ls.getItem('particleball7')),/*max particle speed*/
+	ls.getItem('particleball8') === null ? 65 : parseFloat(ls.getItem('particleball8')),/*max obstacle width/height*/
+	ls.getItem('particleball9') === null,/*clear?*/
+	ls.getItem('particleball10') === null ? 'AD' : ls.getItem('particleball10'),/*movement keys*/
+	ls.getItem('particleball11') === null ? 'H' : ls.getItem('particleball11')/*restart key*/
+];
 var spawners = [];
 var u = 0;
 var x = 0;
 var y = 0;
 
-settings.push(ls.getItem('particleball0')===null ? 1 : parseFloat(ls.getItem('particleball0')));/*audio volume*/
-settings.push(ls.getItem('particleball1')===null ? 10 : parseFloat(ls.getItem('particleball1')));
-settings.push(ls.getItem('particleball2')===null ? 3 : parseFloat(ls.getItem('particleball2')));
-settings.push(ls.getItem('particleball3')===null ? 25 : parseFloat(ls.getItem('particleball3')));/*ms-per-frame*/
-settings.push(ls.getItem('particleball4')===null ? 100 : parseFloat(ls.getItem('particleball4')));
-settings.push(ls.getItem('particleball5')===null ? 200 : parseFloat(ls.getItem('particleball5')));
-settings.push(ls.getItem('particleball6')===null ? 420 : parseFloat(ls.getItem('particleball6')));
-settings.push(ls.getItem('particleball7')===null ? 1.5 : parseFloat(ls.getItem('particleball7')));
-settings.push(ls.getItem('particleball8')===null ? 65 : parseFloat(ls.getItem('particleball8')));
-settings.push(ls.getItem('particleball9') === null);/*clear?*/
-settings.push(ls.getItem('particleball10') === null ? 'AD' : ls.getItem('particleball10'));/*movement keys*/
-settings.push(ls.getItem('particleball11') === null ? 'H' : ls.getItem('particleball11'));/*restart key*/
+
 
 setmode(0,1);
 
@@ -584,6 +598,7 @@ window.onkeydown = function(e){
     if(mode > 0){
         i = window.event ? event : e;
         i = i.charCode ? i.charCode : i.keyCode;
+
         if(String.fromCharCode(i) === settings[10][0]){/*move left key*/
             key_left = 1
         }else if(String.fromCharCode(i) === settings[10][1]){/*move right key*/
@@ -599,6 +614,7 @@ window.onkeydown = function(e){
 window.onkeyup = function(e){
     i = window.event ? event : e;
     i = i.charCode ? i.charCode : i.keyCode;
+
     if(String.fromCharCode(i) === settings[10][0]){/*move left key*/
         key_left = 0
     }else if(String.fromCharCode(i) === settings[10][1]){/*move right key*/
