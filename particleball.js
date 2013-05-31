@@ -572,18 +572,18 @@ var p0_move = 0;
 var p1_move = 0;
 var scenery = [];
 var settings = [
-	ls.getItem('particleball0') === null ? 1 : parseFloat(ls.getItem('particleball0')),/*audio volume*/
-	ls.getItem('particleball1') === null ? 10 : parseFloat(ls.getItem('particleball1')),/*number of obstacles*/
-	ls.getItem('particleball2') === null ? 3 : parseFloat(ls.getItem('particleball2')),/*number of spawners*/
-	ls.getItem('particleball3') === null ? 25 : parseFloat(ls.getItem('particleball3')),/*ms-per-frame*/
-	ls.getItem('particleball4') === null ? 100 : parseFloat(ls.getItem('particleball4')),/*max particles*/
-	ls.getItem('particleball5') === null ? 200 : parseFloat(ls.getItem('particleball5')),/*game area height*/
-	ls.getItem('particleball6') === null ? 420 : parseFloat(ls.getItem('particleball6')),/*game area width*/
-	ls.getItem('particleball7') === null ? 1.5 : parseFloat(ls.getItem('particleball7')),/*max particle speed*/
-	ls.getItem('particleball8') === null ? 65 : parseFloat(ls.getItem('particleball8')),/*max obstacle width/height*/
-	ls.getItem('particleball9') === null,/*clear?*/
-	ls.getItem('particleball10') === null ? 'AD' : ls.getItem('particleball10'),/*movement keys*/
-	ls.getItem('particleball11') === null ? 'H' : ls.getItem('particleball11')/*restart key*/
+    ls.getItem('particleball0') === null ? 1 : parseFloat(ls.getItem('particleball0')),/*audio volume*/
+    ls.getItem('particleball1') === null ? 10 : parseFloat(ls.getItem('particleball1')),/*number of obstacles*/
+    ls.getItem('particleball2') === null ? 3 : parseFloat(ls.getItem('particleball2')),/*number of spawners*/
+    ls.getItem('particleball3') === null ? 25 : parseFloat(ls.getItem('particleball3')),/*ms-per-frame*/
+    ls.getItem('particleball4') === null ? 100 : parseFloat(ls.getItem('particleball4')),/*max particles*/
+    ls.getItem('particleball5') === null ? 200 : parseFloat(ls.getItem('particleball5')),/*game area height*/
+    ls.getItem('particleball6') === null ? 420 : parseFloat(ls.getItem('particleball6')),/*game area width*/
+    ls.getItem('particleball7') === null ? 1.5 : parseFloat(ls.getItem('particleball7')),/*max particle speed*/
+    ls.getItem('particleball8') === null ? 65 : parseFloat(ls.getItem('particleball8')),/*max obstacle width/height*/
+    ls.getItem('particleball9') === null,/*clear?*/
+    ls.getItem('particleball10') === null ? 'AD' : ls.getItem('particleball10'),/*movement keys*/
+    ls.getItem('particleball11') === null ? 'H' : ls.getItem('particleball11')/*restart key*/
 ];
 var spawners = [];
 var u = 0;
