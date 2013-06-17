@@ -539,7 +539,7 @@ function setmode(newmode,newgame){
         buffer = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><a href=/><b>Particleball</b></a></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick=setmode(1,1)>AI vs AI<li><a onclick=setmode(2,1)>Player vs AI</a></a></ul></div><hr><div class=c><input id=gamearea-height size=1 type=text value='
+        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><a href=/><b>Particleball</b></a></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick=setmode(1,1)>AI vs AI</a><li><a onclick=setmode(2,1)>Player vs AI</a></ul></div><hr><div class=c><input id=gamearea-height size=1 type=text value='
             + settings[5] + '>*2+100 Height<br><input id=number-of-obstacles size=1 type=text value='
             + settings[1] + '>*2 Obstacles<br><input id=obstacle-size size=1 type=text value='
             + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles size=1 type=text value='
