@@ -3,8 +3,8 @@ function draw(){
         buffer.clearRect(
             0,
             0,
-            get('buffer').width,
-            get('buffer').height
+            width,
+            height
         );
     }
 
@@ -161,6 +161,7 @@ function draw(){
                                 if(particles[i][0] > obstacles[j][0] - 2 && particles[i][0] < obstacles[j][0]){
                                     particles[i][2] *= -1;
                                 }
+
                             }else if(particles[i][0] > obstacles[j][0] + obstacles[j][2]
                                   && particles[i][0] < obstacles[j][0] + obstacles[j][2] + 2){
                                 particles[i][2] *= -1;
@@ -181,6 +182,7 @@ function draw(){
                                     particles[i][4] = 0;
                                 }
                             }
+
                         }else if(particles[i][0] > players[1][0]- 2
                               && particles[i][0] < players[1][0] + players[1][2] + 2
                               && particles[i][3] < 0
@@ -191,10 +193,12 @@ function draw(){
 
                     }else{
                         /* left/right wall collisions */
-                        if((particles[i][2] < 0 && particles[i][0] -2 <= -particle_x_limit)
+                        if((particles[i][2] < 0 && particles[i][0] - 2 <= -particle_x_limit)
                          || (particles[i][2] > 0 && particles[i][0] + 2 >= particle_x_limit)){
                             particles[i][2] *= -1;
                         }
+
+                        /* player paddle collisions */
                         if((particles[i][3] < 0 && particles[i][1] - 2 <= players[1][1] + players[1][3])
                          || (particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1])){
                             particles[i][3] *= -1;
@@ -220,6 +224,7 @@ function draw(){
         if(p0_move === -1){
             if(i === 0){
                 p0_move = 0;
+
             }else{
                 p0_move = i < 0 ? 2 : -2;
             }
@@ -233,6 +238,7 @@ function draw(){
         if(p1_move === -1){
             if(i === 0){
                 p1_move = 0;
+
             }else{
                 p1_move = i < 0 ? 2 : -2;
             }
@@ -326,8 +332,8 @@ function draw(){
         canvas.clearRect(
             0,
             0,
-            get('canvas').width,
-            get('canvas').height
+            width,
+            height
         );
     }
     canvas.drawImage(
@@ -350,11 +356,11 @@ function play_audio(i){
 
 function resize(){
     if(mode > 0){
-        get('buffer').width = get('canvas').width = window.innerWidth;
-        get('buffer').height = get('canvas').height = window.innerHeight;
+        width = get('buffer').width = get('canvas').width = window.innerWidth;
+        height = get('buffer').height = get('canvas').height = window.innerHeight;
 
-        x = get('canvas').width / 2;
-        y = get('canvas').height / 2;
+        x = width / 2;
+        y = height / 2;
     }
 }
 
@@ -376,6 +382,7 @@ function save(){
             'particle-speed',
             'obstacle-size'
         ][i];
+
         if(isNaN(get(j).value) || get(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65][i]){
             ls.removeItem('particleball-' + i);
             settings[i] = [
@@ -390,6 +397,7 @@ function save(){
                 65
             ][i];
             get(j).value = settings[i];
+
         }else{
             settings[i] = parseFloat(get(j).value);
             ls.setItem(
@@ -403,6 +411,7 @@ function save(){
     settings[9] = get('clear').checked;
     if(settings[9]){
         ls.removeItem('particleball-9');
+
     }else{
         ls.setItem(
             'particleball-9',
@@ -419,6 +428,7 @@ function save(){
                 'AD',
                 'H'
             ][i];
+
         }else{
             settings[i + 10] = get(['move-keys', 'restart-key'][i]).value;
             ls.setItem(
@@ -497,12 +507,12 @@ function setmode(newmode, newgame){
 
         /* add scenery rectangles at edges of game area */
         scenery = [
-            [-temp_half_width - 5,-205 - temp_half_height,5,dist],/* left wall */
-            [temp_half_width,-205 - temp_half_height,5,dist],/* right wall */
-            [-temp_half_width,-205 - temp_half_height,temp_half_width - 90,5],/* top left wall */
-            [temp_half_width,-205 - temp_half_height,-temp_half_width + 90,5],/* top right wall */
-            [-temp_half_width,200 + temp_half_height,temp_half_width - 90,5],/* bottom left wall */
-            [temp_half_width,200 + temp_half_height,-temp_half_width + 90,5]/* bottom right wall */
+            [-temp_half_width - 5, -205 - temp_half_height,                     5, dist],/* left wall */
+            [     temp_half_width, -205 - temp_half_height,                     5, dist],/* right wall */
+            [    -temp_half_width, -205 - temp_half_height,  temp_half_width - 90,    5],/* top left wall */
+            [     temp_half_width, -205 - temp_half_height, -temp_half_width + 90,    5],/* top right wall */
+            [    -temp_half_width,  200 + temp_half_height,  temp_half_width - 90,    5],/* bottom left wall */
+            [     temp_half_width,  200 + temp_half_height, -temp_half_width + 90,    5]/* bottom right wall */
         ];
 
         /* if number of spawners > 0, add spawners */
@@ -556,8 +566,10 @@ function setmode(newmode, newgame){
         /* if it's a newgame from the main menu, setup canvas */
         if(newgame){
             get('page').innerHTML = '<canvas id=canvas></canvas>';
+
             buffer = get('buffer').getContext('2d');
             canvas = get('canvas').getContext('2d');
+
             resize();
         }
 
@@ -589,6 +601,7 @@ function setmode(newmode, newgame){
 
 var buffer = 0;
 var canvas = 0;
+var height = 0;
 var i = 0;
 var interval = 0;
 var j = 0;
@@ -620,6 +633,7 @@ var settings = [
 ];
 var spawners = [];
 var x = 0;
+var width = 0;
 var y = 0;
 
 setmode(0, 1);
