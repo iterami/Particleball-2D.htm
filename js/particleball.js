@@ -51,7 +51,7 @@ function draw(){
             );
         }while(i--);
     }
-    i = scenery.length-1;
+    i = scenery.length - 1;
     if(i >= 0){
         do{
             buffer.fillRect(
@@ -161,7 +161,8 @@ function draw(){
                                 if(particles[i][0] > obstacles[j][0] - 2 && particles[i][0] < obstacles[j][0]){
                                     particles[i][2] *= -1;
                                 }
-                            }else if(particles[i][0] > obstacles[j][0] + obstacles[j][2] && particles[i][0] < obstacles[j][0] + obstacles[j][2] + 2){
+                            }else if(particles[i][0] > obstacles[j][0] + obstacles[j][2]
+                                  && particles[i][0] < obstacles[j][0] + obstacles[j][2] + 2){
                                 particles[i][2] *= -1;
                             }
                         }
@@ -172,29 +173,30 @@ function draw(){
                 if(particles[i][1] > players[1][1] + players[1][3] && particles[i][1] < players[0][1]){
                     if(particles[i][0] > -88 && particles[i][0] < 88){
                         if(particles[i][1] > 0){
-                            if(particles[i][0] > players[0][0] - 2 && particles[i][0] < players[0][0] + players[0][2] + 2){
+                            if(particles[i][0] > players[0][0] - 2
+                             && particles[i][0] < players[0][0] + players[0][2] + 2){
                                 if(particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1]){
                                     particles[i][2] = Math.random() * (settings[7] * 2) - settings[7];
                                     particles[i][3] *= -1;
                                     particles[i][4] = 0;
                                 }
                             }
-                        }else if(particles[i][0] > players[1][0]- 2 &&
-                                 particles[i][0] < players[1][0] + players[1][2] + 2 &&
-                                 particles[i][3] < 0 &&
-                                 particles[i][1] - 2 <= players[1][1] + players[1][3]){
+                        }else if(particles[i][0] > players[1][0]- 2
+                              && particles[i][0] < players[1][0] + players[1][2] + 2
+                              && particles[i][3] < 0
+                              && particles[i][1] - 2 <= players[1][1] + players[1][3]){
                             particles[i][3] *= -1;
                             particles[i][4] = 1;
                         }
 
                     }else{
                         /* left/right wall collisions */
-                        if((particles[i][2] < 0 && particles[i][0] -2 <= -particle_x_limit) ||
-                           (particles[i][2] > 0 && particles[i][0] + 2 >= particle_x_limit)){
+                        if((particles[i][2] < 0 && particles[i][0] -2 <= -particle_x_limit)
+                         || (particles[i][2] > 0 && particles[i][0] + 2 >= particle_x_limit)){
                             particles[i][2] *= -1;
                         }
-                        if((particles[i][3] < 0 && particles[i][1] - 2 <= players[1][1] + players[1][3]) ||
-                           (particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1])){
+                        if((particles[i][3] < 0 && particles[i][1] - 2 <= players[1][1] + players[1][3])
+                         || (particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1])){
                             particles[i][3] *= -1;
                         }
                     }
@@ -249,7 +251,9 @@ function draw(){
     if(i >= 0){
         do{
             /* set color to player color */
-            buffer.fillStyle = 'rgb(' + players[i][4] + ',' + players[i][5] + ',' + players[i][6] + ')';
+            buffer.fillStyle = 'rgb(' + players[i][4] + ', '
+                                      + players[i][5] + ', '
+                                      + players[i][6] + ')';
 
             /* draw paddle */
             buffer.fillRect(
@@ -345,7 +349,7 @@ function play_audio(i){
 }
 
 function resize(){
-    if(mode>0){
+    if(mode > 0){
         get('buffer').width = get('canvas').width = window.innerWidth;
         get('buffer').height = get('canvas').height = window.innerHeight;
 
@@ -591,6 +595,7 @@ var j = 0;
 var key_left = 0;
 var key_right = 0;
 var ls = window.localStorage;
+var mode = 0;
 var obstacles = [];
 var pa = 1;
 var particles = [];
@@ -614,7 +619,6 @@ var settings = [
     ls.getItem('particleball-11') === null ? 'H' : ls.getItem('particleball-11')/* restart key */
 ];
 var spawners = [];
-var u = 0;
 var x = 0;
 var y = 0;
 
