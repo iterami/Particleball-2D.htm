@@ -8,6 +8,13 @@ function draw(){
         );
     }
 
+    /* draw precalculated static obstacles */
+    buffer.drawImage(
+        get('buffer-static'),
+        0,
+        0
+    );
+
     /* move red player paddle, prevent from moving past goal boundaries */
     players[1][0] += p1_move;
     if(players[1][0] > 20){
@@ -37,30 +44,6 @@ function draw(){
         }else if(players[0][0] < -90){
             players[0][0] = -90;
         }
-    }
-
-    buffer.fillStyle = '#3c3c3c';
-    i = obstacles.length - 1;
-    if(i >= 0){
-        do{
-            buffer.fillRect(
-                obstacles[i][0] + x,
-                obstacles[i][1] + y,
-                obstacles[i][2],
-                obstacles[i][3]
-            );
-        }while(i--);
-    }
-    i = scenery.length - 1;
-    if(i >= 0){
-        do{
-            buffer.fillRect(
-                scenery[i][0] + x,
-                scenery[i][1] + y,
-                scenery[i][2],
-                scenery[i][3]
-            );
-        }while(i--);
     }
 
     i = spawners.length - 1;
@@ -356,11 +339,20 @@ function play_audio(i){
 
 function resize(){
     if(mode > 0){
-        width = get('buffer').width = get('canvas').width = window.innerWidth;
-        height = get('buffer').height = get('canvas').height = window.innerHeight;
+        width = window.innerWidth;
+        get('buffer').width = width;
+        get('buffer-static').width = width;
+        get('canvas').width = width;
+
+        height = window.innerHeight;
+        get('buffer').height = height;
+        get('buffer-static').height = height;
+        get('canvas').height = height;
 
         x = width / 2;
         y = height / 2;
+
+        update_static_buffer();
     }
 }
 
@@ -568,19 +560,24 @@ function setmode(newmode, newgame){
             get('page').innerHTML = '<canvas id=canvas></canvas>';
 
             buffer = get('buffer').getContext('2d');
+            buffer_static = get('buffer-static').getContext('2d');
             canvas = get('canvas').getContext('2d');
 
             resize();
         }
 
+        /* draw static obstacles to static buffer to optimize */
+        update_static_buffer();
+
         interval = setInterval(
             'draw()',
-            settings[3]/* ms-per-frame */
+            settings[3]/* milliseconds per frame */
         );
 
     /* main menu mode */
     }else{
         buffer = 0;
+        buffer_static = 0;
         canvas = 0;
 
         get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><b>Particleball</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div><hr><div class=c><input id=gamearea-height size=1 type=text value='
@@ -599,7 +596,44 @@ function setmode(newmode, newgame){
     }
 }
 
+function update_static_buffer(){
+    buffer_static.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+    /* draw obstacles */
+    buffer_static.fillStyle = '#3c3c3c';
+    i = obstacles.length - 1;
+    if(i >= 0){
+        do{
+            buffer_static.fillRect(
+                obstacles[i][0] + x,
+                obstacles[i][1] + y,
+                obstacles[i][2],
+                obstacles[i][3]
+            );
+        }while(i--);
+    }
+
+    /* draw edge walls */
+    i = scenery.length - 1;
+    if(i >= 0){
+        do{
+            buffer_static.fillRect(
+                scenery[i][0] + x,
+                scenery[i][1] + y,
+                scenery[i][2],
+                scenery[i][3]
+            );
+        }while(i--);
+    }
+}
+
 var buffer = 0;
+var buffer_static = 0;
 var canvas = 0;
 var height = 0;
 var i = 0;
@@ -618,18 +652,18 @@ var p0_move = 0;
 var p1_move = 0;
 var scenery = [];
 var settings = [
-    ls.getItem('particleball-0') === null ? 1 : parseFloat(ls.getItem('particleball-0')),/* audio volume */
-    ls.getItem('particleball-1') === null ? 10 : parseFloat(ls.getItem('particleball-1')),/* number of obstacles */
-    ls.getItem('particleball-2') === null ? 3 : parseFloat(ls.getItem('particleball-2')),/* number of spawners */
-    ls.getItem('particleball-3') === null ? 25 : parseFloat(ls.getItem('particleball-3')),/* ms-per-frame */
-    ls.getItem('particleball-4') === null ? 100 : parseFloat(ls.getItem('particleball-4')),/* max particles */
-    ls.getItem('particleball-5') === null ? 200 : parseFloat(ls.getItem('particleball-5')),/* game area height */
-    ls.getItem('particleball-6') === null ? 420 : parseFloat(ls.getItem('particleball-6')),/* game area width */
-    ls.getItem('particleball-7') === null ? 1.5 : parseFloat(ls.getItem('particleball-7')),/* max particle speed */
-    ls.getItem('particleball-8') === null ? 65 : parseFloat(ls.getItem('particleball-8')),/* max obstacle width/height */
-    ls.getItem('particleball-9') === null,/* clear? */
+    ls.getItem('particleball-0')  === null ?    1 : parseFloat(ls.getItem('particleball-0')),/* audio volume */
+    ls.getItem('particleball-1')  === null ?   10 : parseFloat(ls.getItem('particleball-1')),/* number of obstacles */
+    ls.getItem('particleball-2')  === null ?    3 : parseFloat(ls.getItem('particleball-2')),/* number of spawners */
+    ls.getItem('particleball-3')  === null ?   25 : parseFloat(ls.getItem('particleball-3')),/* milliseconds per frame */
+    ls.getItem('particleball-4')  === null ?  100 : parseFloat(ls.getItem('particleball-4')),/* max particles */
+    ls.getItem('particleball-5')  === null ?  200 : parseFloat(ls.getItem('particleball-5')),/* game area height */
+    ls.getItem('particleball-6')  === null ?  420 : parseFloat(ls.getItem('particleball-6')),/* game area width */
+    ls.getItem('particleball-7')  === null ?  1.5 : parseFloat(ls.getItem('particleball-7')),/* max particle speed */
+    ls.getItem('particleball-8')  === null ?   65 : parseFloat(ls.getItem('particleball-8')),/* max obstacle width/height */
+    ls.getItem('particleball-9')  === null,/* clear? */
     ls.getItem('particleball-10') === null ? 'AD' : ls.getItem('particleball-10'),/* movement keys */
-    ls.getItem('particleball-11') === null ? 'H' : ls.getItem('particleball-11')/* restart key */
+    ls.getItem('particleball-11') === null ?  'H' : ls.getItem('particleball-11')/* restart key */
 ];
 var spawners = [];
 var x = 0;
