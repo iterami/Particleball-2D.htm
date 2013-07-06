@@ -48,16 +48,6 @@ function draw(){
 
     i = spawners.length - 1;
     if(i >= 0){
-        buffer.fillStyle = '#476291';
-        do{
-            buffer.fillRect(
-                spawners[i][0] + x - 4,
-                spawners[i][1] + y - 4,
-                8,
-                8
-            );
-        }while(i--);
-
         /* if current number of particles is less than max, add new particle */
         if(particles.length < settings[4]){
             /* pick a random spawner */
@@ -620,13 +610,25 @@ function update_static_buffer(){
 
     /* draw edge walls */
     i = scenery.length - 1;
+    do{
+        buffer_static.fillRect(
+            scenery[i][0] + x,
+            scenery[i][1] + y,
+            scenery[i][2],
+            scenery[i][3]
+        );
+    }while(i--);
+
+    /* draw spawners */
+    i = spawners.length - 1;
     if(i >= 0){
+        buffer_static.fillStyle = '#476291';
         do{
             buffer_static.fillRect(
-                scenery[i][0] + x,
-                scenery[i][1] + y,
-                scenery[i][2],
-                scenery[i][3]
+                spawners[i][0] + x - 4,
+                spawners[i][1] + y - 4,
+                8,
+                8
             );
         }while(i--);
     }
