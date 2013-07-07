@@ -443,25 +443,25 @@ function setmode(newmode, newgame){
         key_right = 0;
 
         /* get half of width and height of game area */
-        var temp_half_width = settings[6] + 100;
-        var temp_half_height = settings[5] - 150;
+        arena_halfwidth = settings[6] + 100;
+        arena_halfheight = settings[5] - 150;
 
         /* particle_x_limit is how far particles can go on x axis positive or negative */
-        particle_x_limit = temp_half_width;
+        particle_x_limit = arena_halfwidth;
 
         /* setup player information */
         players = [
             /* player0 (green, human or AI) */
             [
                 -35,/* paddle top left x */
-                200 + temp_half_height,/* paddle top left y */
+                200 + arena_halfheight,/* paddle top left y */
                 70,/* paddle width */
                 5,/* paddle height */
                 34,/* player red rgb value */
                 102,/* player green rgb value */
                 34,/* player blue rgb value */
                 -100,/* goal top left x */
-                210 + temp_half_height,/* goal top left y */
+                210 + arena_halfheight,/* goal top left y */
                 200,/* goal width */
                 20,/* goal height */
                 0/* score */
@@ -470,14 +470,14 @@ function setmode(newmode, newgame){
             /* player1 (red, AI) */
             [
                 -35,/* paddle top left x */
-                -205 - temp_half_height,/* paddle top left y */
+                -205 - arena_halfheight,/* paddle top left y */
                 70,/* paddle width */
                 5,/* paddle height */
                 200,/* player red rgb value */
                 50,/* player green rgb value */
                 50,/* player blue rgb value */
                 -100,/* goal top left x */
-                -230 - temp_half_height,/* goal top left y */
+                -230 - arena_halfheight,/* goal top left y */
                 200,/* goal width */
                 20,/* goal height */
                 0/* score */
@@ -485,24 +485,14 @@ function setmode(newmode, newgame){
         ];
 
         /* calculate distance between both players */
-        var dist = Math.abs(players[1][1]) + players[0][1] + 5;
-
-        /* add scenery rectangles at edges of game area */
-        scenery = [
-            [-temp_half_width - 5, -205 - temp_half_height,                     5, dist],/* left wall */
-            [     temp_half_width, -205 - temp_half_height,                     5, dist],/* right wall */
-            [    -temp_half_width, -205 - temp_half_height,  temp_half_width - 90,    5],/* top left wall */
-            [     temp_half_width, -205 - temp_half_height, -temp_half_width + 90,    5],/* top right wall */
-            [    -temp_half_width,  200 + temp_half_height,  temp_half_width - 90,    5],/* bottom left wall */
-            [     temp_half_width,  200 + temp_half_height, -temp_half_width + 90,    5]/* bottom right wall */
-        ];
+        arena_playerdist = Math.abs(players[1][1]) + players[0][1] + 5;
 
         /* if number of spawners > 0, add spawners */
         if(settings[2] > 0){
             i = settings[2] - 1;
             do{
-                var temp0 = random_number(temp_half_width * 2) - temp_half_width;/* new spawner center_x */
-                var temp1 = random_number((dist - 25) / 4);/* new spawner center_y */
+                var temp0 = random_number(arena_halfwidth * 2) - arena_halfwidth;/* new spawner center_x */
+                var temp1 = random_number((arena_playerdist - 25) / 4);/* new spawner center_y */
 
                 /* add new spawner */
                 spawners.push([
@@ -522,8 +512,8 @@ function setmode(newmode, newgame){
         if(settings[1] > 0){
             i = settings[1] - 1;
             do{
-                var temp0 = random_number(temp_half_width * 2) - temp_half_width;/* new obstacle center_x */
-                var temp1 = random_number((dist - 25) / 2);/* new obstacle center_y */
+                var temp0 = random_number(arena_halfwidth * 2) - arena_halfwidth;/* new obstacle center_x */
+                var temp1 = random_number((arena_playerdist - 25) / 2);/* new obstacle center_y */
                 var temp2 = random_number(settings[8]) + 5;/* new obstacle width */
                 var temp3 = random_number(settings[8]) + 5;/* new obstacle height */
 
@@ -545,7 +535,7 @@ function setmode(newmode, newgame){
             }while(i--);
         }
 
-        /* if it's a newgame from the main menu, setup canvas */
+        /* if it's a newgame from the main menu, setup canvas and buffers */
         if(newgame){
             get('page').innerHTML = '<canvas id=canvas></canvas>';
 
@@ -608,16 +598,43 @@ function update_static_buffer(){
         }while(i--);
     }
 
-    /* draw edge walls */
-    i = scenery.length - 1;
-    do{
-        buffer_static.fillRect(
-            scenery[i][0] + x,
-            scenery[i][1] + y,
-            scenery[i][2],
-            scenery[i][3]
-        );
-    }while(i--);
+    /* draw scenery rectangles at edges of game area */
+    buffer_static.fillRect(
+        x - arena_halfwidth - 5,
+        y - 205 - arena_halfheight,
+        5,
+        arena_playerdist
+    );
+    buffer_static.fillRect(
+        x + arena_halfwidth,
+        y - 205 - arena_halfheight,
+        5,
+        arena_playerdist
+    );
+    buffer_static.fillRect(
+        x - arena_halfwidth,
+        y - 205 - arena_halfheight,
+        arena_halfwidth - 90,
+        5
+    );
+    buffer_static.fillRect(
+        x + arena_halfwidth,
+        y - 205 - arena_halfheight,
+        90 - arena_halfwidth,
+        5
+    );
+    buffer_static.fillRect(
+        x - arena_halfwidth,
+        y + 200 + arena_halfheight,
+        arena_halfwidth - 90,
+        5
+    );
+    buffer_static.fillRect(
+        x + arena_halfwidth,
+        y + 200 + arena_halfheight,
+        90 - arena_halfwidth,
+        5
+    );
 
     /* draw spawners */
     i = spawners.length - 1;
@@ -634,6 +651,9 @@ function update_static_buffer(){
     }
 }
 
+var arena_halfheight = 0;
+var arena_halfwidth = 0;
+var arena_playerdist = 0;
 var buffer = 0;
 var buffer_static = 0;
 var canvas = 0;
@@ -652,7 +672,6 @@ var particle_x_limit = 0;
 var players = [];
 var p0_move = 0;
 var p1_move = 0;
-var scenery = [];
 var settings = [
     ls.getItem('particleball-0')  === null ?    1 : parseFloat(ls.getItem('particleball-0')),/* audio volume */
     ls.getItem('particleball-1')  === null ?   10 : parseFloat(ls.getItem('particleball-1')),/* number of obstacles */
