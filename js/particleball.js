@@ -25,12 +25,12 @@ function draw(){
 
     // if player controlled, handle keypress movement
     if(ai_or_player){
-        if(key_left && !key_right && players[0][0] > -90){
+        if(key_left && players[0][0] > -90){
             players[0][0] -= 2;
         }else if(players[0][0] < -90){
             players[0][0] = -90;
         }
-        if(key_right && !key_left && players[0][0] < 20){
+        if(key_right && players[0][0] < 20){
             players[0][0] += 2;
         }else if(players[0][0] > 20){
             players[0][0] = 20;
@@ -223,7 +223,6 @@ function draw(){
 
     // setup text display
     buffer.textAlign = 'center';
-    buffer.textBaseline = 'middle';
     buffer.font = '23pt sans-serif';
 
     i = players.length - 1;
@@ -254,7 +253,7 @@ function draw(){
             buffer.fillText(
                 'Score: ' + players[i][11] + '/20',
                 players[i][0] + x + players[i][2] / 2,
-                players[i][1] + y + (i === 0 ? 50 : -50)
+                players[i][1] + y + (i === 0 ? 60 : -35)
             );
         }while(i--);
     }
