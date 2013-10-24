@@ -559,18 +559,18 @@ function setmode(newmode, newgame){
         buffer_static = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><b>Particleball</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div><hr><div class=c><input id=gamearea-height size=2 value='
-            + settings[5] + '>*2+100 Height<br><input id=number-of-obstacles size=2 value='
-            + settings[1] + '>*2 Obstacles<br><input id=obstacle-size size=2 value='
-            + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles size=2 value='
-            + settings[4] + '>Particles<br><input id=particle-speed size=2 value='
-            + settings[7] + '>&gt;Particle Speed<br><input id=number-of-spawners size=2 value='
-            + settings[2] + '>*2 Spawners<br><input id=gamearea-width size=2 value='
+        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><b>Particleball</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div><hr><div class=c><input id=gamearea-height size=3 value='
+            + settings[5] + '>*2+100 Height<br><input id=number-of-obstacles size=3 value='
+            + settings[1] + '>*2 Obstacles<br><input id=obstacle-size size=3 value='
+            + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles size=3 value='
+            + settings[4] + '>Particles<br><input id=particle-speed size=3 value='
+            + settings[7] + '>&gt;Particle Speed<br><input id=number-of-spawners size=3 value='
+            + settings[2] + '>*2 Spawners<br><input id=gamearea-width size=3 value='
             + settings[6] + '>*2+100 Width</div></div></div><div style=display:inline-block;text-align:left><div class=c><input disabled size=3 style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=2 size=3 value='
             + settings[10] + '>Move ←→<br><input id=restart-key maxlength=1 size=3 value='
             + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[0] + '>Audio<br><label><input '
-            + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display===\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=ms-per-frame size=2 value='
+            + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display===\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=ms-per-frame size=3 value='
             + settings[3] + '>ms/Frame</span></div></div>';
     }
 }
