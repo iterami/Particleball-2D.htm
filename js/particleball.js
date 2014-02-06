@@ -570,8 +570,8 @@ function setmode(newmode, newgame){
             + settings[10] + '>Move ←→<br><input id=restart-key maxlength=1 value='
             + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[0] + '>Audio<br><label><input '
-            + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display===\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=ms-per-frame value='
-            + settings[3] + '>ms/Frame</span></div></div>';
+            + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
+            + settings[3] + '>ms/Frame<br><a onclick="if(confirm(\'Reset settings?\')){get(\'particle-speed\').value=1.5;get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'move-keys\').value=\'AD\';get(\'restart-key\').value=\'H\';get(\'number-of-obstacles\').value=10;get(\'obstacle-size\').value=65;get(\'number-of-spawners\').value=3;get(\'ms-per-frame\').value=25;get(\'number-of-particles\').value=100;get(\'gamearea-height\').value=200;get(\'gamearea-width\').value=420;save();setmode(0,1)}">Reset Settings</a></div></div>';
     }
 }
 
