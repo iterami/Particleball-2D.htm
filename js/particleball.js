@@ -745,32 +745,37 @@ setmode(0, 1);
 
 window.onkeydown = function(e){
     if(mode > 0){
-        i = window.event ? event : e;
-        i = i.charCode ? i.charCode : i.keyCode;
+        var key = window.event ? event : e;
+        key = key.charCode ? key.charCode : key.keyCode;
 
-        if(String.fromCharCode(i) === settings[10][0]){// move left key
-            key_left = 1;
-
-        }else if(String.fromCharCode(i) === settings[10][1]){// move right key
-            key_right = 1;
-
-        }else if(String.fromCharCode(i) === settings[11]){// restart key
-            setmode(mode, 0);
-
-        }else if(i === 27){// ESC
+        if(key === 27){// ESC
             setmode(0, 1);
-        }
+
+        }else{
+            key = String.fromCharCode(key);
+
+            if(key === settings[10][0]){// move left key
+                key_left = 1;
+
+            }else if(key === settings[10][1]){// move right key
+                key_right = 1;
+
+            }else if(key === settings[11]){// restart key
+                setmode(mode, 0);
+
+            }
+        } 
     }
 };
 
 window.onkeyup = function(e){
-    i = window.event ? event : e;
-    i = i.charCode ? i.charCode : i.keyCode;
+    var key = window.event ? event : e;
+    key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(String.fromCharCode(i) === settings[10][0]){// move left key
+    if(key === settings[10][0]){// move left key
         key_left = 0;
 
-    }else if(String.fromCharCode(i) === settings[10][1]){// move right key
+    }else if(key === settings[10][1]){// move right key
         key_right = 0;
     }
 };
