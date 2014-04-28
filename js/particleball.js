@@ -1,3 +1,24 @@
+function create_obstacle(obstacle_x, obstacle_y){
+    var obstacle_height = random_number(settings[8]) + 5;// new obstacle height
+    var obstacle_width = random_number(settings[8]) + 5;// new obstacle width
+
+    // add new obstacle
+    obstacles.push([
+      obstacle_x - obstacle_width / 2,
+      obstacle_y - obstacle_height / 2,
+      obstacle_width,
+      obstacle_height
+    ]);
+
+    // add mirrored verison of new obstacle
+    obstacles.push([
+      -obstacle_x - obstacle_width / 2,
+      -obstacle_y - obstacle_height / 2,
+      obstacle_width,
+      obstacle_height
+    ]);
+}
+
 function draw(){
     if(settings[9]){// clear?
         buffer.clearRect(
@@ -541,26 +562,10 @@ function setmode(newmode, newgame){
         if(settings[1] > 0){
             i = settings[1] - 1;
             do{
-                var temp0 = random_number(arena_halfwidth * 2) - arena_halfwidth;// new obstacle center_x
-                var temp1 = random_number((arena_playerdist - 25) / 2);// new obstacle center_y
-                var temp2 = random_number(settings[8]) + 5;// new obstacle width
-                var temp3 = random_number(settings[8]) + 5;// new obstacle height
-
-                // add new obstacle
-                obstacles.push([
-                  temp0 - temp2 / 2,
-                  temp1 - temp3 / 2,
-                  temp2,
-                  temp3
-                ]);
-
-                // add mirrored verison of new obstacle
-                obstacles.push([
-                  -temp0 - temp2 / 2,
-                  -temp1 - temp3 / 2,
-                  temp2,
-                  temp3
-                ]);
+                create_obstacle(
+                  random_number(arena_halfwidth * 2) - arena_halfwidth,// new obstacle center_x
+                  random_number((arena_playerdist - 25) / 2)// new obstacle center_y
+                );
             }while(i--);
         }
 
@@ -590,7 +595,7 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=2 value='
-          + settings[10] + '>Move ←→<br><input id=restart-key maxlength=1 value='
+          + settings[10] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
           + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings[0] + '>Audio<br><label><input '
           + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=gamearea-height value='
@@ -749,7 +754,7 @@ window.onkeydown = function(e){
         key = key.charCode ? key.charCode : key.keyCode;
 
         if(key === 27){// ESC
-            setmode(0, 1);
+            setmode(0, 1);// Main Menu
 
         }else{
             key = String.fromCharCode(key);
@@ -777,6 +782,18 @@ window.onkeyup = function(e){
 
     }else if(key === settings[10][1]){// move right key
         key_right = 0;
+    }
+};
+
+window.onmousedown = function(e){
+    // clicks create new obstacles
+    if(mode > 0){
+        create_obstacle(
+          e.pageX - x,// new obstacle center_x
+          e.pageY - y// new obstacle center_y
+        );
+
+        update_static_buffer();
     }
 };
 
