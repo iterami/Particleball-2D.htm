@@ -20,7 +20,7 @@ function create_obstacle(obstacle_x, obstacle_y){
 }
 
 function draw(){
-    if(settings[9]){// clear?
+    if(settings[10]){// clear?
         buffer.clearRect(
           0,
           0,
@@ -285,7 +285,7 @@ function draw(){
 
             // draw score
             buffer.fillText(
-              'Score: ' + players[i][11] + '/20',
+              'Score: ' + players[i][11] + '/' + settings[9],
               players[i][0] + x + players[i][2] / 2,
               players[i][1] + y + (i === 0 ? 60 : -35)
             );
@@ -293,18 +293,13 @@ function draw(){
     }
 
     // if either player has 20 or more points and 2 more points than the other player
-    if(players[0][11] >= 20
-      && players[0][11] > players[1][11] + 1){
+    if(players[0][11] >= settings[9]
+      || players[1][11] >= settings[9]){
         clearInterval(interval);
 
-        buffer.fillStyle = '#262';
+        buffer.fillStyle = '#fff';
         buffer.fillText(
-          ai_or_player ? 'You win! ☺' : 'Green player wins!',
-          x,
-          y / 2
-        );
-        buffer.fillText(
-          settings[11] + ' = Restart',
+          settings[12] + ' = Restart',
           x,
           y / 2 + 50
         );
@@ -314,29 +309,26 @@ function draw(){
           y / 2 + 90
         );
 
-    }else if(players[1][11] >= 20
-      && players[1][11] > players[0][11] + 1){
-        clearInterval(interval);
+        if(players[0][11] > players[1][11]){
+            buffer.fillStyle = '#262';
+            buffer.fillText(
+              ai_or_player ? 'You win! ☺' : 'Green player wins!',
+              x,
+              y / 2
+            );
 
-        buffer.fillStyle = '#c83232';
-        buffer.fillText(
-          ai_or_player ? 'You lose. ☹' : 'Red player wins!',
-          x,
-          y / 2
-        );
-        buffer.fillText(
-          settings[11] + ' = Restart',
-          x,
-          y / 2 + 50
-        );
-        buffer.fillText(
-          'ESC = Main Menu',
-          x,
-          y / 2 + 90
-        );
+        }else{
+            buffer.fillStyle = '#c83232';
+            buffer.fillText(
+              ai_or_player ? 'You lose. ☹' : 'Red player wins!',
+              x,
+              y / 2
+            );
+        }
+
     }
     
-    if(settings[9]){// clear?
+    if(settings[10]){// clear?
         canvas.clearRect(
           0,
           0,
@@ -395,12 +387,13 @@ function reset(){
         document.getElementById('obstacle-size').value = 65;
         document.getElementById('particle-speed').value = 1.5;
         document.getElementById('restart-key').value = 'H';
+        document.getElementById('score-goal').value = 20;
         save();
     }
 }
 
 function save(){
-    i = 8;
+    i = 9;
     do{
         j = [
           'audio-volume',
@@ -411,11 +404,12 @@ function save(){
           'gamearea-height',
           'gamearea-width',
           'particle-speed',
-          'obstacle-size'
+          'obstacle-size',
+          'score-goal'
         ][i];
 
         if(isNaN(document.getElementById(j).value)
-          || document.getElementById(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65][i]){
+          || document.getElementById(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20][i]){
             window.localStorage.removeItem('particleball-' + i);
             settings[i] = [
               1,
@@ -426,7 +420,8 @@ function save(){
               200,
               420,
               1.5,
-              65
+              65,
+              20
             ][i];
             document.getElementById(j).value = settings[i];
 
@@ -440,13 +435,13 @@ function save(){
     }while(i--);
 
     // save clear setting, if it is not checked
-    settings[9] = document.getElementById('clear').checked;
-    if(settings[9]){
-        window.localStorage.removeItem('particleball-9');
+    settings[10] = document.getElementById('clear').checked;
+    if(settings[10]){
+        window.localStorage.removeItem('particleball-10');
 
     }else{
         window.localStorage.setItem(
-          'particleball-9',
+          'particleball-10',
           0
         );
     }
@@ -455,17 +450,17 @@ function save(){
     i = 1;
     do{
         if(document.getElementById(['move-keys', 'restart-key'][i]).value === ['AD', 'H'][i]){
-            window.localStorage.removeItem('particleball-' + (i + 10));
-            settings[i + 10] = [
+            window.localStorage.removeItem('particleball-' + (i + 11));
+            settings[i + 11] = [
               'AD',
               'H'
             ][i];
 
         }else{
-            settings[i + 10] = document.getElementById(['move-keys', 'restart-key'][i]).value;
+            settings[i + 11] = document.getElementById(['move-keys', 'restart-key'][i]).value;
             window.localStorage.setItem(
-              'particleball-' + (i + 10),
-              settings[i + 10]
+              'particleball-' + (i + 11),
+              settings[i + 11]
             );
         }
     }while(i--);
@@ -595,10 +590,11 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=2 value='
-          + settings[10] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-          + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+          + settings[11] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
+          + settings[12] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings[0] + '>Audio<br><label><input '
-          + (settings[9] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=gamearea-height value='
+          + (settings[10] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=score-goal value='
+          + settings[9] + '>Goal<br><input id=gamearea-height value='
           + settings[5] + '>*2+100 Height<br><input id=ms-per-frame value='
           + settings[3] + '>ms/Frame<br><input id=number-of-obstacles value='
           + settings[1] + '>*2 Obstacles<br><input id=obstacle-size value='
@@ -711,35 +707,38 @@ var settings = [
     : parseFloat(window.localStorage.getItem('particleball-0')),// audio volume
   window.localStorage.getItem('particleball-1') === null
     ? 10
-    : parseFloat(window.localStorage.getItem('particleball-1')),// number of obstacles
+    : parseInt(window.localStorage.getItem('particleball-1')),// number of obstacles
   window.localStorage.getItem('particleball-2') === null
     ? 3
-    : parseFloat(window.localStorage.getItem('particleball-2')),// number of spawners
+    : parseInt(window.localStorage.getItem('particleball-2')),// number of spawners
   window.localStorage.getItem('particleball-3') === null
     ? 25
-    : parseFloat(window.localStorage.getItem('particleball-3')),// milliseconds per frame
+    : parseInt(window.localStorage.getItem('particleball-3')),// milliseconds per frame
   window.localStorage.getItem('particleball-4') === null
     ? 100
-    : parseFloat(window.localStorage.getItem('particleball-4')),// max particles
+    : parseInt(window.localStorage.getItem('particleball-4')),// max particles
   window.localStorage.getItem('particleball-5') === null
     ? 200
-    : parseFloat(window.localStorage.getItem('particleball-5')),// game area height
+    : parseInt(window.localStorage.getItem('particleball-5')),// game area height
   window.localStorage.getItem('particleball-6') === null
     ? 420
-    : parseFloat(window.localStorage.getItem('particleball-6')),// game area width
+    : parseInt(window.localStorage.getItem('particleball-6')),// game area width
   window.localStorage.getItem('particleball-7') === null
     ? 1.5
     : parseFloat(window.localStorage.getItem('particleball-7')),// max particle speed
   window.localStorage.getItem('particleball-8') === null
     ? 65
-    : parseFloat(window.localStorage.getItem('particleball-8')),// max obstacle width/height
-  window.localStorage.getItem('particleball-9')  === null,// clear?
-  window.localStorage.getItem('particleball-10') === null
-    ? 'AD'
-    : window.localStorage.getItem('particleball-10'),// movement keys
+    : parseInt(window.localStorage.getItem('particleball-8')),// max obstacle width/height
+  window.localStorage.getItem('particleball-9') === null
+    ? 20
+    : parseInt(window.localStorage.getItem('particleball-9')),// score goal
+  window.localStorage.getItem('particleball-10')  === null,// clear?
   window.localStorage.getItem('particleball-11') === null
+    ? 'AD'
+    : window.localStorage.getItem('particleball-11'),// movement keys
+  window.localStorage.getItem('particleball-12') === null
     ? 'H'
-    : window.localStorage.getItem('particleball-11')// restart key
+    : window.localStorage.getItem('particleball-12')// restart key
 ];
 var spawners = [];
 var x = 0;
@@ -759,13 +758,13 @@ window.onkeydown = function(e){
         }else{
             key = String.fromCharCode(key);
 
-            if(key === settings[10][0]){// move left key
+            if(key === settings[11][0]){// move left key
                 key_left = 1;
 
-            }else if(key === settings[10][1]){// move right key
+            }else if(key === settings[11][1]){// move right key
                 key_right = 1;
 
-            }else if(key === settings[11]){// restart key
+            }else if(key === settings[12]){// restart key
                 setmode(mode, 0);
 
             }
@@ -777,10 +776,10 @@ window.onkeyup = function(e){
     var key = window.event ? event : e;
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(key === settings[10][0]){// move left key
+    if(key === settings[11][0]){// move left key
         key_left = 0;
 
-    }else if(key === settings[10][1]){// move right key
+    }else if(key === settings[11][1]){// move right key
         key_right = 0;
     }
 };
