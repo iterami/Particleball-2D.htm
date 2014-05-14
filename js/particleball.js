@@ -594,15 +594,15 @@ function setmode(newmode, newgame){
           + settings[12] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings[0] + '>Audio<br><label><input '
           + (settings[10] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=score-goal value='
-          + settings[9] + '>Goal<br><input id=gamearea-height value='
-          + settings[5] + '>*2+100 Height<br><input id=ms-per-frame value='
-          + settings[3] + '>ms/Frame<br><input id=number-of-obstacles value='
-          + settings[1] + '>*2 Obstacles<br><input id=obstacle-size value='
-          + settings[8] + '>+5>Obstacle Size<br><input id=number-of-particles value='
-          + settings[4] + '>Particles<br><input id=particle-speed value='
-          + settings[7] + '>&gt;Particle Speed<br><input id=number-of-spawners value='
-          + settings[2] + '>*2 Spawners<br><input id=gamearea-width value='
-          + settings[6] + '>*2+100 Width<br><a onclick=reset()>Reset Settings</a></div></div>';
+          + settings[9] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
+          + settings[5] + '>*2+100 Height<li><input id=gamearea-width value='
+          + settings[6] + '>*2+100 Width</ul><input id=ms-per-frame value='
+          + settings[3] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
+          + settings[1] + '>*2 #<li><input id=obstacle-size value='
+          + settings[8] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
+          + settings[4] + '>#<li><input id=number-of-spawners value='
+          + settings[2] + '>*2 Spawners<li><input id=particle-speed value='
+          + settings[7] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
