@@ -46,12 +46,14 @@ function draw(){
 
     // if player controlled, handle keypress movement
     if(ai_or_player){
-        if(key_left && players[0][0] > -90){
+        if(key_left
+          && players[0][0] > -90){
             players[0][0] -= 2;
         }else if(players[0][0] < -90){
             players[0][0] = -90;
         }
-        if(key_right && players[0][0] < 20){
+        if(key_right
+          && players[0][0] < 20){
             players[0][0] += 2;
         }else if(players[0][0] > 20){
             players[0][0] = 20;
@@ -67,17 +69,16 @@ function draw(){
         }
     }
 
-    i = spawners.length - 1;
-    if(i >= 0){
+    if(spawners.length - 1 >= 0){
         // if current number of particles is less than max, add new particle
         if(particles.length < settings[4]){
             // pick a random spawner
-            i = random_number(spawners.length);
+            var random_spawner = random_number(spawners.length);
 
             // add particle
             particles.push([
-              spawners[i][0],// particle x
-              spawners[i][1],// particle y
+              spawners[random_spawner][0],// particle x
+              spawners[random_spawner][1],// particle y
               Math.random() * (settings[7] * 2) - settings[7],// particle x speed
               Math.random() * (settings[7] * 2) - settings[7],// particle y speed
               -1// not linked to a player
@@ -85,36 +86,37 @@ function draw(){
         }
     }
 
-    i = particles.length - 1;
-    if(i >= 0){
+    var loop_counter = particles.length - 1;
+    if(loop_counter >= 0){
         // reset movements for recalculation
         p0_move = -1;
         p1_move = -1;
 
         do{
             // if particle is with 90 pixels of center of goal
-            if(particles[i][0] < 90 && particles[i][0] > -90){
+            if(particles[loop_counter][0] < 90
+              && particles[loop_counter][0] > -90){
                 // if particle is moving downwards
-                if(particles[i][3] > 0){
+                if(particles[loop_counter][3] > 0){
                     // link player 0 AI to track this particle if it is closest
-                    if((p0_move === -1 || particles[i][1] > particles[p0_move][1])
-                      && particles[i][1] < players[0][1]){
-                        p0_move = i;
+                    if((p0_move === -1 || particles[loop_counter][1] > particles[p0_move][1])
+                      && particles[loop_counter][1] < players[0][1]){
+                        p0_move = loop_counter;
                     }
 
                 // else link player 1 AI to track this particle if it is closest
-                }else if((p1_move === -1 || particles[i][1] < particles[p1_move][1])
-                  && particles[i][1] > players[1][1]){
-                    p1_move = i;
+                }else if((p1_move === -1 || particles[loop_counter][1] < particles[p1_move][1])
+                  && particles[loop_counter][1] > players[1][1]){
+                    p1_move = loop_counter;
                 }
             }
 
             // if particle has collided with a goal
-            if(particles[i][1]+2 > players[0][8]
-              || particles[i][1]-2 < players[1][8] + players[1][10]){
+            if(particles[loop_counter][1]+2 > players[0][8]
+              || particles[loop_counter][1]-2 < players[1][8] + players[1][10]){
                 // determine which player scored a goal
                 var temp_player = 0;
-                if(particles[i][1] + 2 > players[0][8]){
+                if(particles[loop_counter][1] + 2 > players[0][8]){
                     temp_player = 1;
                 }
 
@@ -124,12 +126,15 @@ function draw(){
                 }
 
                 // increase the scoring players score by 1
-                if(particles[i][4] === temp_player){
+                if(particles[loop_counter][4] === temp_player){
                     players[temp_player][11] += 1;
                 }
 
                 // delete the particle
-                particles.splice(i, 1);
+                particles.splice(
+                  loop_counter,
+                  1
+                );
 
                 p0_move = 0;
                 p1_move = 0;
@@ -140,116 +145,121 @@ function draw(){
                 if(j >= 0){
                     do{
                         // x collisions
-                        if(particles[i][0] >= obstacles[j][0]
-                          && particles[i][0] <= obstacles[j][0] + obstacles[j][2]){
-                            if(particles[i][3] > 0){
-                                if(particles[i][1] > obstacles[j][1] - 2 && particles[i][1] < obstacles[j][1]){
-                                    particles[i][3] *= -1;
+                        if(particles[loop_counter][0] >= obstacles[j][0]
+                          && particles[loop_counter][0] <= obstacles[j][0] + obstacles[j][2]){
+                            if(particles[loop_counter][3] > 0){
+                                if(particles[loop_counter][1] > obstacles[j][1] - 2
+                                  && particles[loop_counter][1] < obstacles[j][1]){
+                                    particles[loop_counter][3] *= -1;
                                 }
-                            }else if(particles[i][1] > obstacles[j][1] + obstacles[j][3]
-                              && particles[i][1] < obstacles[j][1] + obstacles[j][3] + 2){
-                                particles[i][3] *= -1;
+                            }else if(particles[loop_counter][1] > obstacles[j][1] + obstacles[j][3]
+                              && particles[loop_counter][1] < obstacles[j][1] + obstacles[j][3] + 2){
+                                particles[loop_counter][3] *= -1;
                             }
 
                         // y collisions
-                        }else if(particles[i][1] >= obstacles[j][1]
-                          && particles[i][1] <= obstacles[j][1] + obstacles[j][3]){
-                            if(particles[i][2] > 0){
-                                if(particles[i][0] > obstacles[j][0] - 2 && particles[i][0] < obstacles[j][0]){
-                                    particles[i][2] *= -1;
+                        }else if(particles[loop_counter][1] >= obstacles[j][1]
+                          && particles[loop_counter][1] <= obstacles[j][1] + obstacles[j][3]){
+                            if(particles[loop_counter][2] > 0){
+                                if(particles[loop_counter][0] > obstacles[j][0] - 2
+                                  && particles[loop_counter][0] < obstacles[j][0]){
+                                    particles[loop_counter][2] *= -1;
                                 }
 
-                            }else if(particles[i][0] > obstacles[j][0] + obstacles[j][2]
-                              && particles[i][0] < obstacles[j][0] + obstacles[j][2] + 2){
-                                particles[i][2] *= -1;
+                            }else if(particles[loop_counter][0] > obstacles[j][0] + obstacles[j][2]
+                              && particles[loop_counter][0] < obstacles[j][0] + obstacles[j][2] + 2){
+                                particles[loop_counter][2] *= -1;
                             }
                         }
                     }while(j--);
                 }
 
                 // check for collisions with player paddles or edges of game area
-                if(particles[i][1] > players[1][1] + players[1][3] && particles[i][1] < players[0][1]){
-                    if(particles[i][0] > -88 && particles[i][0] < 88){
-                        if(particles[i][1] > 0){
-                            if(particles[i][0] > players[0][0] - 2
-                              && particles[i][0] < players[0][0] + players[0][2] + 2){
-                                if(particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1]){
-                                    particles[i][2] = Math.random() * (settings[7] * 2) - settings[7];
-                                    particles[i][3] *= -1;
-                                    particles[i][4] = 0;
+                if(particles[loop_counter][1] > players[1][1] + players[1][3]
+                  && particles[loop_counter][1] < players[0][1]){
+                    if(particles[loop_counter][0] > -88
+                      && particles[loop_counter][0] < 88){
+                        if(particles[loop_counter][1] > 0){
+                            if(particles[loop_counter][0] > players[0][0] - 2
+                              && particles[loop_counter][0] < players[0][0] + players[0][2] + 2){
+                                if(particles[loop_counter][3] > 0
+                                  && particles[loop_counter][1] + 2 >= players[0][1]){
+                                    particles[loop_counter][2] = Math.random() * (settings[7] * 2) - settings[7];
+                                    particles[loop_counter][3] *= -1;
+                                    particles[loop_counter][4] = 0;
                                 }
                             }
 
-                        }else if(particles[i][0] > players[1][0]- 2
-                          && particles[i][0] < players[1][0] + players[1][2] + 2
-                          && particles[i][3] < 0
-                          && particles[i][1] - 2 <= players[1][1] + players[1][3]){
-                            particles[i][3] *= -1;
-                            particles[i][4] = 1;
+                        }else if(particles[loop_counter][0] > players[1][0]- 2
+                          && particles[loop_counter][0] < players[1][0] + players[1][2] + 2
+                          && particles[loop_counter][3] < 0
+                          && particles[loop_counter][1] - 2 <= players[1][1] + players[1][3]){
+                            particles[loop_counter][3] *= -1;
+                            particles[loop_counter][4] = 1;
                         }
 
                     }else{
                         // left/right wall collisions
-                        if((particles[i][2] < 0 && particles[i][0] - 2 <= -particle_x_limit)
-                         || (particles[i][2] > 0 && particles[i][0] + 2 >= particle_x_limit)){
-                            particles[i][2] *= -1;
+                        if((particles[loop_counter][2] < 0 && particles[loop_counter][0] - 2 <= -particle_x_limit)
+                         || (particles[loop_counter][2] > 0 && particles[loop_counter][0] + 2 >= particle_x_limit)){
+                            particles[loop_counter][2] *= -1;
                         }
 
                         // player paddle collisions
-                        if((particles[i][3] < 0 && particles[i][1] - 2 <= players[1][1] + players[1][3])
-                         || (particles[i][3] > 0 && particles[i][1] + 2 >= players[0][1])){
-                            particles[i][3] *= -1;
+                        if((particles[loop_counter][3] < 0 && particles[loop_counter][1] - 2 <= players[1][1] + players[1][3])
+                         || (particles[loop_counter][3] > 0 && particles[loop_counter][1] + 2 >= players[0][1])){
+                            particles[loop_counter][3] *= -1;
                         }
                     }
                 }
                 // move particles
-                particles[i][0] += particles[i][2];
-                particles[i][1] += particles[i][3];
+                particles[loop_counter][0] += particles[loop_counter][2];
+                particles[loop_counter][1] += particles[loop_counter][3];
             }
             // draw particles, #ddd if they are unclaimed and #player_color if they are claimed
-            buffer.fillStyle = particles[i][4] < 0
+            buffer.fillStyle = particles[loop_counter][4] < 0
               ? '#ddd'
-              : ['#2d8930', '#c83232'][particles[i][4]];
+              : ['#2d8930', '#c83232'][particles[loop_counter][4]];
             buffer.fillRect(
-              particles[i][0] + x - 2,
-              particles[i][1] + y - 2,
+              particles[loop_counter][0] + x - 2,
+              particles[loop_counter][1] + y - 2,
               4,
               4
             );
-        }while(i--);
+        }while(loop_counter--);
 
         // calculate movement direction for next frame if player0 ai is tracking a particle
-        i = players[0][0] + players[0][2] / 2;
+        var paddle_position = players[0][0] + players[0][2] / 2;
         if(p0_move === -1){
-            if(i === 0){
+            if(paddle_position === 0){
                 p0_move = 0;
 
             }else{
-                p0_move = i < 0
+                p0_move = paddle_position < 0
                   ? 2
                   : -2;
             }
 
         }else{
-            p0_move = particles[p0_move][0] > i
+            p0_move = particles[p0_move][0] > paddle_position
               ? 2
               : -2;
         }
 
         // calculate movement direction for next frame if player1 ai is tracking a particle
-        i = players[1][0] + players[1][2] / 2;
+        paddle_position = players[1][0] + players[1][2] / 2;
         if(p1_move === -1){
-            if(i === 0){
+            if(paddle_position === 0){
                 p1_move = 0;
 
             }else{
-                p1_move = i < 0
+                p1_move = paddle_position < 0
                   ? 2
                   : -2;
             }
  
         }else{
-            p1_move = particles[p1_move][0] > i
+            p1_move = particles[p1_move][0] > paddle_position
               ? 2
               : -2;
         }
@@ -259,37 +269,38 @@ function draw(){
     buffer.textAlign = 'center';
     buffer.font = '23pt sans-serif';
 
-    i = players.length - 1;
-    if(i >= 0){
+    loop_counter = players.length - 1;
+    if(loop_counter >= 0){
         do{
             // set color to player color
-            buffer.fillStyle = 'rgb(' + players[i][4] + ', '
-              + players[i][5] + ', '
-              + players[i][6] + ')';
+            buffer.fillStyle = 'rgb('
+              + players[loop_counter][4] + ', '
+              + players[loop_counter][5] + ', '
+              + players[loop_counter][6] + ')';
 
             // draw paddle
             buffer.fillRect(
-              players[i][0] + x,
-              players[i][1] + y,
-              players[i][2],
-              players[i][3]
+              players[loop_counter][0] + x,
+              players[loop_counter][1] + y,
+              players[loop_counter][2],
+              players[loop_counter][3]
             );
 
             // draw goal
             buffer.fillRect(
-              players[i][7] + x,
-              players[i][8] + y,
-              players[i][9],
-              players[i][10]
+              players[loop_counter][7] + x,
+              players[loop_counter][8] + y,
+              players[loop_counter][9],
+              players[loop_counter][10]
             );
 
             // draw score
             buffer.fillText(
-              'Score: ' + players[i][11] + '/' + settings[9],
-              players[i][0] + x + players[i][2] / 2,
-              players[i][1] + y + (i === 0 ? 60 : -35)
+              'Score: ' + players[loop_counter][11] + '/' + settings[9],
+              players[loop_counter][0] + x + players[loop_counter][2] / 2,
+              players[loop_counter][1] + y + (loop_counter === 0 ? 60 : -35)
             );
-        }while(i--);
+        }while(loop_counter--);
     }
 
     // if either player has 20 or more points and 2 more points than the other player
@@ -312,7 +323,9 @@ function draw(){
         if(players[0][11] > players[1][11]){
             buffer.fillStyle = '#262';
             buffer.fillText(
-              ai_or_player ? 'You win! ☺' : 'Green player wins!',
+              ai_or_player
+                ? 'You win! ☺'
+                : 'Green player wins!',
               x,
               y / 2
             );
@@ -320,7 +333,9 @@ function draw(){
         }else{
             buffer.fillStyle = '#c83232';
             buffer.fillText(
-              ai_or_player ? 'You lose. ☹' : 'Red player wins!',
+              ai_or_player
+                ? 'You lose. ☹'
+                : 'Red player wins!',
               x,
               y / 2
             );
@@ -352,18 +367,17 @@ function play_audio(i){
 
 function resize(){
     if(mode > 0){
-        width = window.innerWidth;
-        document.getElementById('buffer').width = width;
-        document.getElementById('buffer-static').width = width;
-        document.getElementById('canvas').width = width;
-
         height = window.innerHeight;
         document.getElementById('buffer').height = height;
         document.getElementById('buffer-static').height = height;
         document.getElementById('canvas').height = height;
-
-        x = width / 2;
         y = height / 2;
+
+        width = window.innerWidth;
+        document.getElementById('buffer').width = width;
+        document.getElementById('buffer-static').width = width;
+        document.getElementById('canvas').width = width;
+        x = width / 2;
 
         update_static_buffer();
     }
@@ -393,7 +407,7 @@ function reset(){
 }
 
 function save(){
-    i = 9;
+    var loop_counter = 9;
     do{
         j = [
           'audio-volume',
@@ -406,12 +420,12 @@ function save(){
           'particle-speed',
           'obstacle-size',
           'score-goal'
-        ][i];
+        ][loop_counter];
 
         if(isNaN(document.getElementById(j).value)
-          || document.getElementById(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20][i]){
-            window.localStorage.removeItem('particleball-' + i);
-            settings[i] = [
+          || document.getElementById(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20][loop_counter]){
+            window.localStorage.removeItem('particleball-' + loop_counter);
+            settings[loop_counter] = [
               1,
               10,
               3,
@@ -422,17 +436,17 @@ function save(){
               1.5,
               65,
               20
-            ][i];
-            document.getElementById(j).value = settings[i];
+            ][loop_counter];
+            document.getElementById(j).value = settings[loop_counter];
 
         }else{
-            settings[i] = parseFloat(document.getElementById(j).value);
+            settings[loop_counter] = parseFloat(document.getElementById(j).value);
             window.localStorage.setItem(
-              'particleball-' + i,
-              settings[i]
+              'particleball-' + loop_counter,
+              settings[loop_counter]
             );
         }
-    }while(i--);
+    }while(loop_counter--);
 
     // save clear setting, if it is not checked
     settings[10] = document.getElementById('clear').checked;
@@ -447,23 +461,23 @@ function save(){
     }
 
     // save move-keys and restart-key, if they differ from default
-    i = 1;
+    loop_counter = 1;
     do{
-        if(document.getElementById(['move-keys', 'restart-key'][i]).value === ['AD', 'H'][i]){
-            window.localStorage.removeItem('particleball-' + (i + 11));
-            settings[i + 11] = [
+        if(document.getElementById(['move-keys', 'restart-key'][loop_counter]).value === ['AD', 'H'][loop_counter]){
+            window.localStorage.removeItem('particleball-' + (loop_counter + 11));
+            settings[loop_counter + 11] = [
               'AD',
               'H'
-            ][i];
+            ][loop_counter];
 
         }else{
-            settings[i + 11] = document.getElementById(['move-keys', 'restart-key'][i]).value;
+            settings[loop_counter + 11] = document.getElementById(['move-keys', 'restart-key'][loop_counter]).value;
             window.localStorage.setItem(
-              'particleball-' + (i + 11),
-              settings[i + 11]
+              'particleball-' + (loop_counter + 11),
+              settings[loop_counter + 11]
             );
         }
-    }while(i--);
+    }while(loop_counter--);
 }
 
 function setmode(newmode, newgame){
@@ -534,7 +548,7 @@ function setmode(newmode, newgame){
 
         // if number of spawners > 0, add spawners
         if(settings[2] > 0){
-            i = settings[2] - 1;
+            var loop_counter = settings[2] - 1;
             do{
                 var temp0 = random_number(arena_halfwidth * 2) - arena_halfwidth;// new spawner center_x
                 var temp1 = random_number((arena_playerdist - 25) / 4);// new spawner center_y
@@ -550,18 +564,18 @@ function setmode(newmode, newgame){
                   -temp0,
                   -temp1
                 ]);
-            }while(i--);
+            }while(loop_counter--);
         }
 
         // if number of obstacles > 0, add obstacles
         if(settings[1] > 0){
-            i = settings[1] - 1;
+            var loop_counter = settings[1] - 1;
             do{
                 create_obstacle(
                   random_number(arena_halfwidth * 2) - arena_halfwidth,// new obstacle center_x
                   random_number((arena_playerdist - 25) / 2)// new obstacle center_y
                 );
-            }while(i--);
+            }while(loop_counter--);
         }
 
         // if it's a newgame from the main menu, setup canvas and buffers
@@ -616,16 +630,16 @@ function update_static_buffer(){
 
     // draw obstacles
     buffer_static.fillStyle = '#3c3c3c';
-    i = obstacles.length - 1;
-    if(i >= 0){
+    var loop_counter = obstacles.length - 1;
+    if(loop_counter >= 0){
         do{
             buffer_static.fillRect(
-              obstacles[i][0] + x,
-              obstacles[i][1] + y,
-              obstacles[i][2],
-              obstacles[i][3]
+              obstacles[loop_counter][0] + x,
+              obstacles[loop_counter][1] + y,
+              obstacles[loop_counter][2],
+              obstacles[loop_counter][3]
             );
-        }while(i--);
+        }while(loop_counter--);
     }
 
     // draw scenery rectangles at edges of game area
@@ -667,17 +681,17 @@ function update_static_buffer(){
     );
 
     // draw spawners
-    i = spawners.length - 1;
-    if(i >= 0){
+    loop_counter = spawners.length - 1;
+    if(loop_counter >= 0){
         buffer_static.fillStyle = '#476291';
         do{
             buffer_static.fillRect(
-              spawners[i][0] + x - 4,
-              spawners[i][1] + y - 4,
+              spawners[loop_counter][0] + x - 4,
+              spawners[loop_counter][1] + y - 4,
               8,
               8
             );
-        }while(i--);
+        }while(loop_counter--);
     }
 }
 
@@ -688,7 +702,6 @@ var buffer = 0;
 var buffer_static = 0;
 var canvas = 0;
 var height = 0;
-var i = 0;
 var interval = 0;
 var j = 0;
 var key_left = 0;
@@ -745,7 +758,7 @@ var x = 0;
 var width = 0;
 var y = 0;
 
-setmode(0, 1);
+setmode(0, 1);// Main Menu
 
 window.onkeydown = function(e){
     if(mode > 0){
