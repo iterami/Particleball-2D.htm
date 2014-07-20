@@ -1,6 +1,6 @@
 function create_obstacle(obstacle_x, obstacle_y){
-    var obstacle_height = random_number(settings[8]) + 5;// new obstacle height
-    var obstacle_width = random_number(settings[8]) + 5;// new obstacle width
+    var obstacle_height = Math.floor(Math.random() * settings[8]) + 5;// new obstacle height
+    var obstacle_width = Math.floor(Math.random() * settings[8]) + 5;// new obstacle width
 
     // add new obstacle
     obstacles.push([
@@ -73,7 +73,7 @@ function draw(){
         // if current number of particles is less than max, add new particle
         if(particles.length < settings[4]){
             // pick a random spawner
-            var random_spawner = random_number(spawners.length);
+            var random_spawner = Math.floor(Math.random() * spawners.length);
 
             // add particle
             particles.push([
@@ -383,10 +383,6 @@ function resize(){
     }
 }
 
-function random_number(i){
-    return Math.floor(Math.random() * i);
-}
-
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
@@ -550,8 +546,8 @@ function setmode(newmode, newgame){
         if(settings[2] > 0){
             var loop_counter = settings[2] - 1;
             do{
-                var temp0 = random_number(arena_halfwidth * 2) - arena_halfwidth;// new spawner center_x
-                var temp1 = random_number((arena_playerdist - 25) / 4);// new spawner center_y
+                var temp0 = Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth;// new spawner center_x
+                var temp1 = Math.floor(Math.random() * ((arena_playerdist - 25) / 4));// new spawner center_y
 
                 // add new spawner
                 spawners.push([
@@ -572,8 +568,8 @@ function setmode(newmode, newgame){
             var loop_counter = settings[1] - 1;
             do{
                 create_obstacle(
-                  random_number(arena_halfwidth * 2) - arena_halfwidth,// new obstacle center_x
-                  random_number((arena_playerdist - 25) / 2)// new obstacle center_y
+                  Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth,// new obstacle center_x
+                  Math.floor(Math.random() * ((arena_playerdist - 25) / 2))// new obstacle center_y
                 );
             }while(loop_counter--);
         }
