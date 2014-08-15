@@ -386,7 +386,7 @@ function resize(){
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
-        document.getElementById('clear').checked = 1;
+        document.getElementById('clear').checked = true;
         document.getElementById('gamearea-height').value = 200;
         document.getElementById('gamearea-width').value = 420;
         document.getElementById('move-keys').value = 'AD';
