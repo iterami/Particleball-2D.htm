@@ -20,14 +20,12 @@ function create_obstacle(obstacle_x, obstacle_y){
 }
 
 function draw(){
-    if(settings[10]){// clear?
-        buffer.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    buffer.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
 
     // draw precalculated static obstacles
     buffer.drawImage(
@@ -310,7 +308,7 @@ function draw(){
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          settings[12] + ' = Restart',
+          settings[11] + ' = Restart',
           x,
           y / 2 + 50
         );
@@ -343,14 +341,12 @@ function draw(){
 
     }
     
-    if(settings[10]){// clear?
-        canvas.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    canvas.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
     canvas.drawImage(
       document.getElementById('buffer'),
       0,
@@ -386,7 +382,6 @@ function resize(){
 function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
-        document.getElementById('clear').checked = true;
         document.getElementById('gamearea-height').value = 200;
         document.getElementById('gamearea-width').value = 420;
         document.getElementById('move-keys').value = 'AD';
@@ -443,18 +438,6 @@ function save(){
             );
         }
     }while(loop_counter--);
-
-    // save clear setting, if it is not checked
-    settings[10] = document.getElementById('clear').checked;
-    if(settings[10]){
-        window.localStorage.removeItem('particleball-10');
-
-    }else{
-        window.localStorage.setItem(
-          'particleball-10',
-          0
-        );
-    }
 
     // save move-keys and restart-key, if they differ from default
     loop_counter = 1;
@@ -600,10 +583,9 @@ function setmode(newmode, newgame){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=2 value='
-          + settings[11] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-          + settings[12] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings[0] + '>Audio<br><label><input '
-          + (settings[10] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=score-goal value='
+          + settings[10] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
+          + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+          + settings[0] + '>Audio<br><input id=score-goal value='
           + settings[9] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
           + settings[5] + '>*2+100 Height<li><input id=gamearea-width value='
           + settings[6] + '>*2+100 Width</ul><input id=ms-per-frame value='
@@ -741,7 +723,6 @@ var settings = [
   window.localStorage.getItem('particleball-9') === null
     ? 20
     : parseInt(window.localStorage.getItem('particleball-9')),// score goal
-  window.localStorage.getItem('particleball-10')  === null,// clear?
   window.localStorage.getItem('particleball-11') === null
     ? 'AD'
     : window.localStorage.getItem('particleball-11'),// movement keys
@@ -767,13 +748,13 @@ window.onkeydown = function(e){
         }else{
             key = String.fromCharCode(key);
 
-            if(key === settings[11][0]){// move left key
+            if(key === settings[10][0]){// move left key
                 key_left = 1;
 
-            }else if(key === settings[11][1]){// move right key
+            }else if(key === settings[10][1]){// move right key
                 key_right = 1;
 
-            }else if(key === settings[12]){// restart key
+            }else if(key === settings[11]){// restart key
                 setmode(mode, 0);
 
             }
@@ -785,10 +766,10 @@ window.onkeyup = function(e){
     var key = window.event ? event : e;
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(key === settings[11][0]){// move left key
+    if(key === settings[10][0]){// move left key
         key_left = 0;
 
-    }else if(key === settings[11][1]){// move right key
+    }else if(key === settings[10][1]){// move right key
         key_right = 0;
     }
 };
