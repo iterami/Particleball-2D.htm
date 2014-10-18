@@ -1,6 +1,6 @@
 function create_obstacle(obstacle_x, obstacle_y){
-    var obstacle_height = Math.floor(Math.random() * settings[8]) + 5;// new obstacle height
-    var obstacle_width = Math.floor(Math.random() * settings[8]) + 5;// new obstacle width
+    var obstacle_height = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle height
+    var obstacle_width = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle width
 
     // add new obstacle
     obstacles.push([
@@ -69,7 +69,7 @@ function draw(){
 
     if(spawners.length - 1 >= 0){
         // if current number of particles is less than max, add new particle
-        if(particles.length < settings[4]){
+        if(particles.length < settings['number-of-particles']){
             // pick a random spawner
             var random_spawner = Math.floor(Math.random() * spawners.length);
 
@@ -77,8 +77,8 @@ function draw(){
             particles.push([
               spawners[random_spawner][0],// particle x
               spawners[random_spawner][1],// particle y
-              Math.random() * (settings[7] * 2) - settings[7],// particle x speed
-              Math.random() * (settings[7] * 2) - settings[7],// particle y speed
+              Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// particle x speed
+              Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// particle y speed
               -1// not linked to a player
             ]);
         }
@@ -182,7 +182,7 @@ function draw(){
                               && particles[loop_counter][0] < players[0][0] + players[0][2] + 2){
                                 if(particles[loop_counter][3] > 0
                                   && particles[loop_counter][1] + 2 >= players[0][1]){
-                                    particles[loop_counter][2] = Math.random() * (settings[7] * 2) - settings[7];
+                                    particles[loop_counter][2] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
                                     particles[loop_counter][3] *= -1;
                                     particles[loop_counter][4] = 0;
                                 }
@@ -294,21 +294,21 @@ function draw(){
 
             // draw score
             buffer.fillText(
-              'Score: ' + players[loop_counter][11] + '/' + settings[9],
+              'Score: ' + players[loop_counter][11] + '/' + settings['score-goal'],
               players[loop_counter][0] + x + players[loop_counter][2] / 2,
               players[loop_counter][1] + y + (loop_counter === 0 ? 60 : -35)
             );
         }while(loop_counter--);
     }
 
-    // if either player has 20 or more points and 2 more points than the other player
-    if(players[0][11] >= settings[9]
-      || players[1][11] >= settings[9]){
+    // if either player has score-goal points and 2 more points than the other player
+    if(players[0][11] >= settings['score-goal']
+      || players[1][11] >= settings['score-goal']){
         clearInterval(interval);
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          settings[11] + ' = Restart',
+          settings['restart-key'] + ' = Restart',
           x,
           y / 2 + 50
         );
@@ -355,7 +355,7 @@ function draw(){
 }
 
 function play_audio(i){
-    if(settings[0] > 0){
+    if(settings['audio-volume'] > 0){
         document.getElementById(i).currentTime = 0;
         document.getElementById(i).play();
     }
@@ -384,7 +384,7 @@ function reset(){
         document.getElementById('audio-volume').value = 1;
         document.getElementById('gamearea-height').value = 200;
         document.getElementById('gamearea-width').value = 420;
-        document.getElementById('move-keys').value = 'AD';
+        document.getElementById('movement-keys').value = 'AD';
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('number-of-obstacles').value = 10;
         document.getElementById('number-of-particles').value = 100;
@@ -400,7 +400,7 @@ function reset(){
 function save(){
     var loop_counter = 9;
     do{
-        j = [
+        var id = [
           'audio-volume',
           'number-of-obstacles',
           'number-of-spawners',
@@ -410,13 +410,13 @@ function save(){
           'gamearea-width',
           'particle-speed',
           'obstacle-size',
-          'score-goal'
+          'score-goal',
         ][loop_counter];
 
-        if(isNaN(document.getElementById(j).value)
-          || document.getElementById(j).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20][loop_counter]){
-            window.localStorage.removeItem('particleball-' + loop_counter);
-            settings[loop_counter] = [
+        if(isNaN(document.getElementById(id).value)
+          || document.getElementById(id).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20][loop_counter]){
+            window.localStorage.removeItem('Particleball.htm-' + id);
+            settings[id] = [
               1,
               10,
               3,
@@ -426,34 +426,39 @@ function save(){
               420,
               1.5,
               65,
-              20
+              20,
             ][loop_counter];
-            document.getElementById(j).value = settings[loop_counter];
+            document.getElementById(id).value = settings[id];
 
         }else{
-            settings[loop_counter] = parseFloat(document.getElementById(j).value);
+            settings[id] = parseFloat(document.getElementById(id).value);
             window.localStorage.setItem(
-              'particleball-' + loop_counter,
-              settings[loop_counter]
+              'Particleball.htm-' + id,
+              settings[id]
             );
         }
     }while(loop_counter--);
 
-    // save move-keys and restart-key, if they differ from default
+    // save movement-keys and restart-key, if they differ from default
     loop_counter = 1;
     do{
-        if(document.getElementById(['move-keys', 'restart-key'][loop_counter]).value === ['AD', 'H'][loop_counter]){
-            window.localStorage.removeItem('particleball-' + (loop_counter + 11));
-            settings[loop_counter + 11] = [
+        id = [
+          'movement-keys',
+          'restart-key',
+        ][loop_counter];
+
+        if(document.getElementById(id).value === ['AD', 'H'][loop_counter]){
+            window.localStorage.removeItem('Particleball.htm-' + id);
+            settings[id] = [
               'AD',
               'H'
             ][loop_counter];
 
         }else{
-            settings[loop_counter + 11] = document.getElementById(['move-keys', 'restart-key'][loop_counter]).value;
+            settings[id] = document.getElementById(id).value;
             window.localStorage.setItem(
-              'particleball-' + (loop_counter + 11),
-              settings[loop_counter + 11]
+              'Particleball.htm-' + id,
+              settings[id]
             );
         }
     }while(loop_counter--);
@@ -481,8 +486,8 @@ function setmode(newmode, newgame){
         key_right = 0;
 
         // get half of width and height of game area
-        arena_halfwidth = settings[6] + 100;
-        arena_halfheight = settings[5] - 150;
+        arena_halfwidth = settings['gamearea-width'] + 100;
+        arena_halfheight = settings['gamearea-height'] - 150;
 
         // particle_x_limit is how far particles can go on x axis positive or negative
         particle_x_limit = arena_halfwidth;
@@ -525,9 +530,8 @@ function setmode(newmode, newgame){
         // calculate distance between both players
         arena_playerdist = Math.abs(players[1][1]) + players[0][1] + 5;
 
-        // if number of spawners > 0, add spawners
-        if(settings[2] > 0){
-            var loop_counter = settings[2] - 1;
+        if(settings['number-of-spawners'] > 0){
+            var loop_counter = settings['number-of-spawners'] - 1;
             do{
                 var temp0 = Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth;// new spawner center_x
                 var temp1 = Math.floor(Math.random() * ((arena_playerdist - 25) / 4));// new spawner center_y
@@ -546,9 +550,8 @@ function setmode(newmode, newgame){
             }while(loop_counter--);
         }
 
-        // if number of obstacles > 0, add obstacles
-        if(settings[1] > 0){
-            var loop_counter = settings[1] - 1;
+        if(settings['number-of-obstacles'] > 0){
+            var loop_counter = settings['number-of-obstacles'] - 1;
             do{
                 create_obstacle(
                   Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth,// new obstacle center_x
@@ -573,7 +576,7 @@ function setmode(newmode, newgame){
 
         interval = setInterval(
           'draw()',
-          settings[3]// milliseconds per frame
+          settings['ms-per-frame']// milliseconds per frame
         );
 
     // main menu mode
@@ -582,19 +585,19 @@ function setmode(newmode, newgame){
         buffer_static = 0;
         canvas = 0;
 
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=move-keys maxlength=2 value='
-          + settings[10] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-          + settings[11] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings[0] + '>Audio<br><input id=score-goal value='
-          + settings[9] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
-          + settings[5] + '>*2+100 Height<li><input id=gamearea-width value='
-          + settings[6] + '>*2+100 Width</ul><input id=ms-per-frame value='
-          + settings[3] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
-          + settings[1] + '>*2 #<li><input id=obstacle-size value='
-          + settings[8] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
-          + settings[4] + '>#<li><input id=number-of-spawners value='
-          + settings[2] + '>*2 Spawners<li><input id=particle-speed value='
-          + settings[7] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
+          + settings['movement-keys'] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
+          + settings['restart-key'] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+          + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
+          + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
+          + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
+          + settings['gamearea-width'] + '>*2+100 Width</ul><input id=ms-per-frame value='
+          + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
+          + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
+          + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
+          + settings['number-of-particles'] + '>#<li><input id=number-of-spawners value='
+          + settings['number-of-spawners'] + '>*2 Spawners<li><input id=particle-speed value='
+          + settings['particle-speed'] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
@@ -692,44 +695,44 @@ var particle_x_limit = 0;
 var players = [];
 var p0_move = 0;
 var p1_move = 0;
-var settings = [
-  window.localStorage.getItem('particleball-0') === null
+var settings = {
+  'audio-volume': window.localStorage.getItem('Particleball.htm-audio-volume') === null
     ? 1
-    : parseFloat(window.localStorage.getItem('particleball-0')),// audio volume
-  window.localStorage.getItem('particleball-1') === null
-    ? 10
-    : parseInt(window.localStorage.getItem('particleball-1')),// number of obstacles
-  window.localStorage.getItem('particleball-2') === null
-    ? 3
-    : parseInt(window.localStorage.getItem('particleball-2')),// number of spawners
-  window.localStorage.getItem('particleball-3') === null
-    ? 25
-    : parseInt(window.localStorage.getItem('particleball-3')),// milliseconds per frame
-  window.localStorage.getItem('particleball-4') === null
-    ? 100
-    : parseInt(window.localStorage.getItem('particleball-4')),// max particles
-  window.localStorage.getItem('particleball-5') === null
+    : parseFloat(window.localStorage.getItem('Particleball.htm-audio-volume')),
+  'gamearea-height': window.localStorage.getItem('Particleball.htm-gamearea-height') === null
     ? 200
-    : parseInt(window.localStorage.getItem('particleball-5')),// game area height
-  window.localStorage.getItem('particleball-6') === null
+    : parseInt(window.localStorage.getItem('Particleball.htm-gamearea-height')),
+  'gamearea-width': window.localStorage.getItem('Particleball.htm-gamearea-width') === null
     ? 420
-    : parseInt(window.localStorage.getItem('particleball-6')),// game area width
-  window.localStorage.getItem('particleball-7') === null
-    ? 1.5
-    : parseFloat(window.localStorage.getItem('particleball-7')),// max particle speed
-  window.localStorage.getItem('particleball-8') === null
-    ? 65
-    : parseInt(window.localStorage.getItem('particleball-8')),// max obstacle width/height
-  window.localStorage.getItem('particleball-9') === null
-    ? 20
-    : parseInt(window.localStorage.getItem('particleball-9')),// score goal
-  window.localStorage.getItem('particleball-11') === null
+    : parseInt(window.localStorage.getItem('Particleball.htm-gamearea-width')),
+  'movement-keys': window.localStorage.getItem('Particleball.htm-movement-keys') === null
     ? 'AD'
-    : window.localStorage.getItem('particleball-11'),// movement keys
-  window.localStorage.getItem('particleball-12') === null
+    : window.localStorage.getItem('Particleball.htm-movement-keys'),
+  'ms-per-frame': window.localStorage.getItem('Particleball.htm-ms-per-frame') === null
+    ? 25
+    : parseInt(window.localStorage.getItem('Particleball.htm-ms-per-frame')),
+  'number-of-obstacles': window.localStorage.getItem('Particleball.htm-number-of-obstacles') === null
+    ? 10
+    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-obstacles')),
+  'number-of-particles': window.localStorage.getItem('Particleball.htm-number-of-particles') === null
+    ? 100
+    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-particles')),
+  'number-of-spawners': window.localStorage.getItem('Particleball.htm-number-of-spawners') === null
+    ? 3
+    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-spawners')),
+  'obstacle-size': window.localStorage.getItem('Particleball.htm-obstacle-size') === null
+    ? 65
+    : parseInt(window.localStorage.getItem('Particleball.htm-obstacle-size')),
+  'particle-speed': window.localStorage.getItem('Particleball.htm-particle-speed') === null
+    ? 1.5
+    : parseFloat(window.localStorage.getItem('Particleball.htm-particle-speed')),
+  'restart-key': window.localStorage.getItem('Particleball.htm-restart-key') === null
     ? 'H'
-    : window.localStorage.getItem('particleball-12')// restart key
-];
+    : window.localStorage.getItem('Particleball.htm-restart-key'),
+  'score-goal': window.localStorage.getItem('Particleball.htm-score-goal') === null
+    ? 20
+    : parseInt(window.localStorage.getItem('Particleball.htm-score-goal')),
+};
 var spawners = [];
 var x = 0;
 var width = 0;
@@ -748,13 +751,13 @@ window.onkeydown = function(e){
         }else{
             key = String.fromCharCode(key);
 
-            if(key === settings[10][0]){// move left key
+            if(key === settings['movement-keys'][0]){// move left key
                 key_left = 1;
 
-            }else if(key === settings[10][1]){// move right key
+            }else if(key === settings['movement-keys'][1]){// move right key
                 key_right = 1;
 
-            }else if(key === settings[11]){// restart key
+            }else if(key === settings['restart-key']){// restart key
                 setmode(mode, 0);
 
             }
@@ -766,10 +769,10 @@ window.onkeyup = function(e){
     var key = window.event ? event : e;
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(key === settings[10][0]){// move left key
+    if(key === settings['movement-keys'][0]){// move left key
         key_left = 0;
 
-    }else if(key === settings[10][1]){// move right key
+    }else if(key === settings['movement-keys'][1]){// move right key
         key_right = 0;
     }
 };
