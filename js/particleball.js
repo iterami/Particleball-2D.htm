@@ -67,21 +67,21 @@ function draw(){
         }
     }
 
-    if(spawners.length - 1 >= 0){
-        // If current number of particles is less than max, add new particle.
-        if(particles.length < settings['number-of-particles']){
-            // Pick a random spawner.
-            var random_spawner = Math.floor(Math.random() * spawners.length);
+    // If spawners exist and current number of particles
+    //   is less than max, add new particle.
+    if(spawners.length - 1 >= 0
+      && particles.length < settings['number-of-particles']){
+        // Pick a random spawner.
+        var random_spawner = Math.floor(Math.random() * spawners.length);
 
-            // Add particle.
-            particles.push([
-              spawners[random_spawner][0],// Particle X
-              spawners[random_spawner][1],// Particle Y
-              Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle X speed
-              Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle Y speed
-              -1,// Not linked to a player
-            ]);
-        }
+        // Add particle.
+        particles.push([
+          spawners[random_spawner][0],// Particle X
+          spawners[random_spawner][1],// Particle Y
+          Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle X speed
+          Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle Y speed
+          -1,// Not linked to a player
+        ]);
     }
 
     var loop_counter = particles.length - 1;
@@ -139,7 +139,7 @@ function draw(){
 
             }else{
                 // Loop through obstacles to find collisions.
-                j = obstacles.length - 1;
+                var j = obstacles.length - 1;
                 if(j >= 0){
                     do{
                         // X collisions.
@@ -196,18 +196,15 @@ function draw(){
                             particles[loop_counter][4] = 1;
                         }
 
-                    }else{
-                        // Left/right wall collisions.
-                        if((particles[loop_counter][2] < 0 && particles[loop_counter][0] - 2 <= -particle_x_limit)
-                         || (particles[loop_counter][2] > 0 && particles[loop_counter][0] + 2 >= particle_x_limit)){
-                            particles[loop_counter][2] *= -1;
-                        }
+                    // Left/right wall collisions.
+                    }else if((particles[loop_counter][2] < 0 && particles[loop_counter][0] - 2 <= -particle_x_limit)
+                     || (particles[loop_counter][2] > 0 && particles[loop_counter][0] + 2 >= particle_x_limit)){
+                        particles[loop_counter][2] *= -1;
 
-                        // Player paddle collisions.
-                        if((particles[loop_counter][3] < 0 && particles[loop_counter][1] - 2 <= players[1][1] + players[1][3])
-                         || (particles[loop_counter][3] > 0 && particles[loop_counter][1] + 2 >= players[0][1])){
-                            particles[loop_counter][3] *= -1;
-                        }
+                    // Player paddle collisions.
+                    }else if((particles[loop_counter][3] < 0 && particles[loop_counter][1] - 2 <= players[1][1] + players[1][3])
+                     || (particles[loop_counter][3] > 0 && particles[loop_counter][1] + 2 >= players[0][1])){
+                        particles[loop_counter][3] *= -1;
                     }
                 }
 
@@ -411,30 +408,30 @@ function save(){
     do{
         var id = [
           'audio-volume',
-          'number-of-obstacles',
-          'number-of-spawners',
-          'ms-per-frame',
-          'number-of-particles',
           'gamearea-height',
           'gamearea-width',
-          'particle-speed',
+          'ms-per-frame',
+          'number-of-obstacles',
+          'number-of-spawners',
+          'number-of-particles',
           'obstacle-size',
+          'particle-speed',
           'score-goal',
         ][loop_counter];
 
         if(isNaN(document.getElementById(id).value)
-          || document.getElementById(id).value === [1, 10, 3, 25, 100, 200, 420, 1.5, 65, 20,][loop_counter]){
+          || document.getElementById(id).value === [1, 200, 420, 25, 10, 3, 100, 65, 1.5, 20,][loop_counter]){
             window.localStorage.removeItem('Particleball.htm-' + id);
             settings[id] = [
               1,
-              10,
-              3,
-              25,
-              100,
               200,
               420,
-              1.5,
+              25,
+              10,
+              3,
+              100,
               65,
+              1.5,
               20,
             ][loop_counter];
             document.getElementById(id).value = settings[id];
@@ -693,12 +690,10 @@ var buffer_static = 0;
 var canvas = 0;
 var height = 0;
 var interval = 0;
-var j = 0;
 var key_left = false;
 var key_right = false;
 var mode = 0;
 var obstacles = [];
-var pa = 1;
 var particles = [];
 var particle_x_limit = 0;
 var players = [];
