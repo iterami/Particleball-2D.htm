@@ -34,6 +34,113 @@ function draw(){
       0
     );
 
+    var loop_counter = particles.length - 1;
+    if(loop_counter >= 0){
+        do{
+            // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
+            buffer.fillStyle = particles[loop_counter][4] < 0
+              ? '#ddd'
+              : ['#2d8930', '#c83232',][particles[loop_counter][4]];
+            buffer.fillRect(
+              particles[loop_counter][0] + x - 2,
+              particles[loop_counter][1] + y - 2,
+              4,
+              4
+            );
+        }while(loop_counter--);
+    }
+
+    // Setup text display.
+    buffer.textAlign = 'center';
+    buffer.font = '23pt sans-serif';
+
+    loop_counter = players.length - 1;
+    if(loop_counter >= 0){
+        do{
+            // Set color to player color.
+            buffer.fillStyle = 'rgb('
+              + players[loop_counter][4] + ', '
+              + players[loop_counter][5] + ', '
+              + players[loop_counter][6] + ')';
+
+            // Draw paddle.
+            buffer.fillRect(
+              players[loop_counter][0] + x,
+              players[loop_counter][1] + y,
+              players[loop_counter][2],
+              players[loop_counter][3]
+            );
+
+            // Draw goal.
+            buffer.fillRect(
+              players[loop_counter][7] + x,
+              players[loop_counter][8] + y,
+              players[loop_counter][9],
+              players[loop_counter][10]
+            );
+
+            // Draw score.
+            buffer.fillText(
+              'Score: ' + players[loop_counter][11] + '/' + settings['score-goal'],
+              players[loop_counter][0] + x + players[loop_counter][2] / 2,
+              players[loop_counter][1] + y + (loop_counter === 0 ? 60 : -35)
+            );
+        }while(loop_counter--);
+    }
+
+    // If either player has score-goal points and 2 more points than the other player.
+    if(players[0][11] >= settings['score-goal']
+      || players[1][11] >= settings['score-goal']){
+        buffer.fillStyle = '#fff';
+        buffer.fillText(
+          settings['restart-key'] + ' = Restart',
+          x,
+          y / 2 + 50
+        );
+        buffer.fillText(
+          'ESC = Main Menu',
+          x,
+          y / 2 + 90
+        );
+
+        if(players[0][11] > players[1][11]){
+            buffer.fillStyle = '#262';
+            buffer.fillText(
+              ai_or_player
+                ? 'You win! ☺'
+                : 'Green player wins!',
+              x,
+              y / 2
+            );
+
+        }else{
+            buffer.fillStyle = '#c83232';
+            buffer.fillText(
+              ai_or_player
+                ? 'You lose. ☹'
+                : 'Red player wins!',
+              x,
+              y / 2
+            );
+        }
+    }
+    
+    canvas.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+    canvas.drawImage(
+      document.getElementById('buffer'),
+      0,
+      0
+    );
+
+    window.requestAnimationFrame(draw);
+}
+
+function logic(){
     // Move red player paddle, prevent from moving past goal boundaries.
     players[1][0] += p1_move;
     if(players[1][0] > 20){
@@ -212,17 +319,6 @@ function draw(){
                 particles[loop_counter][0] += particles[loop_counter][2];
                 particles[loop_counter][1] += particles[loop_counter][3];
             }
-
-            // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
-            buffer.fillStyle = particles[loop_counter][4] < 0
-              ? '#ddd'
-              : ['#2d8930', '#c83232',][particles[loop_counter][4]];
-            buffer.fillRect(
-              particles[loop_counter][0] + x - 2,
-              particles[loop_counter][1] + y - 2,
-              4,
-              4
-            );
         }while(loop_counter--);
 
         // Calculate movement direction for next frame if player0 ai is tracking a particle.
@@ -262,95 +358,11 @@ function draw(){
         }
     }
 
-    // Setup text display.
-    buffer.textAlign = 'center';
-    buffer.font = '23pt sans-serif';
-
-    loop_counter = players.length - 1;
-    if(loop_counter >= 0){
-        do{
-            // Set color to player color.
-            buffer.fillStyle = 'rgb('
-              + players[loop_counter][4] + ', '
-              + players[loop_counter][5] + ', '
-              + players[loop_counter][6] + ')';
-
-            // Draw paddle.
-            buffer.fillRect(
-              players[loop_counter][0] + x,
-              players[loop_counter][1] + y,
-              players[loop_counter][2],
-              players[loop_counter][3]
-            );
-
-            // Draw goal.
-            buffer.fillRect(
-              players[loop_counter][7] + x,
-              players[loop_counter][8] + y,
-              players[loop_counter][9],
-              players[loop_counter][10]
-            );
-
-            // Draw score.
-            buffer.fillText(
-              'Score: ' + players[loop_counter][11] + '/' + settings['score-goal'],
-              players[loop_counter][0] + x + players[loop_counter][2] / 2,
-              players[loop_counter][1] + y + (loop_counter === 0 ? 60 : -35)
-            );
-        }while(loop_counter--);
-    }
-
     // If either player has score-goal points and 2 more points than the other player.
     if(players[0][11] >= settings['score-goal']
       || players[1][11] >= settings['score-goal']){
         clearInterval(interval);
-
-        buffer.fillStyle = '#fff';
-        buffer.fillText(
-          settings['restart-key'] + ' = Restart',
-          x,
-          y / 2 + 50
-        );
-        buffer.fillText(
-          'ESC = Main Menu',
-          x,
-          y / 2 + 90
-        );
-
-        if(players[0][11] > players[1][11]){
-            buffer.fillStyle = '#262';
-            buffer.fillText(
-              ai_or_player
-                ? 'You win! ☺'
-                : 'Green player wins!',
-              x,
-              y / 2
-            );
-
-        }else{
-            buffer.fillStyle = '#c83232';
-            buffer.fillText(
-              ai_or_player
-                ? 'You lose. ☹'
-                : 'Red player wins!',
-              x,
-              y / 2
-            );
-        }
-
     }
-    
-    canvas.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-    canvas.drawImage(
-      document.getElementById('buffer'),
-      0,
-      0
-    );
 }
 
 function play_audio(i){
@@ -580,8 +592,9 @@ function setmode(newmode, newgame){
         // Draw static obstacles to static buffer to optimize.
         update_static_buffer();
 
+        window.requestAnimationFrame(draw);
         interval = setInterval(
-          'draw()',
+          'logic()',
           settings['ms-per-frame']
         );
 
