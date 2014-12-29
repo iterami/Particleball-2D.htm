@@ -137,7 +137,7 @@ function draw(){
       0
     );
 
-    window.requestAnimationFrame(draw);
+    animationFrame = window.requestAnimationFrame(draw);
 }
 
 function logic(){
@@ -483,6 +483,7 @@ function save(){
 }
 
 function setmode(newmode, newgame){
+    window.cancelAnimationFrame(animationFrame);
     clearInterval(interval);
     obstacles = [];
     particles = [];
@@ -592,7 +593,7 @@ function setmode(newmode, newgame){
         // Draw static obstacles to static buffer to optimize.
         update_static_buffer();
 
-        window.requestAnimationFrame(draw);
+        animationFrame = window.requestAnimationFrame(draw);
         interval = setInterval(
           'logic()',
           settings['ms-per-frame']
@@ -695,6 +696,7 @@ function update_static_buffer(){
     }
 }
 
+var animationFrame = 0;
 var arena_halfheight = 0;
 var arena_halfwidth = 0;
 var arena_playerdist = 0;
