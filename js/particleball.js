@@ -51,8 +51,8 @@ function draw(){
     }
 
     // Setup text display.
-    buffer.textAlign = 'center';
     buffer.font = '23pt sans-serif';
+    buffer.textAlign = 'center';
 
     loop_counter = players.length - 1;
     if(loop_counter >= 0){
