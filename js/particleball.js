@@ -504,26 +504,26 @@ function setmode(newmode, newgame){
         key_left = false;
         key_right = false;
 
-        // Get half of width and height of game area.
-        arena_halfwidth = settings['gamearea-width'] + 100;
-        arena_halfheight = settings['gamearea-height'] - 150;
+        // Get half of height and width of game area.
+        gamearea_height_half = settings['gamearea-height'] - 150;
+        gamearea_width_half = settings['gamearea-width'] + 100;
 
         // Particle_x_limit is how far particles can go on x axis positive or negative.
-        particle_x_limit = arena_halfwidth;
+        particle_x_limit = gamearea_width_half;
 
         // Setup player information.
         players = [
             // players[0] (green, human or AI).
             [
               -35,// paddle top left X
-              200 + arena_halfheight,// Paddle top left Y
+              200 + gamearea_height_half,// Paddle top left Y
               70,// Paddle width
               5,// Paddle height
               34,// Player red RGB value
               102,// player green RGB value
               34,// Player blue RGB value
               -100,// Goal top left X
-              210 + arena_halfheight,// Goal top left Y
+              210 + gamearea_height_half,// Goal top left Y
               200,// Goal width
               20,// Goal height
               0,// Score
@@ -532,14 +532,14 @@ function setmode(newmode, newgame){
             // players[1] (red, AI).
             [
               -35,// Paddle top left C
-              -205 - arena_halfheight,// Paddle top left Y
+              -205 - gamearea_height_half,// Paddle top left Y
               70,// Paddle width
               5,// Paddle height
               200,// Player red rgb value
               50,// Player green rgb value
               50,// Player blue rgb value
               -100,// Goal top left X
-              -230 - arena_halfheight,// Goal top left Y
+              -230 - gamearea_height_half,// Goal top left Y
               200,// Goal width
               20,// Goal height
               0,// Score
@@ -547,13 +547,13 @@ function setmode(newmode, newgame){
         ];
 
         // Calculate distance between both players.
-        arena_playerdist = Math.abs(players[1][1]) + players[0][1] + 5;
+        gamearea_playerdist = Math.abs(players[1][1]) + players[0][1] + 5;
 
         if(settings['number-of-spawners'] > 0){
             var loop_counter = settings['number-of-spawners'] - 1;
             do{
-                var temp0 = Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth;// new spawner center_x
-                var temp1 = Math.floor(Math.random() * ((arena_playerdist - 25) / 4));// new spawner center_y
+                var temp0 = Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half;// new spawner center_x
+                var temp1 = Math.floor(Math.random() * ((gamearea_playerdist - 25) / 4));// new spawner center_y
 
                 // Add new spawner.
                 spawners.push([
@@ -573,8 +573,8 @@ function setmode(newmode, newgame){
             var loop_counter = settings['number-of-obstacles'] - 1;
             do{
                 create_obstacle(
-                  Math.floor(Math.random() * (arena_halfwidth * 2)) - arena_halfwidth,// New obstacle center_x
-                  Math.floor(Math.random() * ((arena_playerdist - 25) / 2))// New obstacle center_y
+                  Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half,// New obstacle center_x
+                  Math.floor(Math.random() * ((gamearea_playerdist - 25) / 2))// New obstacle center_y
                 );
             }while(loop_counter--);
         }
@@ -645,39 +645,39 @@ function update_static_buffer(){
 
     // Draw scenery rectangles at edges of game area.
     buffer_static.fillRect(
-      x - arena_halfwidth - 5,
-      y - 205 - arena_halfheight,
+      x - gamearea_width_half - 5,
+      y - 205 - gamearea_height_half,
       5,
-      arena_playerdist
+      gamearea_playerdist
     );
     buffer_static.fillRect(
-      x + arena_halfwidth,
-      y - 205 - arena_halfheight,
+      x + gamearea_width_half,
+      y - 205 - gamearea_height_half,
       5,
-      arena_playerdist
+      gamearea_playerdist
     );
     buffer_static.fillRect(
-      x - arena_halfwidth,
-      y - 205 - arena_halfheight,
-      arena_halfwidth - 90,
+      x - gamearea_width_half,
+      y - 205 - gamearea_height_half,
+      gamearea_width_half - 90,
       5
     );
     buffer_static.fillRect(
-      x + arena_halfwidth,
-      y - 205 - arena_halfheight,
-      90 - arena_halfwidth,
+      x + gamearea_width_half,
+      y - 205 - gamearea_height_half,
+      90 - gamearea_width_half,
       5
     );
     buffer_static.fillRect(
-      x - arena_halfwidth,
-      y + 200 + arena_halfheight,
-      arena_halfwidth - 90,
+      x - gamearea_width_half,
+      y + 200 + gamearea_height_half,
+      gamearea_width_half - 90,
       5
     );
     buffer_static.fillRect(
-      x + arena_halfwidth,
-      y + 200 + arena_halfheight,
-      90 - arena_halfwidth,
+      x + gamearea_width_half,
+      y + 200 + gamearea_height_half,
+      90 - gamearea_width_half,
       5
     );
 
@@ -697,12 +697,12 @@ function update_static_buffer(){
 }
 
 var animationFrame = 0;
-var arena_halfheight = 0;
-var arena_halfwidth = 0;
-var arena_playerdist = 0;
 var buffer = 0;
 var buffer_static = 0;
 var canvas = 0;
+var gamearea_height_half = 0;
+var gamearea_width_half = 0;
+var gamearea_playerdist = 0;
 var height = 0;
 var interval = 0;
 var key_left = false;
