@@ -374,26 +374,6 @@ function play_audio(i){
     document.getElementById(i).play();
 }
 
-function resize(){
-    if(mode <= 0){
-        return;
-    }
-
-    height = window.innerHeight;
-    document.getElementById('buffer').height = height;
-    document.getElementById('buffer-static').height = height;
-    document.getElementById('canvas').height = height;
-    y = height / 2;
-
-    width = window.innerWidth;
-    document.getElementById('buffer').width = width;
-    document.getElementById('buffer-static').width = width;
-    document.getElementById('canvas').width = width;
-    x = width / 2;
-
-    update_static_buffer();
-}
-
 function reset(){
     if(!confirm('Reset settings?')){
         return;
@@ -413,6 +393,26 @@ function reset(){
     document.getElementById('score-goal').value = 20;
 
     save();
+}
+
+function resize(){
+    if(mode <= 0){
+        return;
+    }
+
+    height = window.innerHeight;
+    document.getElementById('buffer').height = height;
+    document.getElementById('buffer-static').height = height;
+    document.getElementById('canvas').height = height;
+    y = height / 2;
+
+    width = window.innerWidth;
+    document.getElementById('buffer').width = width;
+    document.getElementById('buffer-static').width = width;
+    document.getElementById('canvas').width = width;
+    x = width / 2;
+
+    update_static_buffer();
 }
 
 function save(){
