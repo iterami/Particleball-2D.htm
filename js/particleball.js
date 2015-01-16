@@ -769,19 +769,19 @@ window.onkeydown = function(e){
     // ESC: return to main menu.
     if(key === 27){
         setmode(0, 1);
+        return;
+    }
 
-    }else{
-        key = String.fromCharCode(key);
+    key = String.fromCharCode(key);
 
-        if(key === settings['movement-keys'][0]){
-            key_left = true;
+    if(key === settings['movement-keys'][0]){
+        key_left = true;
 
-        }else if(key === settings['movement-keys'][1]){
-             key_right = true;
+    }else if(key === settings['movement-keys'][1]){
+         key_right = true;
 
-        }else if(key === settings['restart-key']){
-            setmode(mode, 0);
-        } 
+    }else if(key === settings['restart-key']){
+        setmode(mode, 0);
     }
 };
 
