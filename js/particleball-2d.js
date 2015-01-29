@@ -434,7 +434,7 @@ function save(){
 
         if(isNaN(document.getElementById(id).value)
           || document.getElementById(id).value === [1, 200, 420, 25, 10, 3, 100, 65, 1.5, 20,][loop_counter]){
-            window.localStorage.removeItem('Particleball.htm-' + id);
+            window.localStorage.removeItem('Particleball-2D.htm-' + id);
             settings[id] = [
               1,
               200,
@@ -452,7 +452,7 @@ function save(){
         }else{
             settings[id] = parseFloat(document.getElementById(id).value);
             window.localStorage.setItem(
-              'Particleball.htm-' + id,
+              'Particleball-2D.htm-' + id,
               settings[id]
             );
         }
@@ -467,7 +467,7 @@ function save(){
         ][loop_counter];
 
         if(document.getElementById(id).value === ['AD', 'H',][loop_counter]){
-            window.localStorage.removeItem('Particleball.htm-' + id);
+            window.localStorage.removeItem('Particleball-2D.htm-' + id);
             settings[id] = [
               'AD',
               'H',
@@ -476,7 +476,7 @@ function save(){
         }else{
             settings[id] = document.getElementById(id).value;
             window.localStorage.setItem(
-              'Particleball.htm-' + id,
+              'Particleball-2D.htm-' + id,
               settings[id]
             );
         }
@@ -606,7 +606,7 @@ function setmode(newmode, newgame){
         buffer_static = 0;
         canvas = 0;
 
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball-2D.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
           + settings['movement-keys'] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
           + settings['restart-key'] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
@@ -716,42 +716,42 @@ var players = [];
 var p0_move = 0;
 var p1_move = 0;
 var settings = {
-  'audio-volume': window.localStorage.getItem('Particleball.htm-audio-volume') === null
+  'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') === null
     ? 1
-    : parseFloat(window.localStorage.getItem('Particleball.htm-audio-volume')),
-  'gamearea-height': window.localStorage.getItem('Particleball.htm-gamearea-height') === null
+    : parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume')),
+  'gamearea-height': window.localStorage.getItem('Particleball-2D.htm-gamearea-height') === null
     ? 200
-    : parseInt(window.localStorage.getItem('Particleball.htm-gamearea-height')),
-  'gamearea-width': window.localStorage.getItem('Particleball.htm-gamearea-width') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height')),
+  'gamearea-width': window.localStorage.getItem('Particleball-2D.htm-gamearea-width') === null
     ? 420
-    : parseInt(window.localStorage.getItem('Particleball.htm-gamearea-width')),
-  'movement-keys': window.localStorage.getItem('Particleball.htm-movement-keys') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width')),
+  'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') === null
     ? 'AD'
-    : window.localStorage.getItem('Particleball.htm-movement-keys'),
-  'ms-per-frame': window.localStorage.getItem('Particleball.htm-ms-per-frame') === null
+    : window.localStorage.getItem('Particleball-2D.htm-movement-keys'),
+  'ms-per-frame': window.localStorage.getItem('Particleball-2D.htm-ms-per-frame') === null
     ? 25
-    : parseInt(window.localStorage.getItem('Particleball.htm-ms-per-frame')),
-  'number-of-obstacles': window.localStorage.getItem('Particleball.htm-number-of-obstacles') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame')),
+  'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') === null
     ? 10
-    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-obstacles')),
-  'number-of-particles': window.localStorage.getItem('Particleball.htm-number-of-particles') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles')),
+  'number-of-particles': window.localStorage.getItem('Particleball-2D.htm-number-of-particles') === null
     ? 100
-    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-particles')),
-  'number-of-spawners': window.localStorage.getItem('Particleball.htm-number-of-spawners') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')),
+  'number-of-spawners': window.localStorage.getItem('Particleball-2D.htm-number-of-spawners') === null
     ? 3
-    : parseInt(window.localStorage.getItem('Particleball.htm-number-of-spawners')),
-  'obstacle-size': window.localStorage.getItem('Particleball.htm-obstacle-size') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')),
+  'obstacle-size': window.localStorage.getItem('Particleball-2D.htm-obstacle-size') === null
     ? 65
-    : parseInt(window.localStorage.getItem('Particleball.htm-obstacle-size')),
-  'particle-speed': window.localStorage.getItem('Particleball.htm-particle-speed') === null
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')),
+  'particle-speed': window.localStorage.getItem('Particleball-2D.htm-particle-speed') === null
     ? 1.5
-    : parseFloat(window.localStorage.getItem('Particleball.htm-particle-speed')),
-  'restart-key': window.localStorage.getItem('Particleball.htm-restart-key') === null
+    : parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')),
+  'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') === null
     ? 'H'
-    : window.localStorage.getItem('Particleball.htm-restart-key'),
-  'score-goal': window.localStorage.getItem('Particleball.htm-score-goal') === null
+    : window.localStorage.getItem('Particleball-2D.htm-restart-key'),
+  'score-goal': window.localStorage.getItem('Particleball-2D.htm-score-goal') === null
     ? 20
-    : parseInt(window.localStorage.getItem('Particleball.htm-score-goal')),
+    : parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')),
 };
 var spawners = [];
 var x = 0;
