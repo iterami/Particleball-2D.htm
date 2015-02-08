@@ -174,10 +174,9 @@ function logic(){
         }
     }
 
-    // If spawners exist and current number of particles
+    // If the current number of particles
     //   is less than max, add new particle.
-    if(spawners.length - 1 >= 0
-      && particles.length < settings['number-of-particles']){
+    if(particles.length < settings['number-of-particles']){
         // Pick a random spawner.
         var random_spawner = Math.floor(Math.random() * spawners.length);
 
@@ -552,25 +551,29 @@ function setmode(newmode, newgame){
         // Calculate distance between both players.
         gamearea_playerdist = Math.abs(players[1][1]) + players[0][1] + 5;
 
-        if(settings['number-of-spawners'] > 0){
-            var loop_counter = settings['number-of-spawners'] - 1;
-            do{
-                var temp0 = Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half;// new spawner center_x
-                var temp1 = Math.floor(Math.random() * ((gamearea_playerdist - 25) / 4));// new spawner center_y
+        // Require spawners.
+        settings['number-of-spawners'] = Math.max(
+          settings['number-of-spawners'],
+          1
+        );
 
-                // Add new spawner.
-                spawners.push([
-                  temp0,
-                  temp1,
-                ]);
+        var loop_counter = settings['number-of-spawners'] - 1;
+        do{
+            var temp0 = Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half;// new spawner center_x
+            var temp1 = Math.floor(Math.random() * ((gamearea_playerdist - 25) / 4));// new spawner center_y
 
-                // Add mirrored version of new spawner.
-                spawners.push([
-                  -temp0,
-                  -temp1,
-                ]);
-            }while(loop_counter--);
-        }
+            // Add new spawner.
+            spawners.push([
+              temp0,
+              temp1,
+            ]);
+
+            // Add mirrored version of new spawner.
+            spawners.push([
+              -temp0,
+              -temp1,
+            ]);
+        }while(loop_counter--);
 
         if(settings['number-of-obstacles'] > 0){
             var loop_counter = settings['number-of-obstacles'] - 1;
@@ -686,17 +689,15 @@ function update_static_buffer(){
 
     // Draw spawners.
     loop_counter = spawners.length - 1;
-    if(loop_counter >= 0){
-        buffer_static.fillStyle = '#476291';
-        do{
-            buffer_static.fillRect(
-              spawners[loop_counter][0] + x - 4,
-              spawners[loop_counter][1] + y - 4,
-              8,
-              8
-            );
-        }while(loop_counter--);
-    }
+    buffer_static.fillStyle = '#476291';
+    do{
+        buffer_static.fillRect(
+          spawners[loop_counter][0] + x - 4,
+          spawners[loop_counter][1] + y - 4,
+          8,
+          8
+        );
+    }while(loop_counter--);
 }
 
 var animationFrame = 0;
