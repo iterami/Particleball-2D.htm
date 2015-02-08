@@ -362,7 +362,7 @@ function logic(){
     // If either player has score-goal points and 2 more points than the other player.
     if(players[0][11] >= settings['score-goal']
       || players[1][11] >= settings['score-goal']){
-        clearInterval(interval);
+        window.clearInterval(interval);
     }
 }
 
@@ -485,10 +485,12 @@ function save(){
 
 function setmode(newmode, newgame){
     window.cancelAnimationFrame(animationFrame);
-    clearInterval(interval);
+    window.clearInterval(interval);
+
     obstacles = [];
     particles = [];
     spawners = [];
+
     mode = newmode;
 
     // New game mode.
@@ -595,7 +597,7 @@ function setmode(newmode, newgame){
         update_static_buffer();
 
         animationFrame = window.requestAnimationFrame(draw);
-        interval = setInterval(
+        interval = window.setInterval(
           'logic()',
           settings['ms-per-frame']
         );
