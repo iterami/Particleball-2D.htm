@@ -42,8 +42,8 @@ function draw(){
               ? '#ddd'
               : ['#2d8930', '#c83232',][particles[loop_counter][4]];
             buffer.fillRect(
-              particles[loop_counter][0] + x - 2,
-              particles[loop_counter][1] + y - 2,
+              Math.round(particles[loop_counter][0]) + x - 2,
+              Math.round(particles[loop_counter][1]) + y - 2,
               4,
               4
             );
