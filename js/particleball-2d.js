@@ -38,12 +38,12 @@ function draw(){
     if(loop_counter >= 0){
         do{
             // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
-            buffer.fillStyle = particles[loop_counter][4] < 0
+            buffer.fillStyle = particles[loop_counter]['owner'] < 0
               ? '#ddd'
-              : ['#2d8930', '#c83232',][particles[loop_counter][4]];
+              : players[particles[loop_counter]['owner']]['color'];
             buffer.fillRect(
-              Math.round(particles[loop_counter][0]) + x - 2,
-              Math.round(particles[loop_counter][1]) + y - 2,
+              Math.round(particles[loop_counter]['x']) + x - 2,
+              Math.round(particles[loop_counter]['y']) + y - 2,
               4,
               4
             );
@@ -137,7 +137,7 @@ function draw(){
 
 function logic(){
     // Move player 1 paddle, prevent from moving past goal boundaries.
-    players[1]['paddle-x'] += p1_move;
+    players[1]['paddle-x'] += players[1]['paddle-x-move'];
     if(players[1]['paddle-x'] > 20){
         players[1]['paddle-x'] = 20;
     }else if(players[1]['paddle-x'] < -90){
@@ -161,7 +161,7 @@ function logic(){
 
     // ...else move via AI.
     }else{
-        players[0]['paddle-x'] += p0_move;
+        players[0]['paddle-x'] += players[0]['paddle-x-move'];
         if(players[0]['paddle-x'] > 20){
             players[0]['paddle-x'] = 20;
         }else if(players[0]['paddle-x'] < -90){
@@ -176,46 +176,46 @@ function logic(){
         var random_spawner = Math.floor(Math.random() * spawners.length);
 
         // Add particle.
-        particles.push([
-          spawners[random_spawner][0],// Particle X
-          spawners[random_spawner][1],// Particle Y
-          Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle X speed
-          Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],// Particle Y speed
-          -1,// Not linked to a player
-        ]);
+        particles.push({
+          'owner': -1,
+          'x': spawners[random_spawner][0],
+          'x-speed': Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],
+          'y': spawners[random_spawner][1],
+          'y-speed': Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'],
+        });
     }
 
     var loop_counter = particles.length - 1;
     if(loop_counter >= 0){
         // Reset movements for recalculation.
-        p0_move = -1;
-        p1_move = -1;
+        players[0]['paddle-x-move'] = -1;
+        players[1]['paddle-x-move'] = -1;
 
         do{
             // If particle is with 90 pixels of center of goal.
-            if(particles[loop_counter][0] < 90
-              && particles[loop_counter][0] > -90){
+            if(particles[loop_counter]['x'] < 90
+              && particles[loop_counter]['x'] > -90){
                 // If particle is moving downwards...
-                if(particles[loop_counter][3] > 0){
+                if(particles[loop_counter]['y-speed'] > 0){
                     // Link player 0 AI to track this particle if it is closest.
-                    if((p0_move === -1 || particles[loop_counter][1] > particles[p0_move][1])
-                      && particles[loop_counter][1] < players[0]['paddle-y']){
-                        p0_move = loop_counter;
+                    if((players[0]['paddle-x-move'] === -1 || particles[loop_counter]['y'] > particles[players[0]['paddle-x-move']]['y'])
+                      && particles[loop_counter]['y'] < players[0]['paddle-y']){
+                        players[0]['paddle-x-move'] = loop_counter;
                     }
 
                 // ...else link player 1 AI to track this particle if it is closest.
-                }else if((p1_move === -1 || particles[loop_counter][1] < particles[p1_move][1])
-                  && particles[loop_counter][1] > players[1]['paddle-y']){
-                    p1_move = loop_counter;
+                }else if((players[1]['paddle-x-move'] === -1 || particles[loop_counter]['y'] < particles[players[1]['paddle-x-move']]['y'])
+                  && particles[loop_counter]['y'] > players[1]['paddle-y']){
+                    players[1]['paddle-x-move'] = loop_counter;
                 }
             }
 
             // If particle has collided with a goal.
-            if(particles[loop_counter][1] + 2 > players[0]['goal-y']
-              || particles[loop_counter][1] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
+            if(particles[loop_counter]['y'] + 2 > players[0]['goal-y']
+              || particles[loop_counter]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
                 // Determine which player scored a goal.
                 var temp_player = 0;
-                if(particles[loop_counter][1] + 2 > players[0]['goal-y']){
+                if(particles[loop_counter]['y'] + 2 > players[0]['goal-y']){
                     temp_player = 1;
                 }
 
@@ -225,7 +225,7 @@ function logic(){
                 }
 
                 // Increase the scoring players score by 1.
-                if(particles[loop_counter][4] === temp_player){
+                if(particles[loop_counter]['owner'] === temp_player){
                     players[temp_player]['score'] += 1;
                 }
 
@@ -235,8 +235,8 @@ function logic(){
                   1
                 );
 
-                p0_move = 0;
-                p1_move = 0;
+                players[0]['paddle-x-move'] = 0;
+                players[1]['paddle-x-move'] = 0;
 
                 continue;
             }
@@ -246,108 +246,108 @@ function logic(){
             if(j >= 0){
                 do{
                     // X collisions.
-                    if(particles[loop_counter][0] >= obstacles[j][0]
-                      && particles[loop_counter][0] <= obstacles[j][0] + obstacles[j][2]){
-                        if(particles[loop_counter][3] > 0){
-                            if(particles[loop_counter][1] > obstacles[j][1] - 2
-                              && particles[loop_counter][1] < obstacles[j][1]){
-                                particles[loop_counter][3] *= -1;
+                    if(particles[loop_counter]['x'] >= obstacles[j][0]
+                      && particles[loop_counter]['x'] <= obstacles[j][0] + obstacles[j][2]){
+                        if(particles[loop_counter]['y-speed'] > 0){
+                            if(particles[loop_counter]['y'] > obstacles[j][1] - 2
+                              && particles[loop_counter]['y'] < obstacles[j][1]){
+                                particles[loop_counter]['y-speed'] *= -1;
                             }
-                        }else if(particles[loop_counter][1] > obstacles[j][1] + obstacles[j][3]
-                          && particles[loop_counter][1] < obstacles[j][1] + obstacles[j][3] + 2){
-                            particles[loop_counter][3] *= -1;
+                        }else if(particles[loop_counter]['y'] > obstacles[j][1] + obstacles[j][3]
+                          && particles[loop_counter]['y'] < obstacles[j][1] + obstacles[j][3] + 2){
+                            particles[loop_counter]['y-speed'] *= -1;
                         }
 
                     // Y collisions.
-                    }else if(particles[loop_counter][1] >= obstacles[j][1]
-                      && particles[loop_counter][1] <= obstacles[j][1] + obstacles[j][3]){
-                        if(particles[loop_counter][2] > 0){
-                            if(particles[loop_counter][0] > obstacles[j][0] - 2
-                              && particles[loop_counter][0] < obstacles[j][0]){
-                                particles[loop_counter][2] *= -1;
+                    }else if(particles[loop_counter]['y'] >= obstacles[j][1]
+                      && particles[loop_counter]['y'] <= obstacles[j][1] + obstacles[j][3]){
+                        if(particles[loop_counter]['x-speed'] > 0){
+                            if(particles[loop_counter]['x'] > obstacles[j][0] - 2
+                              && particles[loop_counter]['x'] < obstacles[j][0]){
+                                particles[loop_counter]['x-speed'] *= -1;
                             }
 
-                        }else if(particles[loop_counter][0] > obstacles[j][0] + obstacles[j][2]
-                          && particles[loop_counter][0] < obstacles[j][0] + obstacles[j][2] + 2){
-                            particles[loop_counter][2] *= -1;
+                        }else if(particles[loop_counter]['x'] > obstacles[j][0] + obstacles[j][2]
+                          && particles[loop_counter]['x'] < obstacles[j][0] + obstacles[j][2] + 2){
+                            particles[loop_counter]['x-speed'] *= -1;
                         }
                     }
                 }while(j--);
             }
 
             // Check for collisions with player paddles or edges of game area.
-            if(particles[loop_counter][1] > players[1]['paddle-y'] + players[1]['paddle-height']
-              && particles[loop_counter][1] < players[0]['paddle-y']){
-                if(particles[loop_counter][0] > -88
-                  && particles[loop_counter][0] < 88){
-                    if(particles[loop_counter][1] > 0){
-                        if(particles[loop_counter][0] > players[0]['paddle-x'] - 2
-                          && particles[loop_counter][0] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2){
-                            if(particles[loop_counter][3] > 0
-                              && particles[loop_counter][1] + 2 >= players[0]['paddle-x']){
-                                particles[loop_counter][2] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
-                                particles[loop_counter][3] *= -1;
-                                particles[loop_counter][4] = 0;
+            if(particles[loop_counter]['y'] > players[1]['paddle-y'] + players[1]['paddle-height']
+              && particles[loop_counter]['y'] < players[0]['paddle-y']){
+                if(particles[loop_counter]['x'] > -88
+                  && particles[loop_counter]['x'] < 88){
+                    if(particles[loop_counter]['y'] > 0){
+                        if(particles[loop_counter]['x'] > players[0]['paddle-x'] - 2
+                          && particles[loop_counter]['x'] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2){
+                            if(particles[loop_counter]['y-speed'] > 0
+                              && particles[loop_counter]['y'] + 2 >= players[0]['paddle-y']){
+                                particles[loop_counter]['x-speed'] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
+                                particles[loop_counter]['y-speed'] *= -1;
+                                particles[loop_counter]['owner'] = 0;
                             }
                         }
 
-                    }else if(particles[loop_counter][0] > players[1]['paddle-x']- 2
-                      && particles[loop_counter][0] < players[1]['paddle-x'] + players[1]['paddle-width'] + 2
-                      && particles[loop_counter][3] < 0
-                      && particles[loop_counter][1] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
-                        particles[loop_counter][3] *= -1;
-                        particles[loop_counter][4] = 1;
+                    }else if(particles[loop_counter]['x'] > players[1]['paddle-x']- 2
+                      && particles[loop_counter]['x'] < players[1]['paddle-x'] + players[1]['paddle-width'] + 2
+                      && particles[loop_counter]['y-speed'] < 0
+                      && particles[loop_counter]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
+                        particles[loop_counter]['y-speed'] *= -1;
+                        particles[loop_counter]['owner'] = 1;
                     }
 
                 // Left/right wall collisions.
-                }else if((particles[loop_counter][2] < 0 && particles[loop_counter][0] - 2 <= -particle_x_limit)
-                  || (particles[loop_counter][2] > 0 && particles[loop_counter][0] + 2 >= particle_x_limit)){
-                    particles[loop_counter][2] *= -1;
+                }else if((particles[loop_counter]['x-speed'] < 0 && particles[loop_counter]['x'] - 2 <= -particle_x_limit)
+                  || (particles[loop_counter]['x-speed'] > 0 && particles[loop_counter]['x'] + 2 >= particle_x_limit)){
+                    particles[loop_counter]['x-speed'] *= -1;
 
                 // Player paddle collisions.
-                }else if((particles[loop_counter][3] < 0 && particles[loop_counter][1] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
-                  || (particles[loop_counter][3] > 0 && particles[loop_counter][1] + 2 >= players[0]['paddle-y'])){
-                    particles[loop_counter][3] *= -1;
+                }else if((particles[loop_counter]['y-speed'] < 0 && particles[loop_counter]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
+                  || (particles[loop_counter]['y-speed'] > 0 && particles[loop_counter]['y'] + 2 >= players[0]['paddle-y'])){
+                    particles[loop_counter]['y-speed'] *= -1;
                 }
             }
 
             // Move particles.
-            particles[loop_counter][0] += particles[loop_counter][2];
-            particles[loop_counter][1] += particles[loop_counter][3];
+            particles[loop_counter]['x'] += particles[loop_counter]['x-speed'];
+            particles[loop_counter]['y'] += particles[loop_counter]['y-speed'];
         }while(loop_counter--);
 
         // Calculate movement direction for next frame if player0 ai is tracking a particle.
         var paddle_position = players[0]['paddle-x'] + players[0]['paddle-width'] / 2;
-        if(p0_move === -1){
+        if(players[0]['paddle-x-move'] === -1){
             if(paddle_position === 0){
-                p0_move = 0;
+                players[0]['paddle-x-move'] = 0;
 
             }else{
-                p0_move = paddle_position < 0
+                players[0]['paddle-x-move'] = paddle_position < 0
                   ? 2
                   : -2;
             }
 
         }else{
-            p0_move = particles[p0_move][0] > paddle_position
+            players[0]['paddle-x-move'] = particles[players[0]['paddle-x-move']]['x'] > paddle_position
               ? 2
               : -2;
         }
 
         // Calculate movement direction for next frame if player1 ai is tracking a particle.
         paddle_position = players[1]['paddle-x'] + players[1]['paddle-width'] / 2;
-        if(p1_move === -1){
+        if(players[1]['paddle-x-move'] === -1){
             if(paddle_position === 0){
-                p1_move = 0;
+                players[1]['paddle-x-move'] = 0;
 
             }else{
-                p1_move = paddle_position < 0
+                players[1]['paddle-x-move'] = paddle_position < 0
                   ? 2
                   : -2;
             }
  
         }else{
-            p1_move = particles[p1_move][0] > paddle_position
+            players[1]['paddle-x-move'] = particles[players[1]['paddle-x-move']]['x'] > paddle_position
               ? 2
               : -2;
         }
@@ -519,6 +519,7 @@ function setmode(newmode, newgame){
               'paddle-height': 5,
               'paddle-width': 70,
               'paddle-x': -35,
+              'paddle-x-move': 0,
               'paddle-y': 200 + gamearea_height_half,
               'score': 0,
             },
@@ -531,6 +532,7 @@ function setmode(newmode, newgame){
               'paddle-height': 5,
               'paddle-width': 70,
               'paddle-x': -35,
+              'paddle-x-move': 0,
               'paddle-y': -205 - gamearea_height_half,
               'score': 0,
             }
@@ -704,8 +706,6 @@ var obstacles = [];
 var particles = [];
 var particle_x_limit = 0;
 var players = [];
-var p0_move = 0;
-var p1_move = 0;
 var settings = {
   'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') === null
     ? 1
