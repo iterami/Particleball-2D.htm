@@ -494,7 +494,7 @@ function setmode(newmode, newgame){
 
         // If it's a newgame from the main menu, save settings.
         if(newgame){
-            save()
+            save();
         }
 
         // Reset keypresses.
