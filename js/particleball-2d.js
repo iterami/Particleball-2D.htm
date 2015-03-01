@@ -34,54 +34,50 @@ function draw(){
       0
     );
 
-    var loop_counter = particles.length - 1;
-    if(loop_counter >= 0){
-        do{
-            // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
-            buffer.fillStyle = particles[loop_counter]['owner'] < 0
-              ? '#ddd'
-              : players[particles[loop_counter]['owner']]['color'];
-            buffer.fillRect(
-              Math.round(particles[loop_counter]['x']) + x - 2,
-              Math.round(particles[loop_counter]['y']) + y - 2,
-              4,
-              4
-            );
-        }while(loop_counter--);
+    for(var particle in particles){
+        // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
+        buffer.fillStyle = particles[particle]['owner'] < 0
+          ? '#ddd'
+          : players[particles[particle]['owner']]['color'];
+        buffer.fillRect(
+          Math.round(particles[particle]['x']) + x - 2,
+          Math.round(particles[particle]['y']) + y - 2,
+          4,
+          4
+        );
     }
 
     // Setup text display.
     buffer.font = '23pt sans-serif';
     buffer.textAlign = 'center';
 
-    loop_counter = players.length - 1;
-    do{
+    for(var player in players){
         // Set color to player color.
-        buffer.fillStyle = players[loop_counter]['color'];
+        buffer.fillStyle = players[player]['color'];
 
         // Draw paddle.
         buffer.fillRect(
-          players[loop_counter]['paddle-x'] + x,
-          players[loop_counter]['paddle-y'] + y,
-          players[loop_counter]['paddle-width'],
-          players[loop_counter]['paddle-height']
+          players[player]['paddle-x'] + x,
+          players[player]['paddle-y'] + y,
+          players[player]['paddle-width'],
+          players[player]['paddle-height']
         );
 
         // Draw goal.
         buffer.fillRect(
-          players[loop_counter]['goal-x'] + x,
-          players[loop_counter]['goal-y'] + y,
-          players[loop_counter]['goal-width'],
-          players[loop_counter]['goal-height']
+          players[player]['goal-x'] + x,
+          players[player]['goal-y'] + y,
+          players[player]['goal-width'],
+          players[player]['goal-height']
         );
 
         // Draw score.
         buffer.fillText(
-          'Score: ' + players[loop_counter]['score'] + '/' + settings['score-goal'],
-          players[loop_counter]['paddle-x'] + x + players[loop_counter]['paddle-width'] / 2,
-          players[loop_counter]['paddle-y'] + y + (loop_counter === 0 ? 60 : -35)
+          'Score: ' + players[player]['score'] + '/' + settings['score-goal'],
+          players[player]['paddle-x'] + x + players[player]['paddle-width'] / 2,
+          players[player]['paddle-y'] + y + (player === 0 ? 60 : -35)
         );
-    }while(loop_counter--);
+    }
 
     // If either player has score-goal points and 2 more points than the other player.
     if(players[0]['score'] >= settings['score-goal']
@@ -627,16 +623,13 @@ function update_static_buffer(){
 
     // Draw obstacles.
     buffer_static.fillStyle = '#3c3c3c';
-    var loop_counter = obstacles.length - 1;
-    if(loop_counter >= 0){
-        do{
-            buffer_static.fillRect(
-              obstacles[loop_counter][0] + x,
-              obstacles[loop_counter][1] + y,
-              obstacles[loop_counter][2],
-              obstacles[loop_counter][3]
-            );
-        }while(loop_counter--);
+    for(var obstacle in obstacles){
+        buffer_static.fillRect(
+          obstacles[obstacle][0] + x,
+          obstacles[obstacle][1] + y,
+          obstacles[obstacle][2],
+          obstacles[obstacle][3]
+        );
     }
 
     // Draw scenery rectangles at edges of game area.
@@ -678,16 +671,15 @@ function update_static_buffer(){
     );
 
     // Draw spawners.
-    loop_counter = spawners.length - 1;
     buffer_static.fillStyle = '#476291';
-    do{
+    for(var spawner in spawners){
         buffer_static.fillRect(
-          spawners[loop_counter][0] + x - 4,
-          spawners[loop_counter][1] + y - 4,
+          spawners[spawner][0] + x - 4,
+          spawners[spawner][1] + y - 4,
           8,
           8
         );
-    }while(loop_counter--);
+    }
 }
 
 var animationFrame = 0;
