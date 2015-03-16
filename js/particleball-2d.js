@@ -75,11 +75,11 @@ function draw(){
         buffer.fillText(
           'Score: ' + players[player]['score'] + '/' + settings['score-goal'],
           players[player]['paddle-x'] + x + players[player]['paddle-width'] / 2,
-          players[player]['paddle-y'] + y + (player === 0 ? 60 : -35)
+          players[player]['paddle-y'] + y + (player == 0 ? 60 : -35)
         );
     }
 
-    // If either player has score-goal points and 2 more points than the other player.
+    // Players win if they have score-goal points.
     if(players[0]['score'] >= settings['score-goal']
       || players[1]['score'] >= settings['score-goal']){
         buffer.fillStyle = '#fff';
@@ -181,172 +181,163 @@ function logic(){
         });
     }
 
-    var loop_counter = particles.length - 1;
-    if(loop_counter >= 0){
-        // Reset movements for recalculation.
-        players[0]['paddle-x-move'] = -1;
-        players[1]['paddle-x-move'] = -1;
+    // Reset movements for recalculation.
+    players[0]['paddle-x-move'] = -1;
+    players[1]['paddle-x-move'] = -1;
 
-        do{
-            // If particle is with 90 pixels of center of goal.
-            if(particles[loop_counter]['x'] < 90
-              && particles[loop_counter]['x'] > -90){
-                // If particle is moving downwards...
-                if(particles[loop_counter]['y-speed'] > 0){
-                    // Link player 0 AI to track this particle if it is closest.
-                    if((players[0]['paddle-x-move'] === -1 || particles[loop_counter]['y'] > particles[players[0]['paddle-x-move']]['y'])
-                      && particles[loop_counter]['y'] < players[0]['paddle-y']){
-                        players[0]['paddle-x-move'] = loop_counter;
+    for(var particle in particles){
+        // If particle is with 90 pixels of center of goal.
+        if(Math.abs(particles[particle]['x']) < 90){
+            // If particle is moving downwards...
+            if(particles[particle]['y-speed'] > 0){
+                // Link player 0 AI to track this particle if it is closest.
+                if((players[0]['paddle-x-move'] === -1 || particles[particle]['y'] > particles[players[0]['paddle-x-move']]['y'])
+                  && particles[particle]['y'] < players[0]['paddle-y']){
+                    players[0]['paddle-x-move'] = particle;
+                }
+
+            // ...else link player 1 AI to track this particle if it is closest.
+            }else if((players[1]['paddle-x-move'] === -1 || particles[particle]['y'] < particles[players[1]['paddle-x-move']]['y'])
+              && particles[particle]['y'] > players[1]['paddle-y']){
+                players[1]['paddle-x-move'] = particle;
+            }
+        }
+
+        // If particle has collided with a goal.
+        if(particles[particle]['y'] + 2 > players[0]['goal-y']
+          || particles[particle]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
+            // Determine which player scored a goal.
+            var temp_player = 0;
+            if(particles[particle]['y'] + 2 > players[0]['goal-y']){
+                temp_player = 1;
+            }
+
+            // Decrease the other players score by 1 if it is greater than 0.
+            if(players[1 - temp_player]['score'] > 0){
+                players[1 - temp_player]['score'] -= 1;
+            }
+
+            // Increase the scoring players score by 1.
+            if(particles[particle]['owner'] === temp_player){
+                players[temp_player]['score'] += 1;
+            }
+
+            // Delete the particle.
+            particles.splice(
+              particle,
+              1
+            );
+
+            players[0]['paddle-x-move'] = 0;
+            players[1]['paddle-x-move'] = 0;
+
+            continue;
+        }
+
+        // Loop through obstacles to find collisions.
+        for(var obstacle in obstacles){
+            // X collisions.
+            if(particles[particle]['x'] >= obstacles[obstacle][0]
+              && particles[particle]['x'] <= obstacles[obstacle][0] + obstacles[obstacle][2]){
+                if(particles[particle]['y-speed'] > 0){
+                    if(particles[particle]['y'] > obstacles[obstacle][1] - 2
+                      && particles[particle]['y'] < obstacles[obstacle][1]){
+                        particles[particle]['y-speed'] *= -1;
                     }
 
-                // ...else link player 1 AI to track this particle if it is closest.
-                }else if((players[1]['paddle-x-move'] === -1 || particles[loop_counter]['y'] < particles[players[1]['paddle-x-move']]['y'])
-                  && particles[loop_counter]['y'] > players[1]['paddle-y']){
-                    players[1]['paddle-x-move'] = loop_counter;
-                }
-            }
-
-            // If particle has collided with a goal.
-            if(particles[loop_counter]['y'] + 2 > players[0]['goal-y']
-              || particles[loop_counter]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
-                // Determine which player scored a goal.
-                var temp_player = 0;
-                if(particles[loop_counter]['y'] + 2 > players[0]['goal-y']){
-                    temp_player = 1;
+                }else if(particles[particle]['y'] > obstacles[obstacle][1] + obstacles[obstacle][3]
+                  && particles[particle]['y'] < obstacles[obstacle][1] + obstacles[obstacle][3] + 2){
+                    particles[particle]['y-speed'] *= -1;
                 }
 
-                // Decrease the other players score by 1 if it is greater than 0.
-                if(players[1 - temp_player]['score'] > 0){
-                    players[1 - temp_player]['score'] -= 1;
-                }
-
-                // Increase the scoring players score by 1.
-                if(particles[loop_counter]['owner'] === temp_player){
-                    players[temp_player]['score'] += 1;
-                }
-
-                // Delete the particle.
-                particles.splice(
-                  loop_counter,
-                  1
-                );
-
-                players[0]['paddle-x-move'] = 0;
-                players[1]['paddle-x-move'] = 0;
-
-                continue;
-            }
-
-            // Loop through obstacles to find collisions.
-            var j = obstacles.length - 1;
-            if(j >= 0){
-                do{
-                    // X collisions.
-                    if(particles[loop_counter]['x'] >= obstacles[j][0]
-                      && particles[loop_counter]['x'] <= obstacles[j][0] + obstacles[j][2]){
-                        if(particles[loop_counter]['y-speed'] > 0){
-                            if(particles[loop_counter]['y'] > obstacles[j][1] - 2
-                              && particles[loop_counter]['y'] < obstacles[j][1]){
-                                particles[loop_counter]['y-speed'] *= -1;
-                            }
-                        }else if(particles[loop_counter]['y'] > obstacles[j][1] + obstacles[j][3]
-                          && particles[loop_counter]['y'] < obstacles[j][1] + obstacles[j][3] + 2){
-                            particles[loop_counter]['y-speed'] *= -1;
-                        }
-
-                    // Y collisions.
-                    }else if(particles[loop_counter]['y'] >= obstacles[j][1]
-                      && particles[loop_counter]['y'] <= obstacles[j][1] + obstacles[j][3]){
-                        if(particles[loop_counter]['x-speed'] > 0){
-                            if(particles[loop_counter]['x'] > obstacles[j][0] - 2
-                              && particles[loop_counter]['x'] < obstacles[j][0]){
-                                particles[loop_counter]['x-speed'] *= -1;
-                            }
-
-                        }else if(particles[loop_counter]['x'] > obstacles[j][0] + obstacles[j][2]
-                          && particles[loop_counter]['x'] < obstacles[j][0] + obstacles[j][2] + 2){
-                            particles[loop_counter]['x-speed'] *= -1;
-                        }
-                    }
-                }while(j--);
-            }
-
-            // Check for collisions with player paddles or edges of game area.
-            if(particles[loop_counter]['y'] > players[1]['paddle-y'] + players[1]['paddle-height']
-              && particles[loop_counter]['y'] < players[0]['paddle-y']){
-                if(particles[loop_counter]['x'] > -88
-                  && particles[loop_counter]['x'] < 88){
-                    if(particles[loop_counter]['y'] > 0){
-                        if(particles[loop_counter]['x'] > players[0]['paddle-x'] - 2
-                          && particles[loop_counter]['x'] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2){
-                            if(particles[loop_counter]['y-speed'] > 0
-                              && particles[loop_counter]['y'] + 2 >= players[0]['paddle-y']){
-                                particles[loop_counter]['x-speed'] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
-                                particles[loop_counter]['y-speed'] *= -1;
-                                particles[loop_counter]['owner'] = 0;
-                            }
-                        }
-
-                    }else if(particles[loop_counter]['x'] > players[1]['paddle-x']- 2
-                      && particles[loop_counter]['x'] < players[1]['paddle-x'] + players[1]['paddle-width'] + 2
-                      && particles[loop_counter]['y-speed'] < 0
-                      && particles[loop_counter]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
-                        particles[loop_counter]['y-speed'] *= -1;
-                        particles[loop_counter]['owner'] = 1;
+            // Y collisions.
+            }else if(particles[particle]['y'] >= obstacles[obstacle][1]
+              && particles[particle]['y'] <= obstacles[obstacle][1] + obstacles[obstacle][3]){
+                if(particles[particle]['x-speed'] > 0){
+                    if(particles[particle]['x'] > obstacles[obstacle][0] - 2
+                      && particles[particle]['x'] < obstacles[obstacle][0]){
+                        particles[particle]['x-speed'] *= -1;
                     }
 
-                // Left/right wall collisions.
-                }else if((particles[loop_counter]['x-speed'] < 0 && particles[loop_counter]['x'] - 2 <= -particle_x_limit)
-                  || (particles[loop_counter]['x-speed'] > 0 && particles[loop_counter]['x'] + 2 >= particle_x_limit)){
-                    particles[loop_counter]['x-speed'] *= -1;
-
-                // Player paddle collisions.
-                }else if((particles[loop_counter]['y-speed'] < 0 && particles[loop_counter]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
-                  || (particles[loop_counter]['y-speed'] > 0 && particles[loop_counter]['y'] + 2 >= players[0]['paddle-y'])){
-                    particles[loop_counter]['y-speed'] *= -1;
+                }else if(particles[particle]['x'] > obstacles[obstacle][0] + obstacles[obstacle][2]
+                  && particles[particle]['x'] < obstacles[obstacle][0] + obstacles[obstacle][2] + 2){
+                    particles[particle]['x-speed'] *= -1;
                 }
             }
+        }
 
-            // Move particles.
-            particles[loop_counter]['x'] += particles[loop_counter]['x-speed'];
-            particles[loop_counter]['y'] += particles[loop_counter]['y-speed'];
-        }while(loop_counter--);
+        // Check for collisions with player paddles or edges of game area.
+        if(particles[particle]['y'] > players[1]['paddle-y'] + players[1]['paddle-height']
+          && particles[particle]['y'] < players[0]['paddle-y']){
+            if(Math.abs(particles[particle]['x']) < 88){
+                if(particles[particle]['y'] > 0){
+                    if(particles[particle]['x'] > players[0]['paddle-x'] - 2
+                      && particles[particle]['x'] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2
+                      && particles[particle]['y-speed'] > 0
+                      && particles[particle]['y'] + 2 >= players[0]['paddle-y']){
+                        particles[particle]['x-speed'] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
+                        particles[particle]['y-speed'] *= -1;
+                        particles[particle]['owner'] = 0;
+                    }
 
-        // Calculate movement direction for next frame if player0 ai is tracking a particle.
-        var paddle_position = players[0]['paddle-x'] + players[0]['paddle-width'] / 2;
-        if(players[0]['paddle-x-move'] === -1){
-            if(paddle_position === 0){
-                players[0]['paddle-x-move'] = 0;
+                }else if(particles[particle]['x'] > players[1]['paddle-x']- 2
+                  && particles[particle]['x'] < players[1]['paddle-x'] + players[1]['paddle-width'] + 2
+                  && particles[particle]['y-speed'] < 0
+                  && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
+                    particles[particle]['y-speed'] *= -1;
+                    particles[particle]['owner'] = 1;
+                }
 
-            }else{
-                players[0]['paddle-x-move'] = paddle_position < 0
-                  ? 2
-                  : -2;
+            // Left/right wall collisions.
+            }else if(Math.abs(particles[particle]['x']) > particle_x_limit){
+                particles[particle]['x-speed'] *= -1;
+
+            // Player paddle collisions.
+            }else if((particles[particle]['y-speed'] < 0 && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
+              || (particles[particle]['y-speed'] > 0 && particles[particle]['y'] + 2 >= players[0]['paddle-y'])){
+                particles[particle]['y-speed'] *= -1;
             }
+        }
+
+        // Move particles.
+        particles[particle]['x'] += particles[particle]['x-speed'];
+        particles[particle]['y'] += particles[particle]['y-speed'];
+    }
+
+    // Calculate movement direction for next frame if player0 ai is tracking a particle.
+    var paddle_position = players[0]['paddle-x'] + players[0]['paddle-width'] / 2;
+    if(players[0]['paddle-x-move'] === -1){
+        if(paddle_position === 0){
+            players[0]['paddle-x-move'] = 0;
 
         }else{
-            players[0]['paddle-x-move'] = particles[players[0]['paddle-x-move']]['x'] > paddle_position
+            players[0]['paddle-x-move'] = paddle_position < 0
               ? 2
               : -2;
         }
 
-        // Calculate movement direction for next frame if player1 ai is tracking a particle.
-        paddle_position = players[1]['paddle-x'] + players[1]['paddle-width'] / 2;
-        if(players[1]['paddle-x-move'] === -1){
-            if(paddle_position === 0){
-                players[1]['paddle-x-move'] = 0;
+    }else{
+        players[0]['paddle-x-move'] = particles[players[0]['paddle-x-move']]['x'] > paddle_position
+          ? 2
+          : -2;
+    }
 
-            }else{
-                players[1]['paddle-x-move'] = paddle_position < 0
-                  ? 2
-                  : -2;
-            }
- 
+    // Calculate movement direction for next frame if player1 ai is tracking a particle.
+    paddle_position = players[1]['paddle-x'] + players[1]['paddle-width'] / 2;
+    if(players[1]['paddle-x-move'] === -1){
+        if(paddle_position === 0){
+            players[1]['paddle-x-move'] = 0;
+
         }else{
-            players[1]['paddle-x-move'] = particles[players[1]['paddle-x-move']]['x'] > paddle_position
+            players[1]['paddle-x-move'] = paddle_position < 0
               ? 2
               : -2;
         }
+
+    }else{
+        players[1]['paddle-x-move'] = particles[players[1]['paddle-x-move']]['x'] > paddle_position
+          ? 2
+          : -2;
     }
 
     // If either player has score-goal points and 2 more points than the other player.
@@ -356,13 +347,13 @@ function logic(){
     }
 }
 
-function play_audio(i){
+function play_audio(id){
     if(settings['audio-volume'] <= 0){
         return;
     }
 
-    document.getElementById(i).currentTime = 0;
-    document.getElementById(i).play();
+    document.getElementById(id).currentTime = 0;
+    document.getElementById(id).play();
 }
 
 function reset(){
@@ -406,38 +397,25 @@ function resize(){
     update_static_buffer();
 }
 
+// Save settings into window.localStorage if they differ from default.
 function save(){
-    var loop_counter = 9;
-    do{
-        var id = [
-          'audio-volume',
-          'gamearea-height',
-          'gamearea-width',
-          'ms-per-frame',
-          'number-of-obstacles',
-          'number-of-spawners',
-          'number-of-particles',
-          'obstacle-size',
-          'particle-speed',
-          'score-goal',
-        ][loop_counter];
-
+    var ids = {
+      'audio-volume': 1,
+      'gamearea-height': 200,
+      'gamearea-width': 420,
+      'ms-per-frame': 25,
+      'number-of-obstacles': 10,
+      'number-of-spawners': 3,
+      'number-of-particles': 100,
+      'obstacle-size': 65,
+      'particle-speed': 1.5,
+      'score-goal': 20,
+    };
+    for(var id in ids){
         if(isNaN(document.getElementById(id).value)
-          || document.getElementById(id).value === [1, 200, 420, 25, 10, 3, 100, 65, 1.5, 20,][loop_counter]){
+          || document.getElementById(id).value === ids[id]){
             window.localStorage.removeItem('Particleball-2D.htm-' + id);
-            settings[id] = [
-              1,
-              200,
-              420,
-              25,
-              10,
-              3,
-              100,
-              65,
-              1.5,
-              20,
-            ][loop_counter];
-            document.getElementById(id).value = settings[id];
+            settings[id] = ids[id];
 
         }else{
             settings[id] = parseFloat(document.getElementById(id).value);
@@ -446,22 +424,16 @@ function save(){
               settings[id]
             );
         }
-    }while(loop_counter--);
+    }
 
-    // save movement-keys and restart-key, if they differ from default
-    loop_counter = 1;
-    do{
-        id = [
-          'movement-keys',
-          'restart-key',
-        ][loop_counter];
-
-        if(document.getElementById(id).value === ['AD', 'H',][loop_counter]){
+    ids = {
+      'movement-keys': 'AD',
+      'restart-key': 'H',
+    };
+    for(id in ids){
+        if(document.getElementById(id).value === ids[id]){
             window.localStorage.removeItem('Particleball-2D.htm-' + id);
-            settings[id] = [
-              'AD',
-              'H',
-            ][loop_counter];
+            settings[id] = ids[id];
 
         }else{
             settings[id] = document.getElementById(id).value;
@@ -470,7 +442,7 @@ function save(){
               settings[id]
             );
         }
-    }while(loop_counter--);
+    }
 }
 
 function setmode(newmode, newgame){
@@ -531,7 +503,7 @@ function setmode(newmode, newgame){
               'paddle-x-move': 0,
               'paddle-y': -205 - gamearea_height_half,
               'score': 0,
-            }
+            },
         ];
 
         // Calculate distance between both players.
@@ -565,8 +537,8 @@ function setmode(newmode, newgame){
             var loop_counter = settings['number-of-obstacles'] - 1;
             do{
                 create_obstacle(
-                  Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half,// New obstacle center_x
-                  Math.floor(Math.random() * ((gamearea_playerdist - 25) / 2))// New obstacle center_y
+                  Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half,// center_x
+                  Math.floor(Math.random() * ((gamearea_playerdist - 25) / 2))// center_y
                 );
             }while(loop_counter--);
         }
@@ -597,7 +569,7 @@ function setmode(newmode, newgame){
         buffer_static = 0;
         canvas = 0;
 
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Particleball-2D.htm</b></div><hr><div class=c><b>Generate Level:</b><ul><li><a onclick="setmode(1, 1)">AI vs AI</a><li><a onclick="setmode(2, 1)">Player vs AI</a></ul></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a onclick="setmode(1, 1)">AI vs AI</a><br><a onclick="setmode(2, 1)">Player vs AI</a></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
           + settings['movement-keys'] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
           + settings['restart-key'] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
@@ -785,7 +757,7 @@ window.onmousedown = function(e){
         return;
     }
 
-    // Clicks create new obstacles
+    // Clicks create new obstacles.
     create_obstacle(
       e.pageX - x,// New obstacle center_x
       e.pageY - y// New obstacle center_y
