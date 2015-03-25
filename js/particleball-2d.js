@@ -413,7 +413,7 @@ function save(){
     };
     for(var id in ids){
         if(isNaN(document.getElementById(id).value)
-          || document.getElementById(id).value === ids[id]){
+          || document.getElementById(id).value == ids[id]){
             window.localStorage.removeItem('Particleball-2D.htm-' + id);
             settings[id] = ids[id];
 
