@@ -671,42 +671,18 @@ var particles = [];
 var particle_x_limit = 0;
 var players = [];
 var settings = {
-  'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') === null
-    ? 1
-    : parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume')),
-  'gamearea-height': window.localStorage.getItem('Particleball-2D.htm-gamearea-height') === null
-    ? 200
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height')),
-  'gamearea-width': window.localStorage.getItem('Particleball-2D.htm-gamearea-width') === null
-    ? 420
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width')),
-  'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') === null
-    ? 'AD'
-    : window.localStorage.getItem('Particleball-2D.htm-movement-keys'),
-  'ms-per-frame': window.localStorage.getItem('Particleball-2D.htm-ms-per-frame') === null
-    ? 25
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame')),
-  'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') === null
-    ? 10
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles')),
-  'number-of-particles': window.localStorage.getItem('Particleball-2D.htm-number-of-particles') === null
-    ? 100
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')),
-  'number-of-spawners': window.localStorage.getItem('Particleball-2D.htm-number-of-spawners') === null
-    ? 3
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')),
-  'obstacle-size': window.localStorage.getItem('Particleball-2D.htm-obstacle-size') === null
-    ? 65
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')),
-  'particle-speed': window.localStorage.getItem('Particleball-2D.htm-particle-speed') === null
-    ? 1.5
-    : parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')),
-  'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') === null
-    ? 'H'
-    : window.localStorage.getItem('Particleball-2D.htm-restart-key'),
-  'score-goal': window.localStorage.getItem('Particleball-2D.htm-score-goal') === null
-    ? 20
-    : parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')),
+  'audio-volume': parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume')) || 1,
+  'gamearea-height': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height')) || 200,
+  'gamearea-width': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width')) || 420,
+  'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') || 'AD',
+  'ms-per-frame': parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame')) || 25,
+  'number-of-obstacles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles')) || 10,
+  'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')) || 100,
+  'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')) || 3,
+  'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')) || 65,
+  'particle-speed': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')) || 1.5,
+  'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') || 'H',
+  'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')) || 20,
 };
 var spawners = [];
 var x = 0;
