@@ -563,26 +563,27 @@ function setmode(newmode, newgame){
           settings['ms-per-frame']
         );
 
-    // Main menu mode.
-    }else{
-        buffer = 0;
-        buffer_static = 0;
-        canvas = 0;
-
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a onclick="setmode(1, 1)">AI vs AI</a><br><a onclick="setmode(2, 1)">Player vs AI</a></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
-          + settings['movement-keys'] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-          + settings['restart-key'] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
-          + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
-          + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
-          + settings['gamearea-width'] + '>*2+100 Width</ul><input id=ms-per-frame value='
-          + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
-          + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
-          + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
-          + settings['number-of-particles'] + '>#<li><input id=number-of-spawners value='
-          + settings['number-of-spawners'] + '>*2 Spawners<li><input id=particle-speed value='
-          + settings['particle-speed'] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
+        return;
     }
+
+    // Main menu mode.
+    buffer = 0;
+    buffer_static = 0;
+    canvas = 0;
+
+    document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a onclick="setmode(1, true)">AI vs AI</a><br><a onclick="setmode(2, true)">Player vs AI</a></div></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input disabled style=border:0 value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
+      + settings['movement-keys'] + '>Move ←→<br><input disabled style=border:0 value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
+      + settings['restart-key'] + '>Restart</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+      + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
+      + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
+      + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
+      + settings['gamearea-width'] + '>*2+100 Width</ul><input id=ms-per-frame value='
+      + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
+      + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
+      + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
+      + settings['number-of-particles'] + '>#<li><input id=number-of-spawners value='
+      + settings['number-of-spawners'] + '>*2 Spawners<li><input id=particle-speed value='
+      + settings['particle-speed'] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
 }
 
 function update_static_buffer(){
@@ -698,7 +699,10 @@ window.onkeydown = function(e){
 
     // ESC: return to main menu.
     if(key === 27){
-        setmode(0, 1);
+        setmode(
+          0,
+          true
+        );
         return;
     }
 
@@ -711,7 +715,10 @@ window.onkeydown = function(e){
          key_right = true;
 
     }else if(key === settings['restart-key']){
-        setmode(mode, 0);
+        setmode(
+          mode,
+          false
+        );
     }
 };
 
@@ -727,7 +734,10 @@ window.onkeyup = function(e){
 };
 
 window.onload = function(e){
-    setmode(0, 1);
+    setmode(
+      0,
+      true
+    );
 };
 
 window.onmousedown = function(e){
