@@ -6,8 +6,8 @@ A canvas-based particle arena game. Duel against an AI opponent, or watch two AI
 ---
 
 Action              | Key
---------------------|------
-Add Obstacle        | Click
+--------------------|------------
+Add Obstacle        | Mouse Click
 Move Paddle         | AD
 Restart             | H
 Return to Main Menu | ESC
