@@ -745,11 +745,37 @@ window.onmousedown = function(e){
         return;
     }
 
-    // Clicks create new obstacles.
-    create_obstacle(
-      e.pageX - x,// New obstacle center_x
-      e.pageY - y// New obstacle center_y
-    );
+    var pageX = e.pageX - x;
+    var pageY = e.pageY - y;
+
+    // Check if clicked on obstacle.
+    var onobstacle = false;
+    for(var obstacle in obstacles){
+        if(pageX >= obstacles[obstacle][0]
+          && pageX <= obstacles[obstacle][0] + obstacles[obstacle][2]
+          && pageY >= obstacles[obstacle][1]
+          && pageY <= obstacles[obstacle][1] + obstacles[obstacle][3]){
+            onobstacle = true;
+
+            // Delete the obstacle.
+            obstacles.splice(
+              obstacle % 2
+                ? obstacle - 1
+                : obstacle,
+              2
+            );
+
+            break;
+        }
+    }
+
+    if(!onobstacle){
+        // Clicks create new obstacles.
+        create_obstacle(
+          pageX,// New obstacle center_x
+          pageY// New obstacle center_y
+        );
+    }
 
     update_static_buffer();
 };
