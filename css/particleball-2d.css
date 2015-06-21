@@ -17,6 +17,7 @@ body{
     padding: 4px;
 }
 canvas{
+    cursor: pointer;
     left: 0;
     position: absolute;
     top: 0;
@@ -31,6 +32,9 @@ input{
     font-size: 100%;
     text-align: center;
     width: 75px;
+}
+input[type=range]{
+    cursor: pointer;
 }
 ul{
     margin: 0;
