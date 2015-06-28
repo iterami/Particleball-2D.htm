@@ -3,20 +3,20 @@ function create_obstacle(obstacle_x, obstacle_y){
     var obstacle_width = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle width
 
     // Add new obstacle.
-    obstacles.push([
-      obstacle_x - obstacle_width / 2,
-      obstacle_y - obstacle_height / 2,
-      obstacle_width,
-      obstacle_height,
-    ]);
+    obstacles.push({
+      'height': obstacle_height,
+      'width': obstacle_width,
+      'x': obstacle_x - obstacle_width / 2,
+      'y': obstacle_y - obstacle_height / 2,
+    });
 
     // Add mirrored verison of new obstacle.
-    obstacles.push([
-      -obstacle_x - obstacle_width / 2,
-      -obstacle_y - obstacle_height / 2,
-      obstacle_width,
-      obstacle_height,
-    ]);
+    obstacles.push({
+      'height': obstacle_height,
+      'width': obstacle_width,
+      'x': -obstacle_x - obstacle_width / 2,
+      'y': -obstacle_y - obstacle_height / 2,
+    });
 }
 
 function draw(){
@@ -237,30 +237,30 @@ function logic(){
         // Loop through obstacles to find collisions.
         for(var obstacle in obstacles){
             // X collisions.
-            if(particles[particle]['x'] >= obstacles[obstacle][0]
-              && particles[particle]['x'] <= obstacles[obstacle][0] + obstacles[obstacle][2]){
+            if(particles[particle]['x'] >= obstacles[obstacle]['x']
+              && particles[particle]['x'] <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']){
                 if(particles[particle]['y-speed'] > 0){
-                    if(particles[particle]['y'] > obstacles[obstacle][1] - 2
-                      && particles[particle]['y'] < obstacles[obstacle][1]){
+                    if(particles[particle]['y'] > obstacles[obstacle]['y'] - 2
+                      && particles[particle]['y'] < obstacles[obstacle]['y']){
                         particles[particle]['y-speed'] *= -1;
                     }
 
-                }else if(particles[particle]['y'] > obstacles[obstacle][1] + obstacles[obstacle][3]
-                  && particles[particle]['y'] < obstacles[obstacle][1] + obstacles[obstacle][3] + 2){
+                }else if(particles[particle]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
+                  && particles[particle]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
                     particles[particle]['y-speed'] *= -1;
                 }
 
             // Y collisions.
-            }else if(particles[particle]['y'] >= obstacles[obstacle][1]
-              && particles[particle]['y'] <= obstacles[obstacle][1] + obstacles[obstacle][3]){
+            }else if(particles[particle]['y'] >= obstacles[obstacle]['y']
+              && particles[particle]['y'] <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
                 if(particles[particle]['x-speed'] > 0){
-                    if(particles[particle]['x'] > obstacles[obstacle][0] - 2
-                      && particles[particle]['x'] < obstacles[obstacle][0]){
+                    if(particles[particle]['x'] > obstacles[obstacle]['x'] - 2
+                      && particles[particle]['x'] < obstacles[obstacle]['x']){
                         particles[particle]['x-speed'] *= -1;
                     }
 
-                }else if(particles[particle]['x'] > obstacles[obstacle][0] + obstacles[obstacle][2]
-                  && particles[particle]['x'] < obstacles[obstacle][0] + obstacles[obstacle][2] + 2){
+                }else if(particles[particle]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
+                  && particles[particle]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
                     particles[particle]['x-speed'] *= -1;
                 }
             }
@@ -598,10 +598,10 @@ function update_static_buffer(){
     buffer_static.fillStyle = '#3c3c3c';
     for(var obstacle in obstacles){
         buffer_static.fillRect(
-          obstacles[obstacle][0] + x,
-          obstacles[obstacle][1] + y,
-          obstacles[obstacle][2],
-          obstacles[obstacle][3]
+          obstacles[obstacle]['x'] + x,
+          obstacles[obstacle]['y'] + y,
+          obstacles[obstacle]['width'],
+          obstacles[obstacle]['height']
         );
     }
 
@@ -755,10 +755,10 @@ window.onmousedown = function(e){
     // Check if clicked on obstacle.
     var onobstacle = false;
     for(var obstacle in obstacles){
-        if(pageX >= obstacles[obstacle][0]
-          && pageX <= obstacles[obstacle][0] + obstacles[obstacle][2]
-          && pageY >= obstacles[obstacle][1]
-          && pageY <= obstacles[obstacle][1] + obstacles[obstacle][3]){
+        if(pageX >= obstacles[obstacle]['x']
+          && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
+          && pageY >= obstacles[obstacle]['y']
+          && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
             onobstacle = true;
 
             // Delete the obstacle.
