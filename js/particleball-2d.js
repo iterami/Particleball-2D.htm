@@ -1,3 +1,5 @@
+'use strict';
+
 function create_obstacle(obstacle_x, obstacle_y){
     var obstacle_height = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle height
     var obstacle_width = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle width
@@ -97,7 +99,7 @@ function draw(){
         if(players[0]['score'] > players[1]['score']){
             buffer.fillStyle = players[0]['color'];
             buffer.fillText(
-              ai_or_player
+              player_controlled
                 ? 'You win! ☺'
                 : 'Player 0 wins!',
               x,
@@ -107,7 +109,7 @@ function draw(){
         }else{
             buffer.fillStyle = players[1]['color'];
             buffer.fillText(
-              ai_or_player
+              player_controlled
                 ? 'You lose. ☹'
                 : 'Player 1 wins!',
               x,
@@ -141,7 +143,7 @@ function logic(){
     }
 
     // If player controlled, handle keypress movement...
-    if(ai_or_player){
+    if(player_controlled){
         if(key_left
           && players[0]['paddle-x'] > -90){
             players[0]['paddle-x'] -= 2;
@@ -457,8 +459,7 @@ function setmode(newmode, newgame){
 
     // New game mode.
     if(mode > 0){
-        // If mode is 1, ai vs ai, if mode is 2, player vs ai.
-        ai_or_player = mode - 1;
+        player_controlled = mode == 2;
 
         // If it's a newgame from the main menu, save settings.
         if(newgame){
@@ -670,6 +671,7 @@ var mode = 0;
 var obstacles = [];
 var particles = [];
 var particle_x_limit = 0;
+var player_controlled = false;
 var players = [];
 var settings = {
   'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') != null
