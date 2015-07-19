@@ -466,10 +466,6 @@ function setmode(newmode, newgame){
             save();
         }
 
-        // Reset keypresses.
-        key_left = false;
-        key_right = false;
-
         // Get half of height and width of game area.
         gamearea_height_half = settings['gamearea-height'] - 150;
         gamearea_width_half = settings['gamearea-width'] + 100;
