@@ -459,7 +459,7 @@ function setmode(newmode, newgame){
 
     // New game mode.
     if(mode > 0){
-        player_controlled = mode == 2;
+        player_controlled = mode === 2;
 
         // If it's a newgame from the main menu, save settings.
         if(newgame){
