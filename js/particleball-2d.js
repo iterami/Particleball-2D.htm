@@ -544,15 +544,21 @@ function setmode(newmode, newgame){
         if(newgame){
             document.getElementById('page').innerHTML = '<canvas id=canvas></canvas><canvas id=buffer></canvas><canvas id=buffer-static></canvas>';
 
-            buffer = document.getElementById('buffer').getContext('2d', {
+            var contextAttributes = {
               'alpha': false,
-            });
-            buffer_static = document.getElementById('buffer-static').getContext('2d', {
-              'alpha': false,
-            });
-            canvas = document.getElementById('canvas').getContext('2d', {
-              'alpha': false,
-            });
+            };
+            buffer = document.getElementById('buffer').getContext(
+              '2d',
+              contextAttributes
+            );
+            buffer_static = document.getElementById('buffer-static').getContext(
+              '2d',
+              contextAttributes
+            );
+            canvas = document.getElementById('canvas').getContext(
+              '2d',
+              contextAttributes
+            );
 
             resize();
         }
