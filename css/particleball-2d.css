@@ -17,9 +17,6 @@ body{
 #buffer-static{
     display: none;
 }
-.c{
-    padding: 4px;
-}
 canvas{
     cursor: pointer;
     left: 0;
@@ -42,6 +39,9 @@ input[disabled]{
 }
 input[type=range]{
     cursor: pointer;
+}
+#page > div > div{
+    padding: 4px;
 }
 ul{
     margin: 0;
