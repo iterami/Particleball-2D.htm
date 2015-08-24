@@ -36,14 +36,20 @@ function draw(){
       0
     );
 
+    buffer.save();
+    buffer.translate(
+      x,
+      y
+    );
+
     for(var particle in particles){
         // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
         buffer.fillStyle = particles[particle]['owner'] < 0
           ? '#ddd'
           : players[particles[particle]['owner']]['color'];
         buffer.fillRect(
-          Math.round(particles[particle]['x']) + x - 2,
-          Math.round(particles[particle]['y']) + y - 2,
+          Math.round(particles[particle]['x']) - 2,
+          Math.round(particles[particle]['y']) - 2,
           4,
           4
         );
@@ -51,7 +57,6 @@ function draw(){
 
     // Setup text display.
     buffer.font = '23pt sans-serif';
-    buffer.textAlign = 'center';
 
     for(var player in players){
         // Set color to player color.
@@ -59,25 +64,25 @@ function draw(){
 
         // Draw paddle.
         buffer.fillRect(
-          players[player]['paddle-x'] + x,
-          players[player]['paddle-y'] + y,
+          players[player]['paddle-x'],
+          players[player]['paddle-y'],
           players[player]['paddle-width'],
           players[player]['paddle-height']
         );
 
         // Draw goal.
         buffer.fillRect(
-          players[player]['goal-x'] + x,
-          players[player]['goal-y'] + y,
+          players[player]['goal-x'],
+          players[player]['goal-y'],
           players[player]['goal-width'],
           players[player]['goal-height']
         );
 
         // Draw score.
         buffer.fillText(
-          'Score: ' + players[player]['score'] + '/' + settings['score-goal'],
-          players[player]['paddle-x'] + x + players[player]['paddle-width'] / 2,
-          players[player]['paddle-y'] + y + (player == 0 ? 60 : -35)
+          players[player]['score'] + '/' + settings['score-goal'],
+          players[player]['paddle-x'],
+          players[player]['paddle-y'] + (player == 0 ? 60 : -35)
         );
     }
 
@@ -87,12 +92,12 @@ function draw(){
         buffer.fillStyle = '#fff';
         buffer.fillText(
           settings['restart-key'] + ' = Restart',
-          x,
+          0,
           y / 2 + 50
         );
         buffer.fillText(
           'ESC = Main Menu',
-          x,
+          0,
           y / 2 + 90
         );
 
@@ -102,7 +107,7 @@ function draw(){
               player_controlled
                 ? 'You win! ☺'
                 : 'Player 0 wins!',
-              x,
+              0,
               y / 2
             );
 
@@ -112,11 +117,13 @@ function draw(){
               player_controlled
                 ? 'You lose. ☹'
                 : 'Player 1 wins!',
-              x,
+              0,
               y / 2
             );
         }
     }
+
+    buffer.restore();
     
     canvas.clearRect(
       0,
@@ -604,12 +611,18 @@ function update_static_buffer(){
       height
     );
 
+    buffer_static.save();
+    buffer_static.translate(
+      x,
+      y
+    );
+
     // Draw obstacles.
     buffer_static.fillStyle = '#3c3c3c';
     for(var obstacle in obstacles){
         buffer_static.fillRect(
-          obstacles[obstacle]['x'] + x,
-          obstacles[obstacle]['y'] + y,
+          obstacles[obstacle]['x'],
+          obstacles[obstacle]['y'],
           obstacles[obstacle]['width'],
           obstacles[obstacle]['height']
         );
@@ -617,38 +630,38 @@ function update_static_buffer(){
 
     // Draw scenery rectangles at edges of game area.
     buffer_static.fillRect(
-      x - gamearea_width_half - 5,
-      y - 205 - gamearea_height_half,
+      -gamearea_width_half - 5,
+      -gamearea_height_half - 205,
       5,
       gamearea_playerdist
     );
     buffer_static.fillRect(
-      x + gamearea_width_half,
-      y - 205 - gamearea_height_half,
+      gamearea_width_half,
+      -gamearea_height_half - 205,
       5,
       gamearea_playerdist
     );
     buffer_static.fillRect(
-      x - gamearea_width_half,
-      y - 205 - gamearea_height_half,
+      -gamearea_width_half,
+      -gamearea_height_half - 205,
       gamearea_width_half - 90,
       5
     );
     buffer_static.fillRect(
-      x + gamearea_width_half,
-      y - 205 - gamearea_height_half,
+      gamearea_width_half,
+      -gamearea_height_half - 205,
       90 - gamearea_width_half,
       5
     );
     buffer_static.fillRect(
-      x - gamearea_width_half,
-      y + 200 + gamearea_height_half,
+      -gamearea_width_half,
+      200 + gamearea_height_half,
       gamearea_width_half - 90,
       5
     );
     buffer_static.fillRect(
-      x + gamearea_width_half,
-      y + 200 + gamearea_height_half,
+      gamearea_width_half,
+      200 + gamearea_height_half,
       90 - gamearea_width_half,
       5
     );
@@ -657,12 +670,14 @@ function update_static_buffer(){
     buffer_static.fillStyle = '#476291';
     for(var spawner in spawners){
         buffer_static.fillRect(
-          spawners[spawner][0] + x - 4,
-          spawners[spawner][1] + y - 4,
+          spawners[spawner][0] - 4,
+          spawners[spawner][1] - 4,
           8,
           8
         );
     }
+
+    buffer_static.restore();
 }
 
 var animationFrame = 0;
