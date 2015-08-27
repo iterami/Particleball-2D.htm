@@ -55,9 +55,6 @@ function draw(){
         );
     }
 
-    // Setup text display.
-    buffer.font = '23pt sans-serif';
-
     for(var player in players){
         // Set color to player color.
         buffer.fillStyle = players[player]['color'];
@@ -403,6 +400,7 @@ function resize(){
     document.getElementById('canvas').width = width;
     x = width / 2;
 
+    buffer.font = '23pt sans-serif';
     update_static_buffer();
 }
 
