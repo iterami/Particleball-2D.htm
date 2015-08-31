@@ -83,6 +83,8 @@ function draw(){
         );
     }
 
+    buffer.restore();
+
     // Players win if they have score-goal points.
     if(players[0]['score'] >= settings['score-goal']
       || players[1]['score'] >= settings['score-goal']){
@@ -119,8 +121,6 @@ function draw(){
             );
         }
     }
-
-    buffer.restore();
     
     canvas.clearRect(
       0,
