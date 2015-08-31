@@ -1,8 +1,8 @@
 'use strict';
 
 function create_obstacle(obstacle_x, obstacle_y){
-    var obstacle_height = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle height
-    var obstacle_width = Math.floor(Math.random() * settings['obstacle-size']) + 5;// new obstacle width
+    var obstacle_height = Math.floor(Math.random() * settings['obstacle-size']) + 5;
+    var obstacle_width = Math.floor(Math.random() * settings['obstacle-size']) + 5;
 
     // Add new obstacle.
     obstacles.push({
@@ -480,32 +480,32 @@ function setmode(newmode, newgame){
 
         // Setup player information.
         players = [
-            {
-              'color': '#2d8930',
-              'goal-height': 20,
-              'goal-width': 200,
-              'goal-x': -100,
-              'goal-y': 210 + gamearea_height_half,
-              'paddle-height': 5,
-              'paddle-width': 70,
-              'paddle-x': -35,
-              'paddle-x-move': 0,
-              'paddle-y': 200 + gamearea_height_half,
-              'score': 0,
-            },
-            {
-              'color': '#c83232',
-              'goal-height': 20,
-              'goal-width': 200,
-              'goal-x': -100,
-              'goal-y': -230 - gamearea_height_half,
-              'paddle-height': 5,
-              'paddle-width': 70,
-              'paddle-x': -35,
-              'paddle-x-move': 0,
-              'paddle-y': -205 - gamearea_height_half,
-              'score': 0,
-            },
+          {
+           'color': '#2d8930',
+            'goal-height': 20,
+            'goal-width': 200,
+            'goal-x': -100,
+            'goal-y': 210 + gamearea_height_half,
+            'paddle-height': 5,
+            'paddle-width': 70,
+            'paddle-x': -35,
+            'paddle-x-move': 0,
+            'paddle-y': 200 + gamearea_height_half,
+            'score': 0,
+          },
+          {
+            'color': '#c83232',
+            'goal-height': 20,
+            'goal-width': 200,
+            'goal-x': -100,
+            'goal-y': -230 - gamearea_height_half,
+            'paddle-height': 5,
+            'paddle-width': 70,
+            'paddle-x': -35,
+            'paddle-x-move': 0,
+            'paddle-y': -205 - gamearea_height_half,
+            'score': 0,
+          },
         ];
 
         // Calculate distance between both players.
