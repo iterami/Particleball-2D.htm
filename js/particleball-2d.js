@@ -696,14 +696,14 @@ var particle_x_limit = 0;
 var player_controlled = false;
 var players = [];
 var settings = {
-  'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') != null
+  'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') !== null
     ? parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume'))
     : 1,
   'gamearea-height': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height')) || 200,
   'gamearea-width': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width')) || 420,
   'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') || 'AD',
   'ms-per-frame': parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame')) || 25,
-  'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') != null
+  'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') !== null
     ? parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles'))
     : 10,
   'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')) || 100,
