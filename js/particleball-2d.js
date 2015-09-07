@@ -7,7 +7,7 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': 1.01,
+      'multiplier': settings['obstacle-multiplier'],
       'width': obstacle_width,
       'x': obstacle_x - obstacle_width / 2,
       'y': obstacle_y - obstacle_height / 2,
@@ -16,7 +16,7 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add mirrored verison of new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': 1.01,
+      'multiplier': settings['obstacle-multiplier'],
       'width': obstacle_width,
       'x': -obstacle_x - obstacle_width / 2,
       'y': -obstacle_y - obstacle_height / 2,
@@ -377,6 +377,7 @@ function reset(){
     document.getElementById('number-of-obstacles').value = 10;
     document.getElementById('number-of-particles').value = 100;
     document.getElementById('number-of-spawners').value = 3;
+    document.getElementById('obstacle-multiplier').value = 1.01;
     document.getElementById('obstacle-size').value = 65;
     document.getElementById('particle-speed').value = 1.5;
     document.getElementById('restart-key').value = 'H';
@@ -416,6 +417,7 @@ function save(){
       'number-of-obstacles': 10,
       'number-of-spawners': 3,
       'number-of-particles': 100,
+      'obstacle-multiplier': 1.01,
       'obstacle-size': 65,
       'particle-speed': 1.5,
       'score-goal': 20,
@@ -595,7 +597,8 @@ function setmode(newmode, newgame){
       + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
       + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
       + settings['gamearea-width'] + '>*2+100 Width</ul><input id=ms-per-frame value='
-      + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=number-of-obstacles value='
+      + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier value='
+      + settings['obstacle-multiplier'] + '>Multiplier<li><input id=number-of-obstacles value='
       + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
       + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
       + settings['number-of-particles'] + '>#<li><input id=number-of-spawners value='
@@ -710,6 +713,7 @@ var settings = {
     : 10,
   'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')) || 100,
   'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')) || 3,
+  'obstacle-multiplier': parseFloat(window.localStorage.getItem('Particleball-2D.htm-obstacle-multiplier')) || 1.01,
   'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')) || 65,
   'particle-speed': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')) || 1.5,
   'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') || 'H',
