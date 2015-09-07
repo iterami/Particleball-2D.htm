@@ -498,7 +498,7 @@ function setmode(newmode, newgame){
             'score': 0,
           },
           {
-            'color': '#c83232',
+            'color': '#f70',
             'goal-height': 20,
             'goal-width': 200,
             'goal-x': -100,
