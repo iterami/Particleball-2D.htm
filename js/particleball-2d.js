@@ -7,6 +7,7 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add new obstacle.
     obstacles.push({
       'height': obstacle_height,
+      'multiplier': 1.01,
       'width': obstacle_width,
       'x': obstacle_x - obstacle_width / 2,
       'y': obstacle_y - obstacle_height / 2,
@@ -15,6 +16,7 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add mirrored verison of new obstacle.
     obstacles.push({
       'height': obstacle_height,
+      'multiplier': 1.01,
       'width': obstacle_width,
       'x': -obstacle_x - obstacle_width / 2,
       'y': -obstacle_y - obstacle_height / 2,
@@ -248,12 +250,12 @@ function logic(){
                 if(particles[particle]['y-speed'] > 0){
                     if(particles[particle]['y'] > obstacles[obstacle]['y'] - 2
                       && particles[particle]['y'] < obstacles[obstacle]['y']){
-                        particles[particle]['y-speed'] *= -1;
+                        particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
                     }
 
                 }else if(particles[particle]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
                   && particles[particle]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
-                    particles[particle]['y-speed'] *= -1;
+                    particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
                 }
 
             // Y collisions.
@@ -262,12 +264,12 @@ function logic(){
                 if(particles[particle]['x-speed'] > 0){
                     if(particles[particle]['x'] > obstacles[obstacle]['x'] - 2
                       && particles[particle]['x'] < obstacles[obstacle]['x']){
-                        particles[particle]['x-speed'] *= -1;
+                        particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
                     }
 
                 }else if(particles[particle]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
                   && particles[particle]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
-                    particles[particle]['x-speed'] *= -1;
+                    particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
                 }
             }
         }
