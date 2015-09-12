@@ -348,7 +348,7 @@ function logic(){
           : -2;
     }
 
-    // If either player has score-goal points and 2 more points than the other player.
+    // If either player has score-goal points.
     if(players[0]['score'] >= settings['score-goal']
       || players[1]['score'] >= settings['score-goal']){
         window.clearInterval(interval);
