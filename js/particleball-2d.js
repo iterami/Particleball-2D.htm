@@ -592,7 +592,7 @@ function setmode(newmode, newgame){
 
     document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br><a onclick="setmode(2, true)">Player vs AI</a></div></div></div><div class=right><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
       + settings['movement-keys'] + '>Move ←→<br><input disabled value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-      + settings['restart-key'] + '>Restart</div><hr><div><input id=audio-volume max=1 min=0 step=".01" type=range value='
+      + settings['restart-key'] + '>Restart</div><hr><div><input id=audio-volume max=1 min=0 step=0.01 type=range value='
       + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
       + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
       + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
