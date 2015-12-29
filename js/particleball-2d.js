@@ -369,19 +369,24 @@ function reset(){
         return;
     }
 
-    document.getElementById('audio-volume').value = 1;
-    document.getElementById('gamearea-height').value = 200;
-    document.getElementById('gamearea-width').value = 420;
-    document.getElementById('movement-keys').value = 'AD';
-    document.getElementById('ms-per-frame').value = 25;
-    document.getElementById('number-of-obstacles').value = 10;
-    document.getElementById('number-of-particles').value = 100;
-    document.getElementById('number-of-spawners').value = 3;
-    document.getElementById('obstacle-multiplier').value = 1.01;
-    document.getElementById('obstacle-size').value = 65;
-    document.getElementById('particle-speed').value = 1.5;
-    document.getElementById('restart-key').value = 'H';
-    document.getElementById('score-goal').value = 20;
+    var ids = {
+      'audio-volume': 1,
+      'gamearea-height': 200,
+      'gamearea-width': 420,
+      'movement-keys': 'AD',
+      'ms-per-frame': 25,
+      'number-of-obstacles': 10,
+      'number-of-particles': 100,
+      'number-of-spawners': 3,
+      'obstacle-multiplier': 1.01,
+      'obstacle-size': 65,
+      'particle-speed': 1.5,
+      'restart-key': 'H',
+      'score-goal': 20,
+    };
+    for(var id in ids){
+        document.getElementById(id).value = ids[id];
+    }
 
     save();
 }
