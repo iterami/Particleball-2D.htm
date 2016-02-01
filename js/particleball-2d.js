@@ -583,7 +583,7 @@ function setmode(newmode, newgame){
 
         animationFrame = window.requestAnimationFrame(draw);
         interval = window.setInterval(
-          'logic()',
+          logic,
           settings['ms-per-frame']
         );
 
