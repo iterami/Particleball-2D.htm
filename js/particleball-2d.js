@@ -123,7 +123,7 @@ function draw(){
             );
         }
     }
-    
+
     canvas.clearRect(
       0,
       0,
@@ -242,6 +242,8 @@ function logic(){
             continue;
         }
 
+        var bounced = false;
+
         // Loop through obstacles to find collisions.
         for(var obstacle in obstacles){
             // X collisions.
@@ -251,11 +253,13 @@ function logic(){
                     if(particles[particle]['y'] > obstacles[obstacle]['y'] - 2
                       && particles[particle]['y'] < obstacles[obstacle]['y']){
                         particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
+                        bounced = true;
                     }
 
                 }else if(particles[particle]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
                   && particles[particle]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
                     particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
+                    bounced = true;
                 }
 
             // Y collisions.
@@ -265,11 +269,13 @@ function logic(){
                     if(particles[particle]['x'] > obstacles[obstacle]['x'] - 2
                       && particles[particle]['x'] < obstacles[obstacle]['x']){
                         particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
+                        bounced = true;
                     }
 
                 }else if(particles[particle]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
                   && particles[particle]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
                     particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
+                    bounced = true;
                 }
             }
         }
@@ -286,6 +292,7 @@ function logic(){
                         particles[particle]['x-speed'] = Math.random() * (settings['particle-speed'] * 2) - settings['particle-speed'];
                         particles[particle]['y-speed'] *= -1;
                         particles[particle]['owner'] = 0;
+                        bounced = true;
                     }
 
                 }else if(particles[particle]['x'] > players[1]['paddle-x']- 2
@@ -294,17 +301,25 @@ function logic(){
                   && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
                     particles[particle]['y-speed'] *= -1;
                     particles[particle]['owner'] = 1;
+                    bounced = true;
                 }
 
             // Left/right wall collisions.
             }else if(Math.abs(particles[particle]['x']) > particle_x_limit){
                 particles[particle]['x-speed'] *= -1;
+                bounced = true;
 
             // Player paddle collisions.
             }else if((particles[particle]['y-speed'] < 0 && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
               || (particles[particle]['y-speed'] > 0 && particles[particle]['y'] + 2 >= players[0]['paddle-y'])){
                 particles[particle]['y-speed'] *= -1;
+                bounced = true;
             }
+        }
+
+        if(bounced){
+            particles[particle]['x-speed'] *= settings['particle-bounce'];
+            particles[particle]['y-speed'] *= settings['particle-bounce'];
         }
 
         // Move particles.
@@ -380,6 +395,7 @@ function reset(){
       'number-of-spawners': 3,
       'obstacle-multiplier': 1.01,
       'obstacle-size': 65,
+      'particle-bounce': 1,
       'particle-speed': 1.5,
       'restart-key': 'H',
       'score-goal': 20,
@@ -424,6 +440,7 @@ function save(){
       'number-of-particles': 100,
       'obstacle-multiplier': 1.01,
       'obstacle-size': 65,
+      'particle-bounce': 1,
       'particle-speed': 1.5,
       'score-goal': 20,
     };
@@ -606,7 +623,8 @@ function setmode(newmode, newgame){
       + settings['obstacle-multiplier'] + '>Multiplier<li><input id=number-of-obstacles value='
       + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
       + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
-      + settings['number-of-particles'] + '>#<li><input id=number-of-spawners value='
+      + settings['number-of-particles'] + '>#<li><input id=particle-bounce value='
+      + settings['particle-bounce'] + '>Bounce<li><input id=number-of-spawners value='
       + settings['number-of-spawners'] + '>*2 Spawners<li><input id=particle-speed value='
       + settings['particle-speed'] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
 }
@@ -720,6 +738,7 @@ var settings = {
   'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')) || 3,
   'obstacle-multiplier': parseFloat(window.localStorage.getItem('Particleball-2D.htm-obstacle-multiplier')) || 1.01,
   'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')) || 65,
+  'particle-bounce': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-bounce')) || 1,
   'particle-speed': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')) || 1.5,
   'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') || 'H',
   'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')) || 20,
