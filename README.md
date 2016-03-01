@@ -11,3 +11,8 @@ Add Obstacle        | Mouse Click
 Move Paddle         | AD
 Restart             | H
 Return to Main Menu | ESC
+
+---
+
+Requires:
+* [iterami/common](https://github.com/iterami/common)
