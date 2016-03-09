@@ -711,8 +711,8 @@ var buffer = 0;
 var buffer_static = 0;
 var canvas = 0;
 var gamearea_height_half = 0;
-var gamearea_width_half = 0;
 var gamearea_playerdist = 0;
+var gamearea_width_half = 0;
 var height = 0;
 var interval = 0;
 var key_left = false;
@@ -744,8 +744,8 @@ var settings = {
   'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')) || 20,
 };
 var spawners = [];
-var x = 0;
 var width = 0;
+var x = 0;
 var y = 0;
 
 window.onkeydown = function(e){
