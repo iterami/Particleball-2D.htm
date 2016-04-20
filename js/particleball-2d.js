@@ -718,21 +718,21 @@ var settings = {
   'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') !== null
     ? parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume'))
     : 1,
-  'gamearea-height': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height')) || 200,
-  'gamearea-width': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width')) || 420,
+  'gamearea-height': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height'), 10) || 200,
+  'gamearea-width': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width'), 10) || 420,
   'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') || 'AD',
-  'ms-per-frame': parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame')) || 25,
+  'ms-per-frame': parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame'), 10) || 25,
   'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') !== null
-    ? parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles'))
+    ? parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles'), 10)
     : 10,
-  'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles')) || 100,
-  'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners')) || 3,
+  'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles'), 10) || 100,
+  'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners'), 10) || 3,
   'obstacle-multiplier': parseFloat(window.localStorage.getItem('Particleball-2D.htm-obstacle-multiplier')) || 1.01,
-  'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size')) || 65,
+  'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size'), 10) || 65,
   'particle-bounce': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-bounce')) || 1,
   'particle-speed': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')) || 1.5,
   'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') || 'H',
-  'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal')) || 20,
+  'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal'), 10) || 20,
 };
 var spawners = [];
 var width = 0;
