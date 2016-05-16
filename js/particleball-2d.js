@@ -370,34 +370,6 @@ function logic(){
     }
 }
 
-function reset(){
-    if(!window.confirm('Reset settings?')){
-        return;
-    }
-
-    var ids = {
-      'audio-volume': 1,
-      'gamearea-height': 200,
-      'gamearea-width': 420,
-      'movement-keys': 'AD',
-      'ms-per-frame': 25,
-      'number-of-obstacles': 10,
-      'number-of-particles': 100,
-      'number-of-spawners': 3,
-      'obstacle-multiplier': 1.01,
-      'obstacle-size': 65,
-      'particle-bounce': 1,
-      'particle-speed': 1.5,
-      'restart-key': 'H',
-      'score-goal': 20,
-    };
-    for(var id in ids){
-        document.getElementById(id).value = ids[id];
-    }
-
-    save();
-}
-
 function resize(){
     if(mode <= 0){
         return;
@@ -417,56 +389,6 @@ function resize(){
 
     buffer.font = '23pt sans-serif';
     update_static_buffer();
-}
-
-// Save settings into window.localStorage if they differ from default.
-function save(){
-    var ids = {
-      'audio-volume': 1,
-      'gamearea-height': 200,
-      'gamearea-width': 420,
-      'ms-per-frame': 25,
-      'number-of-obstacles': 10,
-      'number-of-spawners': 3,
-      'number-of-particles': 100,
-      'obstacle-multiplier': 1.01,
-      'obstacle-size': 65,
-      'particle-bounce': 1,
-      'particle-speed': 1.5,
-      'score-goal': 20,
-    };
-    for(var id in ids){
-        settings[id] = parseFloat(document.getElementById(id).value);
-
-        if(settings[id] == ids[id]
-          || isNaN(settings[id])){
-            window.localStorage.removeItem('Particleball-2D.htm-' + id);
-
-        }else{
-            window.localStorage.setItem(
-              'Particleball-2D.htm-' + id,
-              settings[id]
-            );
-        }
-    }
-
-    ids = {
-      'movement-keys': 'AD',
-      'restart-key': 'H',
-    };
-    for(id in ids){
-        settings[id] = document.getElementById(id).value;
-
-        if(settings[id] === ids[id]){
-            window.localStorage.removeItem('Particleball-2D.htm-' + id);
-
-        }else{
-            window.localStorage.setItem(
-              'Particleball-2D.htm-' + id,
-              settings[id]
-            );
-        }
-    }
 }
 
 function setmode(newmode, newgame){
@@ -603,21 +525,26 @@ function setmode(newmode, newgame){
     buffer_static = 0;
     canvas = 0;
 
-    document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br><a onclick="setmode(2, true)">Player vs AI</a></div></div></div><div class=right><div><input disabled value=ESC>Main Menu<br><input id=movement-keys maxlength=2 value='
-      + settings['movement-keys'] + '>Move ←→<br><input disabled value=Click>Obstacles++<br><input id=restart-key maxlength=1 value='
-      + settings['restart-key'] + '>Restart</div><hr><div><input id=audio-volume max=1 min=0 step=0.01 type=range value='
-      + settings['audio-volume'] + '>Audio<br><input id=score-goal value='
-      + settings['score-goal'] + '>Goal<br>Level:<ul><li><input id=gamearea-height value='
-      + settings['gamearea-height'] + '>*2+100 Height<li><input id=gamearea-width value='
-      + settings['gamearea-width'] + '>*2+100 Width</ul><input id=ms-per-frame value='
-      + settings['ms-per-frame'] + '>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier value='
-      + settings['obstacle-multiplier'] + '>Multiplier<li><input id=number-of-obstacles value='
-      + settings['number-of-obstacles'] + '>*2 #<li><input id=obstacle-size value='
-      + settings['obstacle-size'] + '>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles value='
-      + settings['number-of-particles'] + '>#<li><input id=particle-bounce value='
-      + settings['particle-bounce'] + '>Bounce<li><input id=number-of-spawners value='
-      + settings['number-of-spawners'] + '>*2 Spawners<li><input id=particle-speed value='
-      + settings['particle-speed'] + '>&gt;Speed</ul><a onclick=reset()>Reset Settings</a></div></div>';
+    document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br>'
+      + '<a onclick="setmode(2, true)">Player vs AI</a></div></div>'
+      + '</div><div class=right><div><input disabled value=ESC>Main Menu<br>'
+      + '<input id=movement-keys maxlength=2>Move ←→<br>'
+      + '<input disabled value=Click>Obstacles++<br>'
+      + '<input id=restart-key maxlength=1>Restart</div><hr>'
+      + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
+      + '<input id=score-goal>Goal<br>'
+      + 'Level:<ul><li><input id=gamearea-height>*2+100 Height'
+      + '<li><input id=gamearea-width>*2+100 Width</ul>'
+      + '<input id=ms-per-frame>ms/Frame<br>'
+      + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
+      + '<li><input id=number-of-obstacles>*2 #'
+      + '<li><input id=obstacle-size>+5&lt;Size</ul>'
+      + 'Particles:<ul><li><input id=number-of-particles>#'
+      + '<li><input id=particle-bounce>Bounce'
+      + '<li><input id=number-of-spawners>*2 Spawners'
+      + '<li><input id=particle-speed>&gt;Speed</ul>'
+      + '<a onclick=reset()>Reset Settings</a></div></div>';
+    update_settings();
 }
 
 function update_static_buffer(){
@@ -714,26 +641,6 @@ var particles = [];
 var particle_x_limit = 0;
 var player_controlled = false;
 var players = [];
-var settings = {
-  'audio-volume': window.localStorage.getItem('Particleball-2D.htm-audio-volume') !== null
-    ? parseFloat(window.localStorage.getItem('Particleball-2D.htm-audio-volume'))
-    : 1,
-  'gamearea-height': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-height'), 10) || 200,
-  'gamearea-width': parseInt(window.localStorage.getItem('Particleball-2D.htm-gamearea-width'), 10) || 420,
-  'movement-keys': window.localStorage.getItem('Particleball-2D.htm-movement-keys') || 'AD',
-  'ms-per-frame': parseInt(window.localStorage.getItem('Particleball-2D.htm-ms-per-frame'), 10) || 25,
-  'number-of-obstacles': window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles') !== null
-    ? parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-obstacles'), 10)
-    : 10,
-  'number-of-particles': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-particles'), 10) || 100,
-  'number-of-spawners': parseInt(window.localStorage.getItem('Particleball-2D.htm-number-of-spawners'), 10) || 3,
-  'obstacle-multiplier': parseFloat(window.localStorage.getItem('Particleball-2D.htm-obstacle-multiplier')) || 1.01,
-  'obstacle-size': parseInt(window.localStorage.getItem('Particleball-2D.htm-obstacle-size'), 10) || 65,
-  'particle-bounce': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-bounce')) || 1,
-  'particle-speed': parseFloat(window.localStorage.getItem('Particleball-2D.htm-particle-speed')) || 1.5,
-  'restart-key': window.localStorage.getItem('Particleball-2D.htm-restart-key') || 'H',
-  'score-goal': parseInt(window.localStorage.getItem('Particleball-2D.htm-score-goal'), 10) || 20,
-};
 var spawners = [];
 var width = 0;
 var x = 0;
@@ -783,6 +690,25 @@ window.onkeyup = function(e){
 };
 
 window.onload = function(e){
+    init_settings(
+      'Particleball-2D.htm-',
+      {
+        'audio-volume': 1,
+        'gamearea-height': 200,
+        'gamearea-width': 420,
+        'movement-keys': 'AD',
+        'ms-per-frame': 25,
+        'number-of-obstacles': 10,
+        'number-of-particles': 100,
+        'number-of-spawners': 3,
+        'obstacle-multiplier': 1.01,
+        'obstacle-size': 65,
+        'particle-bounce': 1,
+        'particle-speed': 1.5,
+        'restart-key': 'H',
+        'score-goal': 20,
+      }
+    );
     setmode(
       0,
       true
