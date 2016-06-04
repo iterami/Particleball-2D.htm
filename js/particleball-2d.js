@@ -23,26 +23,72 @@ function create_obstacle(obstacle_x, obstacle_y){
     });
 }
 
-function draw(){
-    buffer.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-
-    // Draw precalculated static obstacles.
-    buffer.drawImage(
-      document.getElementById('buffer-static'),
-      0,
-      0
-    );
-
+function draw_logic(){
     buffer.save();
     buffer.translate(
       x,
       y
     );
+
+    // Draw obstacles.
+    buffer.fillStyle = '#3c3c3c';
+    for(var obstacle in obstacles){
+        buffer.fillRect(
+          obstacles[obstacle]['x'],
+          obstacles[obstacle]['y'],
+          obstacles[obstacle]['width'],
+          obstacles[obstacle]['height']
+        );
+    }
+
+    // Draw scenery rectangles at edges of game area.
+    buffer.fillRect(
+      -gamearea_width_half - 5,
+      -gamearea_height_half - 205,
+      5,
+      gamearea_playerdist
+    );
+    buffer.fillRect(
+      gamearea_width_half,
+      -gamearea_height_half - 205,
+      5,
+      gamearea_playerdist
+    );
+    buffer.fillRect(
+      -gamearea_width_half,
+      -gamearea_height_half - 205,
+      gamearea_width_half - 90,
+      5
+    );
+    buffer.fillRect(
+      gamearea_width_half,
+      -gamearea_height_half - 205,
+      90 - gamearea_width_half,
+      5
+    );
+    buffer.fillRect(
+      -gamearea_width_half,
+      200 + gamearea_height_half,
+      gamearea_width_half - 90,
+      5
+    );
+    buffer.fillRect(
+      gamearea_width_half,
+      200 + gamearea_height_half,
+      90 - gamearea_width_half,
+      5
+    );
+
+    // Draw spawners.
+    buffer.fillStyle = '#476291';
+    for(var spawner in spawners){
+        buffer.fillRect(
+          spawners[spawner][0] - 4,
+          spawners[spawner][1] - 4,
+          8,
+          8
+        );
+    }
 
     for(var particle in particles){
         // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
@@ -123,20 +169,6 @@ function draw(){
             );
         }
     }
-
-    canvas.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-    canvas.drawImage(
-      document.getElementById('buffer'),
-      0,
-      0
-    );
-
-    animationFrame = window.requestAnimationFrame(draw);
 }
 
 function logic(){
@@ -370,39 +402,40 @@ function logic(){
     }
 }
 
-function resize(){
-    if(mode <= 0){
-        return;
-    }
-
-    height = window.innerHeight;
-    document.getElementById('buffer').height = height;
-    document.getElementById('buffer-static').height = height;
-    document.getElementById('canvas').height = height;
-    y = height / 2;
-
-    width = window.innerWidth;
-    document.getElementById('buffer').width = width;
-    document.getElementById('buffer-static').width = width;
-    document.getElementById('canvas').width = width;
-    x = width / 2;
-
+function resize_logic(){
     buffer.font = '23pt sans-serif';
-    update_static_buffer();
 }
 
-function setmode(newmode, newgame){
-    window.cancelAnimationFrame(animationFrame);
-    window.clearInterval(interval);
-
+function setmode_logic(newgame){
     obstacles = [];
     particles = [];
     spawners = [];
 
-    mode = newmode;
+    // Main menu mode.
+    if(mode === 0){
+        document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br>'
+          + '<a onclick="setmode(2, true)">Player vs AI</a></div></div>'
+          + '</div><div class=right><div><input disabled value=ESC>Main Menu<br>'
+          + '<input id=movement-keys maxlength=2>Move ←→<br>'
+          + '<input disabled value=Click>Obstacles++<br>'
+          + '<input id=restart-key maxlength=1>Restart</div><hr>'
+          + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
+          + '<input id=score-goal>Goal<br>'
+          + 'Level:<ul><li><input id=gamearea-height>*2+100 Height'
+          + '<li><input id=gamearea-width>*2+100 Width</ul>'
+          + '<input id=ms-per-frame>ms/Frame<br>'
+          + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
+          + '<li><input id=number-of-obstacles>*2 #'
+          + '<li><input id=obstacle-size>+5&lt;Size</ul>'
+          + 'Particles:<ul><li><input id=number-of-particles>#'
+          + '<li><input id=particle-bounce>Bounce'
+          + '<li><input id=number-of-spawners>*2 Spawners'
+          + '<li><input id=particle-speed>&gt;Speed</ul>'
+          + '<a onclick=reset()>Reset Settings</a></div></div>';
+        update_settings();
 
     // New game mode.
-    if(mode > 0){
+    }else{
         player_controlled = mode === 2;
 
         // If it's a newgame from the main menu, save settings.
@@ -483,168 +516,20 @@ function setmode(newmode, newgame){
                 );
             }while(loop_counter--);
         }
-
-        // If it's a newgame from the main menu, setup canvas and buffers.
-        if(newgame){
-            document.body.innerHTML =
-              '<canvas id=canvas></canvas><canvas id=buffer></canvas><canvas id=buffer-static></canvas>';
-
-            var contextAttributes = {
-              'alpha': false,
-            };
-            buffer = document.getElementById('buffer').getContext(
-              '2d',
-              contextAttributes
-            );
-            buffer_static = document.getElementById('buffer-static').getContext(
-              '2d',
-              contextAttributes
-            );
-            canvas = document.getElementById('canvas').getContext(
-              '2d',
-              contextAttributes
-            );
-
-            resize();
-        }
-
-        // Draw static obstacles to static buffer to optimize.
-        update_static_buffer();
-
-        animationFrame = window.requestAnimationFrame(draw);
-        interval = window.setInterval(
-          logic,
-          settings['ms-per-frame']
-        );
-
-        return;
     }
-
-    // Main menu mode.
-    buffer = 0;
-    buffer_static = 0;
-    canvas = 0;
-
-    document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br>'
-      + '<a onclick="setmode(2, true)">Player vs AI</a></div></div>'
-      + '</div><div class=right><div><input disabled value=ESC>Main Menu<br>'
-      + '<input id=movement-keys maxlength=2>Move ←→<br>'
-      + '<input disabled value=Click>Obstacles++<br>'
-      + '<input id=restart-key maxlength=1>Restart</div><hr>'
-      + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
-      + '<input id=score-goal>Goal<br>'
-      + 'Level:<ul><li><input id=gamearea-height>*2+100 Height'
-      + '<li><input id=gamearea-width>*2+100 Width</ul>'
-      + '<input id=ms-per-frame>ms/Frame<br>'
-      + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
-      + '<li><input id=number-of-obstacles>*2 #'
-      + '<li><input id=obstacle-size>+5&lt;Size</ul>'
-      + 'Particles:<ul><li><input id=number-of-particles>#'
-      + '<li><input id=particle-bounce>Bounce'
-      + '<li><input id=number-of-spawners>*2 Spawners'
-      + '<li><input id=particle-speed>&gt;Speed</ul>'
-      + '<a onclick=reset()>Reset Settings</a></div></div>';
-    update_settings();
 }
 
-function update_static_buffer(){
-    buffer_static.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-
-    buffer_static.save();
-    buffer_static.translate(
-      x,
-      y
-    );
-
-    // Draw obstacles.
-    buffer_static.fillStyle = '#3c3c3c';
-    for(var obstacle in obstacles){
-        buffer_static.fillRect(
-          obstacles[obstacle]['x'],
-          obstacles[obstacle]['y'],
-          obstacles[obstacle]['width'],
-          obstacles[obstacle]['height']
-        );
-    }
-
-    // Draw scenery rectangles at edges of game area.
-    buffer_static.fillRect(
-      -gamearea_width_half - 5,
-      -gamearea_height_half - 205,
-      5,
-      gamearea_playerdist
-    );
-    buffer_static.fillRect(
-      gamearea_width_half,
-      -gamearea_height_half - 205,
-      5,
-      gamearea_playerdist
-    );
-    buffer_static.fillRect(
-      -gamearea_width_half,
-      -gamearea_height_half - 205,
-      gamearea_width_half - 90,
-      5
-    );
-    buffer_static.fillRect(
-      gamearea_width_half,
-      -gamearea_height_half - 205,
-      90 - gamearea_width_half,
-      5
-    );
-    buffer_static.fillRect(
-      -gamearea_width_half,
-      200 + gamearea_height_half,
-      gamearea_width_half - 90,
-      5
-    );
-    buffer_static.fillRect(
-      gamearea_width_half,
-      200 + gamearea_height_half,
-      90 - gamearea_width_half,
-      5
-    );
-
-    // Draw spawners.
-    buffer_static.fillStyle = '#476291';
-    for(var spawner in spawners){
-        buffer_static.fillRect(
-          spawners[spawner][0] - 4,
-          spawners[spawner][1] - 4,
-          8,
-          8
-        );
-    }
-
-    buffer_static.restore();
-}
-
-var animationFrame = 0;
-var buffer = 0;
-var buffer_static = 0;
-var canvas = 0;
 var gamearea_height_half = 0;
 var gamearea_playerdist = 0;
 var gamearea_width_half = 0;
-var height = 0;
-var interval = 0;
 var key_left = false;
 var key_right = false;
-var mode = 0;
 var obstacles = [];
 var particles = [];
 var particle_x_limit = 0;
 var player_controlled = false;
 var players = [];
 var spawners = [];
-var width = 0;
-var x = 0;
-var y = 0;
 
 window.onkeydown = function(e){
     if(mode <= 0){
@@ -709,10 +594,7 @@ window.onload = function(e){
         'score-goal': 20,
       }
     );
-    setmode(
-      0,
-      true
-    );
+    init_canvas();
 };
 
 window.onmousedown = function(e){
@@ -751,8 +633,4 @@ window.onmousedown = function(e){
           pageY// New obstacle center_y
         );
     }
-
-    update_static_buffer();
 };
-
-window.onresize = resize;
