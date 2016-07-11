@@ -24,16 +24,16 @@ function create_obstacle(obstacle_x, obstacle_y){
 }
 
 function draw_logic(){
-    buffer.save();
-    buffer.translate(
-      x,
-      y
+    canvas_buffer.save();
+    canvas_buffer.translate(
+      canvas_x,
+      canvas_y
     );
 
     // Draw obstacles.
-    buffer.fillStyle = '#3c3c3c';
+    canvas_buffer.fillStyle = '#3c3c3c';
     for(var obstacle in obstacles){
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           obstacles[obstacle]['x'],
           obstacles[obstacle]['y'],
           obstacles[obstacle]['width'],
@@ -42,37 +42,37 @@ function draw_logic(){
     }
 
     // Draw scenery rectangles at edges of game area.
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       -gamearea_width_half - 5,
       -gamearea_height_half - 205,
       5,
       gamearea_playerdist
     );
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       gamearea_width_half,
       -gamearea_height_half - 205,
       5,
       gamearea_playerdist
     );
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       -gamearea_width_half,
       -gamearea_height_half - 205,
       gamearea_width_half - 90,
       5
     );
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       gamearea_width_half,
       -gamearea_height_half - 205,
       90 - gamearea_width_half,
       5
     );
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       -gamearea_width_half,
       200 + gamearea_height_half,
       gamearea_width_half - 90,
       5
     );
-    buffer.fillRect(
+    canvas_buffer.fillRect(
       gamearea_width_half,
       200 + gamearea_height_half,
       90 - gamearea_width_half,
@@ -80,9 +80,9 @@ function draw_logic(){
     );
 
     // Draw spawners.
-    buffer.fillStyle = '#476291';
+    canvas_buffer.fillStyle = '#476291';
     for(var spawner in spawners){
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           spawners[spawner][0] - 4,
           spawners[spawner][1] - 4,
           8,
@@ -92,10 +92,10 @@ function draw_logic(){
 
     for(var particle in particles){
         // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
-        buffer.fillStyle = particles[particle]['owner'] < 0
+        canvas_buffer.fillStyle = particles[particle]['owner'] < 0
           ? '#ddd'
           : players[particles[particle]['owner']]['color'];
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           Math.round(particles[particle]['x']) - 2,
           Math.round(particles[particle]['y']) - 2,
           4,
@@ -105,10 +105,10 @@ function draw_logic(){
 
     for(var player in players){
         // Set color to player color.
-        buffer.fillStyle = players[player]['color'];
+        canvas_buffer.fillStyle = players[player]['color'];
 
         // Draw paddle.
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           players[player]['paddle-x'],
           players[player]['paddle-y'],
           players[player]['paddle-width'],
@@ -116,7 +116,7 @@ function draw_logic(){
         );
 
         // Draw goal.
-        buffer.fillRect(
+        canvas_buffer.fillRect(
           players[player]['goal-x'],
           players[player]['goal-y'],
           players[player]['goal-width'],
@@ -124,48 +124,48 @@ function draw_logic(){
         );
 
         // Draw score.
-        buffer.fillText(
+        canvas_buffer.fillText(
           players[player]['score'] + '/' + settings_settings['score-goal'],
           players[player]['paddle-x'],
           players[player]['paddle-y'] + (player == 0 ? 60 : -35)
         );
     }
 
-    buffer.restore();
+    canvas_buffer.restore();
 
     // Players win if they have score-goal points.
     if(players[0]['score'] >= settings_settings['score-goal']
       || players[1]['score'] >= settings_settings['score-goal']){
-        buffer.fillStyle = '#fff';
-        buffer.fillText(
+        canvas_buffer.fillStyle = '#fff';
+        canvas_buffer.fillText(
           settings_settings['restart-key'] + ' = Restart',
           0,
-          y / 2 + 50
+          canvas_y / 2 + 50
         );
-        buffer.fillText(
+        canvas_buffer.fillText(
           'ESC = Main Menu',
           0,
-          y / 2 + 90
+          canvas_y / 2 + 90
         );
 
         if(players[0]['score'] > players[1]['score']){
-            buffer.fillStyle = players[0]['color'];
-            buffer.fillText(
+            canvas_buffer.fillStyle = players[0]['color'];
+            canvas_buffer.fillText(
               player_controlled
                 ? 'You win! ☺'
                 : 'Player 0 wins!',
               0,
-              y / 2
+              canvas_y / 2
             );
 
         }else{
-            buffer.fillStyle = players[1]['color'];
-            buffer.fillText(
+            canvas_buffer.fillStyle = players[1]['color'];
+            canvas_buffer.fillText(
               player_controlled
                 ? 'You lose. ☹'
                 : 'Player 1 wins!',
               0,
-              y / 2
+              canvas_y / 2
             );
         }
     }
@@ -408,9 +408,9 @@ function setmode_logic(newgame){
     spawners = [];
 
     // Main menu mode.
-    if(mode === 0){
-        document.body.innerHTML = '<div><div><a onclick="setmode(1, true)">AI vs AI</a><br>'
-          + '<a onclick="setmode(2, true)">Player vs AI</a></div></div>'
+    if(canvas_mode === 0){
+        document.body.innerHTML = '<div><div><a onclick="canvas_setmode(1, true)">AI vs AI</a><br>'
+          + '<a onclick="canvas_setmode(2, true)">Player vs AI</a></div></div>'
           + '</div><div class=right><div><input disabled value=ESC>Main Menu<br>'
           + '<input id=movement-keys maxlength=2>Move ←→<br>'
           + '<input disabled value=Click>Obstacles++<br>'
@@ -432,7 +432,7 @@ function setmode_logic(newgame){
 
     // New game mode.
     }else{
-        player_controlled = mode === 2;
+        player_controlled = canvas_mode === 2;
 
         if(newgame){
             settings_save();
@@ -527,7 +527,7 @@ var players = [];
 var spawners = [];
 
 window.onkeydown = function(e){
-    if(mode <= 0){
+    if(canvas_mode <= 0){
         return;
     }
 
@@ -535,7 +535,7 @@ window.onkeydown = function(e){
 
     // ESC: return to main menu.
     if(key === 27){
-        setmode(
+        canvas_setmode(
           0,
           true
         );
@@ -551,8 +551,8 @@ window.onkeydown = function(e){
          key_right = true;
 
     }else if(key === settings_settings['restart-key']){
-        setmode(
-          mode,
+        canvas_setmode(
+          canvas_mode,
           false
         );
     }
@@ -589,16 +589,16 @@ window.onload = function(e){
         'score-goal': 20,
       }
     );
-    init_canvas();
+    canvas_init();
 };
 
 window.onmousedown = function(e){
-    if(mode <= 0){
+    if(canvas_mode <= 0){
         return;
     }
 
-    var pageX = e.pageX - x;
-    var pageY = e.pageY - y;
+    var pageX = e.pageX - canvas_x;
+    var pageY = e.pageY - canvas_y;
 
     // Check if clicked on obstacle.
     var onobstacle = false;
