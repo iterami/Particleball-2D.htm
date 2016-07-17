@@ -1,8 +1,8 @@
 'use strict';
 
 function create_obstacle(obstacle_x, obstacle_y){
-    var obstacle_height = Math.floor(Math.random() * settings_settings['obstacle-size']) + 5;
-    var obstacle_width = Math.floor(Math.random() * settings_settings['obstacle-size']) + 5;
+    var obstacle_height = random_integer(settings_settings['obstacle-size']) + 5;
+    var obstacle_width = random_integer(settings_settings['obstacle-size']) + 5;
 
     // Add new obstacle.
     obstacles.push({
@@ -209,7 +209,7 @@ function logic(){
     //   is less than max, add new particle.
     if(particles.length < settings_settings['number-of-particles']){
         // Pick a random spawner.
-        var random_spawner = Math.floor(Math.random() * spawners.length);
+        var random_spawner = random_integer(spawners.length);
 
         // Add particle.
         particles.push({
@@ -486,8 +486,8 @@ function setmode_logic(newgame){
 
         var loop_counter = settings_settings['number-of-spawners'] - 1;
         do{
-            var temp0 = Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half;// new spawner center_x
-            var temp1 = Math.floor(Math.random() * ((gamearea_playerdist - 25) / 4));// new spawner center_y
+            var temp0 = random_integer(gamearea_width_half * 2) - gamearea_width_half;// new spawner center_x
+            var temp1 = random_integer((gamearea_playerdist - 25) / 4);// new spawner center_y
 
             // Add new spawner.
             spawners.push([
@@ -506,8 +506,8 @@ function setmode_logic(newgame){
             var loop_counter = settings_settings['number-of-obstacles'] - 1;
             do{
                 create_obstacle(
-                  Math.floor(Math.random() * (gamearea_width_half * 2)) - gamearea_width_half,// center_x
-                  Math.floor(Math.random() * ((gamearea_playerdist - 25) / 2))// center_y
+                  random_integer(gamearea_width_half * 2) - gamearea_width_half,
+                  random_integer((gamearea_playerdist - 25) / 2)
                 );
             }while(loop_counter--);
         }
