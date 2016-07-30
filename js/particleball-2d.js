@@ -172,6 +172,10 @@ function draw_logic(){
 }
 
 function logic(){
+    if(canvas_menu){
+        return;
+    }
+
     // Move player 1 paddle, prevent from moving past goal boundaries.
     players[1]['paddle-x'] += players[1]['paddle-x-move'];
     if(players[1]['paddle-x'] > 20){
@@ -411,7 +415,7 @@ function setmode_logic(newgame){
     if(canvas_mode === 0){
         document.body.innerHTML = '<div><div><a onclick="canvas_setmode(1, true)">AI vs AI</a><br>'
           + '<a onclick="canvas_setmode(2, true)">Player vs AI</a></div></div>'
-          + '</div><div class=right><div><input disabled value=ESC>Main Menu<br>'
+          + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=movement-keys maxlength=2>Move ←→<br>'
           + '<input disabled value=Click>Obstacles++<br>'
           + '<input id=restart-key maxlength=1>Restart</div><hr>'
@@ -533,12 +537,9 @@ window.onkeydown = function(e){
 
     var key = e.keyCode || e.which;
 
-    // ESC: return to main menu.
+    // ESC: menu.
     if(key === 27){
-        canvas_setmode(
-          0,
-          true
-        );
+        canvas_menu_toggle();
         return;
     }
 
@@ -555,6 +556,9 @@ window.onkeydown = function(e){
           canvas_mode,
           false
         );
+
+    }else if(key === 'Q'){
+        canvas_menu_quit();
     }
 };
 
