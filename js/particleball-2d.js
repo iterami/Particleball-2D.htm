@@ -605,14 +605,11 @@ window.onmousedown = function(e){
     var pageY = e.pageY - canvas_y;
 
     // Check if clicked on obstacle.
-    var onobstacle = false;
     for(var obstacle in obstacles){
         if(pageX >= obstacles[obstacle]['x']
           && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
           && pageY >= obstacles[obstacle]['y']
           && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
-            onobstacle = true;
-
             // Delete the obstacle.
             obstacles.splice(
               obstacle % 2
@@ -621,15 +618,13 @@ window.onmousedown = function(e){
               2
             );
 
-            break;
+            return;
         }
     }
 
-    if(!onobstacle){
-        // Clicks create new obstacles.
-        create_obstacle(
-          pageX,// New obstacle center_x
-          pageY// New obstacle center_y
-        );
-    }
+    // Clicks create new obstacles.
+    create_obstacle(
+      pageX,
+      pageY
+    );
 };
