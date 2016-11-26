@@ -250,10 +250,10 @@ function logic(){
         // If particle has collided with a goal.
         if(particles[particle]['y'] + 2 > players[0]['goal-y']
           || particles[particle]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
-            audio_start(
-              'boop',
-              settings_settings['audio-volume']
-            );
+            audio_start({
+              'id': 'boop',
+              'volume-multiplier': settings_settings['audio-volume'],
+            });
 
             // Determine which player scored a goal.
             var temp_player = 0;
@@ -599,13 +599,13 @@ window.onload = function(e){
       }
     );
     audio_init();
-    audio_create(
-      'boop',
-      {
+    audio_create({
+      'id': 'boop',
+      'properties': {
         'duration': .1,
         'volume': .1,
-      }
-    );
+      },
+    });
     canvas_init();
 };
 
