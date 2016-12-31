@@ -579,9 +579,9 @@ window.onkeyup = function(e){
 };
 
 window.onload = function(e){
-    settings_init(
-      'Particleball-2D.htm-',
-      {
+    settings_init({
+      'prefix': 'Particleball-2D.htm-',
+      'settings': {
         'audio-volume': 1,
         'gamearea-height': 200,
         'gamearea-width': 420,
@@ -596,8 +596,8 @@ window.onload = function(e){
         'particle-speed': 1.5,
         'restart-key': 'H',
         'score-goal': 20,
-      }
-    );
+      },
+    });
     audio_init();
     audio_create({
       'id': 'boop',
