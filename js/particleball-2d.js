@@ -424,8 +424,8 @@ function setmode_logic(newgame){
 
     // Main menu mode.
     if(canvas_mode === 0){
-        document.body.innerHTML = '<div><div><a onclick="canvas_setmode(1, true)">AI vs AI</a><br>'
-          + '<a onclick="canvas_setmode(2, true)">Player vs AI</a></div></div>'
+        document.body.innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br>'
+          + '<a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a></div></div>'
           + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=movement-keys maxlength=2>Move ←→<br>'
           + '<input disabled value=Click>Obstacles++<br>'
