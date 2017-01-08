@@ -144,34 +144,23 @@ function draw_logic(){
         canvas_buffer.fillText(
           settings_settings['restart-key'] + ' = Restart',
           0,
-          canvas_y / 2 + 50
+          canvas_y / 2 + 25
         );
         canvas_buffer.fillText(
           'ESC = Main Menu',
           0,
-          canvas_y / 2 + 90
+          canvas_y / 2 + 50
         );
 
-        if(players[0]['score'] > players[1]['score']){
-            canvas_buffer.fillStyle = players[0]['color'];
-            canvas_buffer.fillText(
-              player_controlled
-                ? 'You win! ☺'
-                : 'Player 0 wins!',
-              0,
-              canvas_y / 2
-            );
-
-        }else{
-            canvas_buffer.fillStyle = players[1]['color'];
-            canvas_buffer.fillText(
-              player_controlled
-                ? 'You lose. ☹'
-                : 'Player 1 wins!',
-              0,
-              canvas_y / 2
-            );
-        }
+        var winner = players[0]['score'] > players[1]['score']
+          ? 0
+          : 1;
+        canvas_buffer.fillStyle = players[0]['color'];
+        canvas_buffer.fillText(
+          'Player ' + winner + ' wins!',
+          0,
+          canvas_y / 2
+        );
     }
 }
 
@@ -413,7 +402,7 @@ function logic(){
     // If either player has score-goal points.
     if(players[0]['score'] >= settings_settings['score-goal']
       || players[1]['score'] >= settings_settings['score-goal']){
-        window.clearInterval(interval);
+        window.clearInterval(canvas_interval);
     }
 }
 
@@ -573,10 +562,9 @@ window.onkeydown = function(e){
          key_right = true;
 
     }else if(key === settings_settings['restart-key']){
-        canvas_setmode(
-          canvas_mode,
-          false
-        );
+        canvas_setmode({
+          'mode': canvas_mode,
+        });
 
     }else if(key === 'Q'){
         canvas_menu_quit();
