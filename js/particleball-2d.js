@@ -155,7 +155,7 @@ function draw_logic(){
         var winner = players[0]['score'] > players[1]['score']
           ? 0
           : 1;
-        canvas_buffer.fillStyle = players[0]['color'];
+        canvas_buffer.fillStyle = players[winner]['color'];
         canvas_buffer.fillText(
           'Player ' + winner + ' wins!',
           0,
