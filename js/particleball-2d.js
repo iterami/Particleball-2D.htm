@@ -540,48 +540,6 @@ var player_controlled = false;
 var players = [];
 var spawners = [];
 
-window.onkeydown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    var key = e.keyCode || e.which;
-
-    // ESC: menu.
-    if(key === 27){
-        canvas_menu_toggle();
-        return;
-    }
-
-    key = String.fromCharCode(key);
-
-    if(key === settings_settings['movement-keys'][0]){
-        key_left = true;
-
-    }else if(key === settings_settings['movement-keys'][1]){
-         key_right = true;
-
-    }else if(key === settings_settings['restart-key']){
-        canvas_setmode({
-          'mode': canvas_mode,
-        });
-
-    }else if(key === 'Q'){
-        canvas_menu_quit();
-    }
-};
-
-window.onkeyup = function(e){
-    var key = String.fromCharCode(e.keyCode || e.which);
-
-    if(key === settings_settings['movement-keys'][0]){
-        key_left = false;
-
-    }else if(key === settings_settings['movement-keys'][1]){
-        key_right = false;
-    }
-};
-
 window.onload = function(e){
     settings_init({
       'prefix': 'Particleball-2D.htm-',
@@ -611,37 +569,79 @@ window.onload = function(e){
       },
     });
     canvas_init();
-};
 
-window.onmousedown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    var pageX = e.pageX - canvas_x;
-    var pageY = e.pageY - canvas_y;
-
-    // Check if clicked on obstacle.
-    for(var obstacle in obstacles){
-        if(pageX >= obstacles[obstacle]['x']
-          && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
-          && pageY >= obstacles[obstacle]['y']
-          && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
-            // Delete the obstacle.
-            obstacles.splice(
-              obstacle % 2
-                ? obstacle - 1
-                : obstacle,
-              2
-            );
-
+    window.onkeydown = function(e){
+        if(canvas_mode <= 0){
             return;
         }
-    }
 
-    // Clicks create new obstacles.
-    create_obstacle(
-      pageX,
-      pageY
-    );
+        var key = e.keyCode || e.which;
+
+        // ESC: menu.
+        if(key === 27){
+            canvas_menu_toggle();
+            return;
+        }
+
+        key = String.fromCharCode(key);
+
+        if(key === settings_settings['movement-keys'][0]){
+            key_left = true;
+
+        }else if(key === settings_settings['movement-keys'][1]){
+             key_right = true;
+
+        }else if(key === settings_settings['restart-key']){
+            canvas_setmode({
+              'mode': canvas_mode,
+            });
+
+        }else if(key === 'Q'){
+            canvas_menu_quit();
+        }
+    };
+
+    window.onkeyup = function(e){
+        var key = String.fromCharCode(e.keyCode || e.which);
+
+        if(key === settings_settings['movement-keys'][0]){
+            key_left = false;
+
+        }else if(key === settings_settings['movement-keys'][1]){
+            key_right = false;
+        }
+    };
+
+    window.onmousedown = function(e){
+        if(canvas_mode <= 0){
+            return;
+        }
+
+        var pageX = e.pageX - canvas_x;
+        var pageY = e.pageY - canvas_y;
+
+        // Check if clicked on obstacle.
+        for(var obstacle in obstacles){
+            if(pageX >= obstacles[obstacle]['x']
+              && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
+              && pageY >= obstacles[obstacle]['y']
+              && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
+                // Delete the obstacle.
+                obstacles.splice(
+                  obstacle % 2
+                    ? obstacle - 1
+                    : obstacle,
+                  2
+                );
+
+                return;
+            }
+        }
+
+        // Clicks create new obstacles.
+        create_obstacle(
+          pageX,
+          pageY
+        );
+    };
 };
