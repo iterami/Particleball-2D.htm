@@ -2,16 +2,16 @@
 
 function create_obstacle(obstacle_x, obstacle_y){
     var obstacle_height = random_integer({
-      'max': settings_settings['obstacle-size'],
+      'max': storage_data['obstacle-size'],
     }) + 5;
     var obstacle_width = random_integer({
-      'max': settings_settings['obstacle-size'],
+      'max': storage_data['obstacle-size'],
     }) + 5;
 
     // Add new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': settings_settings['obstacle-multiplier'],
+      'multiplier': storage_data['obstacle-multiplier'],
       'width': obstacle_width,
       'x': obstacle_x - obstacle_width / 2,
       'y': obstacle_y - obstacle_height / 2,
@@ -20,7 +20,7 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add mirrored verison of new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': settings_settings['obstacle-multiplier'],
+      'multiplier': storage_data['obstacle-multiplier'],
       'width': obstacle_width,
       'x': -obstacle_x - obstacle_width / 2,
       'y': -obstacle_y - obstacle_height / 2,
@@ -129,7 +129,7 @@ function draw_logic(){
 
         // Draw score.
         canvas_buffer.fillText(
-          players[player]['score'] + '/' + settings_settings['score-goal'],
+          players[player]['score'] + '/' + storage_data['score-goal'],
           players[player]['paddle-x'],
           players[player]['paddle-y'] + (player == 0 ? 60 : -35)
         );
@@ -138,11 +138,11 @@ function draw_logic(){
     canvas_buffer.restore();
 
     // Players win if they have score-goal points.
-    if(players[0]['score'] >= settings_settings['score-goal']
-      || players[1]['score'] >= settings_settings['score-goal']){
+    if(players[0]['score'] >= storage_data['score-goal']
+      || players[1]['score'] >= storage_data['score-goal']){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          settings_settings['restart-key'] + ' = Restart',
+          storage_data['restart-key'] + ' = Restart',
           0,
           canvas_y / 2 + 25
         );
@@ -204,7 +204,7 @@ function logic(){
 
     // If the current number of particles
     //   is less than max, add new particle.
-    if(particles.length < settings_settings['number-of-particles']){
+    if(particles.length < storage_data['number-of-particles']){
         // Pick a random spawner.
         var random_spawner = random_integer({
           'max': spawners.length,
@@ -214,9 +214,9 @@ function logic(){
         particles.push({
           'owner': -1,
           'x': spawners[random_spawner][0],
-          'x-speed': Math.random() * (settings_settings['particle-speed'] * 2) - settings_settings['particle-speed'],
+          'x-speed': Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'],
           'y': spawners[random_spawner][1],
-          'y-speed': Math.random() * (settings_settings['particle-speed'] * 2) - settings_settings['particle-speed'],
+          'y-speed': Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'],
         });
     }
 
@@ -247,7 +247,7 @@ function logic(){
           || particles[particle]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
             audio_start({
               'id': 'boop',
-              'volume-multiplier': settings_settings['audio-volume'],
+              'volume-multiplier': storage_data['audio-volume'],
             });
 
             // Determine which player scored a goal.
@@ -325,7 +325,7 @@ function logic(){
                       && particles[particle]['x'] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2
                       && particles[particle]['y-speed'] > 0
                       && particles[particle]['y'] + 2 >= players[0]['paddle-y']){
-                        particles[particle]['x-speed'] = Math.random() * (settings_settings['particle-speed'] * 2) - settings_settings['particle-speed'];
+                        particles[particle]['x-speed'] = Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'];
                         particles[particle]['y-speed'] *= -1;
                         particles[particle]['owner'] = 0;
                         bounced = true;
@@ -354,8 +354,8 @@ function logic(){
         }
 
         if(bounced){
-            particles[particle]['x-speed'] *= settings_settings['particle-bounce'];
-            particles[particle]['y-speed'] *= settings_settings['particle-bounce'];
+            particles[particle]['x-speed'] *= storage_data['particle-bounce'];
+            particles[particle]['y-speed'] *= storage_data['particle-bounce'];
         }
 
         // Move particles.
@@ -400,8 +400,8 @@ function logic(){
     }
 
     // If either player has score-goal points.
-    if(players[0]['score'] >= settings_settings['score-goal']
-      || players[1]['score'] >= settings_settings['score-goal']){
+    if(players[0]['score'] >= storage_data['score-goal']
+      || players[1]['score'] >= storage_data['score-goal']){
         window.clearInterval(canvas_interval);
     }
 }
@@ -431,20 +431,20 @@ function setmode_logic(newgame){
           + '<li><input id=particle-bounce>Bounce'
           + '<li><input id=number-of-spawners>*2 Spawners'
           + '<li><input id=particle-speed>&gt;Speed</ul>'
-          + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
-        settings_update();
+          + '<a onclick=storage_reset()>Reset Settings</a></div></div>';
+        storage_update();
 
     // New game mode.
     }else{
         player_controlled = canvas_mode === 2;
 
         if(newgame){
-            settings_save();
+            storage_save();
         }
 
         // Get half of height and width of game area.
-        gamearea_height_half = settings_settings['gamearea-height'] - 150;
-        gamearea_width_half = settings_settings['gamearea-width'] + 100;
+        gamearea_height_half = storage_data['gamearea-height'] - 150;
+        gamearea_width_half = storage_data['gamearea-width'] + 100;
 
         // Particle_x_limit is how far particles can go on x axis positive or negative.
         particle_x_limit = gamearea_width_half;
@@ -483,12 +483,12 @@ function setmode_logic(newgame){
         gamearea_playerdist = Math.abs(players[1]['paddle-y']) + players[0]['paddle-y'] + 5;
 
         // Require spawners.
-        settings_settings['number-of-spawners'] = Math.max(
-          settings_settings['number-of-spawners'],
+        storage_data['number-of-spawners'] = Math.max(
+          storage_data['number-of-spawners'],
           1
         );
 
-        var loop_counter = settings_settings['number-of-spawners'] - 1;
+        var loop_counter = storage_data['number-of-spawners'] - 1;
         do{
             // new spawner center_x
             var temp0 = random_integer({
@@ -512,8 +512,8 @@ function setmode_logic(newgame){
             ]);
         }while(loop_counter--);
 
-        if(settings_settings['number-of-obstacles'] > 0){
-            var loop_counter = settings_settings['number-of-obstacles'] - 1;
+        if(storage_data['number-of-obstacles'] > 0){
+            var loop_counter = storage_data['number-of-obstacles'] - 1;
             do{
                 create_obstacle(
                   random_integer({
@@ -541,9 +541,8 @@ var players = [];
 var spawners = [];
 
 window.onload = function(e){
-    settings_init({
-      'prefix': 'Particleball-2D.htm-',
-      'settings': {
+    storage_init({
+      'data': {
         'audio-volume': 1,
         'gamearea-height': 200,
         'gamearea-width': 420,
@@ -559,6 +558,7 @@ window.onload = function(e){
         'restart-key': 'H',
         'score-goal': 20,
       },
+      'prefix': 'Particleball-2D.htm-',
     });
     audio_init();
     audio_create({
@@ -585,13 +585,13 @@ window.onload = function(e){
 
         key = String.fromCharCode(key);
 
-        if(key === settings_settings['movement-keys'][0]){
+        if(key === storage_data['movement-keys'][0]){
             key_left = true;
 
-        }else if(key === settings_settings['movement-keys'][1]){
+        }else if(key === storage_data['movement-keys'][1]){
              key_right = true;
 
-        }else if(key === settings_settings['restart-key']){
+        }else if(key === storage_data['restart-key']){
             canvas_setmode({
               'mode': canvas_mode,
             });
@@ -604,10 +604,10 @@ window.onload = function(e){
     window.onkeyup = function(e){
         var key = String.fromCharCode(e.keyCode || e.which);
 
-        if(key === settings_settings['movement-keys'][0]){
+        if(key === storage_data['movement-keys'][0]){
             key_left = false;
 
-        }else if(key === settings_settings['movement-keys'][1]){
+        }else if(key === storage_data['movement-keys'][1]){
             key_right = false;
         }
     };
