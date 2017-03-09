@@ -34,6 +34,21 @@ function draw_logic(){
       canvas_y
     );
 
+    // Draw gamearea background.
+    canvas_buffer.fillStyle = '#000';
+    canvas_buffer.fillRect(
+      -storage_data['gamearea-width'] / 2,
+      -storage_data['gamearea-height'] / 2,
+      storage_data['gamearea-width'],
+      storage_data['gamearea-height']
+    );
+    canvas_buffer.fillRect(
+      -90,
+      -players[0]['goal-y'],
+      180,
+      gamearea_playerdist + 20
+    );
+
     // Draw obstacles.
     canvas_buffer.fillStyle = '#3c3c3c';
     for(var obstacle in obstacles){
@@ -44,44 +59,6 @@ function draw_logic(){
           obstacles[obstacle]['height']
         );
     }
-
-    // Draw scenery rectangles at edges of game area.
-    canvas_buffer.fillRect(
-      -gamearea_width_half - 5,
-      -gamearea_height_half - 205,
-      5,
-      gamearea_playerdist
-    );
-    canvas_buffer.fillRect(
-      gamearea_width_half,
-      -gamearea_height_half - 205,
-      5,
-      gamearea_playerdist
-    );
-    canvas_buffer.fillRect(
-      -gamearea_width_half,
-      -gamearea_height_half - 205,
-      gamearea_width_half - 90,
-      5
-    );
-    canvas_buffer.fillRect(
-      gamearea_width_half,
-      -gamearea_height_half - 205,
-      90 - gamearea_width_half,
-      5
-    );
-    canvas_buffer.fillRect(
-      -gamearea_width_half,
-      200 + gamearea_height_half,
-      gamearea_width_half - 90,
-      5
-    );
-    canvas_buffer.fillRect(
-      gamearea_width_half,
-      200 + gamearea_height_half,
-      90 - gamearea_width_half,
-      5
-    );
 
     // Draw spawners.
     canvas_buffer.fillStyle = '#476291';
@@ -421,8 +398,8 @@ function setmode_logic(newgame){
           + '<input id=restart-key maxlength=1>Restart</div><hr>'
           + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
           + '<input id=score-goal>Goal<br>'
-          + 'Level:<ul><li><input id=gamearea-height>*2+100 Height'
-          + '<li><input id=gamearea-width>*2+100 Width</ul>'
+          + 'Level:<ul><li><input id=gamearea-height>Height'
+          + '<li><input id=gamearea-width>Width</ul>'
           + '<input id=ms-per-frame>ms/Frame<br>'
           + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
           + '<li><input id=number-of-obstacles>*2 #'
@@ -441,96 +418,10 @@ function setmode_logic(newgame){
         if(newgame){
             storage_save();
         }
-
-        // Get half of height and width of game area.
-        gamearea_height_half = storage_data['gamearea-height'] - 150;
-        gamearea_width_half = storage_data['gamearea-width'] + 100;
-
-        // Particle_x_limit is how far particles can go on x axis positive or negative.
-        particle_x_limit = gamearea_width_half;
-
-        // Setup player information.
-        players = [
-          {
-           'color': '#2d8930',
-            'goal-height': 20,
-            'goal-width': 200,
-            'goal-x': -100,
-            'goal-y': 210 + gamearea_height_half,
-            'paddle-height': 5,
-            'paddle-width': 70,
-            'paddle-x': -35,
-            'paddle-x-move': 0,
-            'paddle-y': 200 + gamearea_height_half,
-            'score': 0,
-          },
-          {
-            'color': '#f70',
-            'goal-height': 20,
-            'goal-width': 200,
-            'goal-x': -100,
-            'goal-y': -230 - gamearea_height_half,
-            'paddle-height': 5,
-            'paddle-width': 70,
-            'paddle-x': -35,
-            'paddle-x-move': 0,
-            'paddle-y': -205 - gamearea_height_half,
-            'score': 0,
-          },
-        ];
-
-        // Calculate distance between both players.
-        gamearea_playerdist = Math.abs(players[1]['paddle-y']) + players[0]['paddle-y'] + 5;
-
-        // Require spawners.
-        storage_data['number-of-spawners'] = Math.max(
-          storage_data['number-of-spawners'],
-          1
-        );
-
-        var loop_counter = storage_data['number-of-spawners'] - 1;
-        do{
-            // new spawner center_x
-            var temp0 = random_integer({
-              'max': gamearea_width_half * 2,
-            }) - gamearea_width_half;
-            // new spawner center_y
-            var temp1 = random_integer({
-              'max': (gamearea_playerdist - 25) / 4,
-            });
-
-            // Add new spawner.
-            spawners.push([
-              temp0,
-              temp1,
-            ]);
-
-            // Add mirrored version of new spawner.
-            spawners.push([
-              -temp0,
-              -temp1,
-            ]);
-        }while(loop_counter--);
-
-        if(storage_data['number-of-obstacles'] > 0){
-            var loop_counter = storage_data['number-of-obstacles'] - 1;
-            do{
-                create_obstacle(
-                  random_integer({
-                    'max': gamearea_width_half * 2,
-                  }) - gamearea_width_half,
-                  random_integer({
-                    'max': (gamearea_playerdist - 25) / 2,
-                  })
-                );
-            }while(loop_counter--);
-        }
     }
 }
 
-var gamearea_height_half = 0;
 var gamearea_playerdist = 0;
-var gamearea_width_half = 0;
 var key_left = false;
 var key_right = false;
 var obstacles = [];
@@ -544,8 +435,8 @@ window.onload = function(e){
     storage_init({
       'data': {
         'audio-volume': 1,
-        'gamearea-height': 200,
-        'gamearea-width': 420,
+        'gamearea-height': 500,
+        'gamearea-width': 1000,
         'movement-keys': 'AD',
         'ms-per-frame': 25,
         'number-of-obstacles': 10,
