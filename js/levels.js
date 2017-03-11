@@ -67,7 +67,7 @@ function load_level(id){
           [
             -spawner_x,
             -spawner_y
-          ],
+          ]
         );
     }while(loop_counter--);
 
