@@ -364,10 +364,11 @@ function logic(){
           : -2;
     }
 
-    // If either player has score-goal points.
-    if(players[0]['score'] >= storage_data['score-goal']
-      || players[1]['score'] >= storage_data['score-goal']){
-        window.clearInterval(canvas_interval);
+    // End game if any player has >= score-goal score.
+    for(var player in players){
+        if(players[player]['score'] >= storage_data['score-goal']){
+            window.clearInterval(canvas_interval);
+        }
     }
 }
 
