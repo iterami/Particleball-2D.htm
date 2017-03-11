@@ -51,26 +51,24 @@ function load_level(id){
 
     var loop_counter = storage_data['number-of-spawners'] - 1;
     do{
-        // new spawner center_x
-        var temp0 = random_integer({
+        var spawner_x = random_integer({
           'max': gamearea_width_half * 2,
         }) - gamearea_width_half;
-        // new spawner center_y
-        var temp1 = random_integer({
+        var spawner_y = random_integer({
           'max': (gamearea_playerdist - 25) / 4,
         });
 
-        // Add new spawner.
-        spawners.push([
-          temp0,
-          temp1,
-        ]);
-
-        // Add mirrored version of new spawner.
-        spawners.push([
-          -temp0,
-          -temp1,
-        ]);
+        // Add new spawner and mirror.
+        spawners.push(
+          [
+            spawner_x,
+            spawner_y
+          ],
+          [
+            -spawner_x,
+            -spawner_y
+          ],
+        );
     }while(loop_counter--);
 
     if(storage_data['number-of-obstacles'] > 0){
