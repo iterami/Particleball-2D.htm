@@ -11,7 +11,6 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': storage_data['obstacle-multiplier'],
       'width': obstacle_width,
       'x': obstacle_x - obstacle_width / 2,
       'y': obstacle_y - obstacle_height / 2,
@@ -20,7 +19,6 @@ function create_obstacle(obstacle_x, obstacle_y){
     // Add mirrored verison of new obstacle.
     obstacles.push({
       'height': obstacle_height,
-      'multiplier': storage_data['obstacle-multiplier'],
       'width': obstacle_width,
       'x': -obstacle_x - obstacle_width / 2,
       'y': -obstacle_y - obstacle_height / 2,
@@ -255,7 +253,8 @@ function logic(){
             continue;
         }
 
-        var bounced = false;
+        var bounce_x = 1;
+        var bounce_y = 1;
 
         // Loop through obstacles to find collisions.
         for(var obstacle in obstacles){
@@ -265,14 +264,12 @@ function logic(){
                 if(particles[particle]['y-speed'] > 0){
                     if(particles[particle]['y'] > obstacles[obstacle]['y'] - 2
                       && particles[particle]['y'] < obstacles[obstacle]['y']){
-                        particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
-                        bounced = true;
+                        bounce_y = -storage_data['obstacle-multiplier'];
                     }
 
                 }else if(particles[particle]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
                   && particles[particle]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
-                    particles[particle]['y-speed'] *= -obstacles[obstacle]['multiplier'];
-                    bounced = true;
+                    bounce_y = -storage_data['obstacle-multiplier'];
                 }
 
             // Y collisions.
@@ -281,14 +278,12 @@ function logic(){
                 if(particles[particle]['x-speed'] > 0){
                     if(particles[particle]['x'] > obstacles[obstacle]['x'] - 2
                       && particles[particle]['x'] < obstacles[obstacle]['x']){
-                        particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
-                        bounced = true;
+                        bounce_x = -storage_data['obstacle-multiplier'];
                     }
 
                 }else if(particles[particle]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
                   && particles[particle]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
-                    particles[particle]['x-speed'] *= -obstacles[obstacle]['multiplier'];
-                    bounced = true;
+                    bounce_x = -storage_data['obstacle-multiplier'];
                 }
             }
         }
@@ -303,39 +298,32 @@ function logic(){
                       && particles[particle]['y-speed'] > 0
                       && particles[particle]['y'] + 2 >= players[0]['paddle-y']){
                         particles[particle]['x-speed'] = Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'];
-                        particles[particle]['y-speed'] *= -1;
                         particles[particle]['owner'] = 0;
-                        bounced = true;
+                        bounce_y = -1;
                     }
 
                 }else if(particles[particle]['x'] > players[1]['paddle-x']- 2
                   && particles[particle]['x'] < players[1]['paddle-x'] + players[1]['paddle-width'] + 2
                   && particles[particle]['y-speed'] < 0
                   && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height']){
-                    particles[particle]['y-speed'] *= -1;
                     particles[particle]['owner'] = 1;
-                    bounced = true;
+                    bounce_y = -1;
                 }
 
             // Left/right wall collisions.
             }else if(Math.abs(particles[particle]['x']) > particle_x_limit){
-                particles[particle]['x-speed'] *= -1;
-                bounced = true;
+                bounce_x = -1;
 
             // Player paddle collisions.
             }else if((particles[particle]['y-speed'] < 0 && particles[particle]['y'] - 2 <= players[1]['paddle-y'] + players[1]['paddle-height'])
               || (particles[particle]['y-speed'] > 0 && particles[particle]['y'] + 2 >= players[0]['paddle-y'])){
-                particles[particle]['y-speed'] *= -1;
-                bounced = true;
+                bounce_y = -1;
             }
         }
 
-        if(bounced){
-            particles[particle]['x-speed'] *= storage_data['particle-bounce'];
-            particles[particle]['y-speed'] *= storage_data['particle-bounce'];
-        }
-
         // Move particles.
+        particles[particle]['x-speed'] *= bounce_x;
+        particles[particle]['y-speed'] *= bounce_y;
         particles[particle]['x'] += particles[particle]['x-speed'];
         particles[particle]['y'] += particles[particle]['y-speed'];
     }
