@@ -140,7 +140,7 @@ function draw_logic(){
 }
 
 function logic(){
-    if(canvas_menu){
+    if(core_menu_open){
         return;
     }
 
@@ -459,7 +459,7 @@ window.onload = function(e){
 
         // ESC: menu.
         if(key === 27){
-            canvas_menu_toggle();
+            core_menu_toggle();
             return;
         }
 
