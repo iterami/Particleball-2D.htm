@@ -140,10 +140,6 @@ function draw_logic(){
 }
 
 function logic(){
-    if(core_menu_open){
-        return;
-    }
-
     // Move player 1 paddle, prevent from moving past goal boundaries.
     players[1]['paddle-x'] += players[1]['paddle-x-move'];
     if(players[1]['paddle-x'] > 20){
