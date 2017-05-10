@@ -1,10 +1,10 @@
 'use strict';
 
 function create_obstacle(obstacle_x, obstacle_y){
-    var obstacle_height = random_integer({
+    var obstacle_height = core_random_integer({
       'max': storage_data['obstacle-size'],
     }) + 5;
-    var obstacle_width = random_integer({
+    var obstacle_width = core_random_integer({
       'max': storage_data['obstacle-size'],
     }) + 5;
 
@@ -177,7 +177,7 @@ function logic(){
     //   is less than max, add new particle.
     if(particles.length < storage_data['number-of-particles']){
         // Pick a random spawner.
-        var random_spawner = random_integer({
+        var random_spawner = core_random_integer({
           'max': spawners.length,
         });
 

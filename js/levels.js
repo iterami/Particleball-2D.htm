@@ -51,10 +51,10 @@ function load_level(id){
 
     var loop_counter = storage_data['number-of-spawners'] - 1;
     do{
-        var spawner_x = random_integer({
+        var spawner_x = core_random_integer({
           'max': gamearea_width_half * 2,
         }) - gamearea_width_half;
-        var spawner_y = random_integer({
+        var spawner_y = core_random_integer({
           'max': (gamearea_playerdist - 25) / 4,
         });
 
@@ -75,10 +75,10 @@ function load_level(id){
         var loop_counter = storage_data['number-of-obstacles'] - 1;
         do{
             create_obstacle(
-              random_integer({
+              core_random_integer({
                 'max': gamearea_width_half * 2,
               }) - gamearea_width_half,
-              random_integer({
+              core_random_integer({
                 'max': (gamearea_playerdist - 25) / 2,
               })
             );
