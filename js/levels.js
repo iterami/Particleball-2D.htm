@@ -4,8 +4,8 @@ function load_level(id){
     document.getElementById('canvas').style.background = '#3c3c3c';
 
     // Get half of height and width of game area.
-    var gamearea_height_half = storage_data['gamearea-height'] / 2;
-    var gamearea_width_half = storage_data['gamearea-width'] / 2;
+    var gamearea_height_half = core_storage_data['gamearea-height'] / 2;
+    var gamearea_width_half = core_storage_data['gamearea-width'] / 2;
 
     // Particle_x_limit is how far particles can go on x axis positive or negative.
     particle_x_limit = gamearea_width_half - 2;
@@ -44,12 +44,12 @@ function load_level(id){
     gamearea_playerdist = Math.abs(players[1]['paddle-y']) + players[0]['paddle-y'] + 5;
 
     // Require spawners.
-    storage_data['number-of-spawners'] = Math.max(
-      storage_data['number-of-spawners'],
+    core_storage_data['number-of-spawners'] = Math.max(
+      core_storage_data['number-of-spawners'],
       1
     );
 
-    var loop_counter = storage_data['number-of-spawners'] - 1;
+    var loop_counter = core_storage_data['number-of-spawners'] - 1;
     do{
         var spawner_x = core_random_integer({
           'max': gamearea_width_half * 2,
@@ -71,8 +71,8 @@ function load_level(id){
         );
     }while(loop_counter--);
 
-    if(storage_data['number-of-obstacles'] > 0){
-        var loop_counter = storage_data['number-of-obstacles'] - 1;
+    if(core_storage_data['number-of-obstacles'] > 0){
+        var loop_counter = core_storage_data['number-of-obstacles'] - 1;
         do{
             create_obstacle(
               core_random_integer({

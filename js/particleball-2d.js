@@ -2,10 +2,10 @@
 
 function create_obstacle(obstacle_x, obstacle_y){
     var obstacle_height = core_random_integer({
-      'max': storage_data['obstacle-size'],
+      'max': core_storage_data['obstacle-size'],
     }) + 5;
     var obstacle_width = core_random_integer({
-      'max': storage_data['obstacle-size'],
+      'max': core_storage_data['obstacle-size'],
     }) + 5;
 
     // Add new obstacle.
@@ -35,10 +35,10 @@ function draw_logic(){
     // Draw gamearea background.
     canvas_buffer.fillStyle = '#000';
     canvas_buffer.fillRect(
-      -storage_data['gamearea-width'] / 2,
-      -storage_data['gamearea-height'] / 2,
-      storage_data['gamearea-width'],
-      storage_data['gamearea-height']
+      -core_storage_data['gamearea-width'] / 2,
+      -core_storage_data['gamearea-height'] / 2,
+      core_storage_data['gamearea-width'],
+      core_storage_data['gamearea-height']
     );
     canvas_buffer.fillRect(
       -90,
@@ -104,7 +104,7 @@ function draw_logic(){
 
         // Draw score.
         canvas_buffer.fillText(
-          players[player]['score'] + '/' + storage_data['score-goal'],
+          players[player]['score'] + '/' + core_storage_data['score-goal'],
           players[player]['paddle-x'],
           players[player]['paddle-y'] + (player == 0 ? 60 : -35)
         );
@@ -113,11 +113,11 @@ function draw_logic(){
     canvas_buffer.restore();
 
     // Players win if they have score-goal points.
-    if(players[0]['score'] >= storage_data['score-goal']
-      || players[1]['score'] >= storage_data['score-goal']){
+    if(players[0]['score'] >= core_storage_data['score-goal']
+      || players[1]['score'] >= core_storage_data['score-goal']){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          storage_data['restart-key'] + ' = Restart',
+          core_storage_data['restart-key'] + ' = Restart',
           0,
           canvas_y / 2 + 25
         );
@@ -175,7 +175,7 @@ function logic(){
 
     // If the current number of particles
     //   is less than max, add new particle.
-    if(particles.length < storage_data['number-of-particles']){
+    if(particles.length < core_storage_data['number-of-particles']){
         // Pick a random spawner.
         var random_spawner = core_random_integer({
           'max': spawners.length,
@@ -185,9 +185,9 @@ function logic(){
         particles.push({
           'owner': -1,
           'x': spawners[random_spawner][0],
-          'x-speed': Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'],
+          'x-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
           'y': spawners[random_spawner][1],
-          'y-speed': Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'],
+          'y-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
         });
     }
 
@@ -218,7 +218,7 @@ function logic(){
           || particles[particle]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
             audio_start({
               'id': 'boop',
-              'volume-multiplier': storage_data['audio-volume'],
+              'volume-multiplier': core_storage_data['audio-volume'],
             });
 
             // Determine which player scored a goal.
@@ -260,12 +260,12 @@ function logic(){
                 if(particles[particle]['y-speed'] > 0){
                     if(particles[particle]['y'] > obstacles[obstacle]['y'] - 2
                       && particles[particle]['y'] < obstacles[obstacle]['y']){
-                        bounce_y = -storage_data['obstacle-multiplier'];
+                        bounce_y = -core_storage_data['obstacle-multiplier'];
                     }
 
                 }else if(particles[particle]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
                   && particles[particle]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
-                    bounce_y = -storage_data['obstacle-multiplier'];
+                    bounce_y = -core_storage_data['obstacle-multiplier'];
                 }
 
             // Y collisions.
@@ -274,12 +274,12 @@ function logic(){
                 if(particles[particle]['x-speed'] > 0){
                     if(particles[particle]['x'] > obstacles[obstacle]['x'] - 2
                       && particles[particle]['x'] < obstacles[obstacle]['x']){
-                        bounce_x = -storage_data['obstacle-multiplier'];
+                        bounce_x = -core_storage_data['obstacle-multiplier'];
                     }
 
                 }else if(particles[particle]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
                   && particles[particle]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
-                    bounce_x = -storage_data['obstacle-multiplier'];
+                    bounce_x = -core_storage_data['obstacle-multiplier'];
                 }
             }
         }
@@ -293,7 +293,7 @@ function logic(){
                       && particles[particle]['x'] < players[0]['paddle-x'] + players[0]['paddle-width'] + 2
                       && particles[particle]['y-speed'] > 0
                       && particles[particle]['y'] + 2 >= players[0]['paddle-y']){
-                        particles[particle]['x-speed'] = Math.random() * (storage_data['particle-speed'] * 2) - storage_data['particle-speed'];
+                        particles[particle]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
                         particles[particle]['owner'] = 0;
                         bounce_y = -1;
                     }
@@ -362,7 +362,7 @@ function logic(){
 
     // End game if any player has >= score-goal score.
     for(var player in players){
-        if(players[player]['score'] >= storage_data['score-goal']){
+        if(players[player]['score'] >= core_storage_data['score-goal']){
             window.clearInterval(canvas_interval);
         }
     }
@@ -393,15 +393,15 @@ function setmode_logic(newgame){
           + '<li><input id=particle-bounce>Bounce'
           + '<li><input id=number-of-spawners>*2 Spawners'
           + '<li><input id=particle-speed>&gt;Speed</ul>'
-          + '<a onclick=storage_reset()>Reset Settings</a></div></div>';
-        storage_update();
+          + '<a onclick=core_storage_reset()>Reset Settings</a></div></div>';
+        core_storage_update();
 
     // New game mode.
     }else{
         player_controlled = canvas_mode === 2;
 
         if(newgame){
-            storage_save();
+            core_storage_save();
         }
     }
 }
@@ -417,7 +417,7 @@ var players = [];
 var spawners = [];
 
 window.onload = function(e){
-    storage_init({
+    core_storage_init({
       'data': {
         'audio-volume': 1,
         'gamearea-height': 500,
@@ -461,13 +461,13 @@ window.onload = function(e){
 
         key = String.fromCharCode(key);
 
-        if(key === storage_data['movement-keys'][0]){
+        if(key === core_storage_data['movement-keys'][0]){
             key_left = true;
 
-        }else if(key === storage_data['movement-keys'][1]){
+        }else if(key === core_storage_data['movement-keys'][1]){
              key_right = true;
 
-        }else if(key === storage_data['restart-key']){
+        }else if(key === core_storage_data['restart-key']){
             canvas_setmode({
               'mode': canvas_mode,
             });
@@ -480,10 +480,10 @@ window.onload = function(e){
     window.onkeyup = function(e){
         var key = String.fromCharCode(e.keyCode || e.which);
 
-        if(key === storage_data['movement-keys'][0]){
+        if(key === core_storage_data['movement-keys'][0]){
             key_left = false;
 
-        }else if(key === storage_data['movement-keys'][1]){
+        }else if(key === core_storage_data['movement-keys'][1]){
             key_right = false;
         }
     };
