@@ -368,55 +368,7 @@ function logic(){
     }
 }
 
-function setmode_logic(newgame){
-    obstacles = [];
-    particles = [];
-    spawners = [];
-
-    // Main menu mode.
-    if(canvas_mode === 0){
-        document.body.innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br>'
-          + '<a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a></div></div>'
-          + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
-          + '<input id=movement-keys maxlength=2>Move ←→<br>'
-          + '<input disabled value=Click>Obstacles++<br>'
-          + '<input id=restart-key maxlength=1>Restart</div><hr>'
-          + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
-          + '<input id=score-goal>Goal<br>'
-          + 'Level:<ul><li><input id=gamearea-height>Height'
-          + '<li><input id=gamearea-width>Width</ul>'
-          + '<input id=ms-per-frame>ms/Frame<br>'
-          + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
-          + '<li><input id=number-of-obstacles>*2 #'
-          + '<li><input id=obstacle-size>+5&lt;Size</ul>'
-          + 'Particles:<ul><li><input id=number-of-particles>#'
-          + '<li><input id=particle-bounce>Bounce'
-          + '<li><input id=number-of-spawners>*2 Spawners'
-          + '<li><input id=particle-speed>&gt;Speed</ul>'
-          + '<a onclick=core_storage_reset()>Reset Settings</a></div></div>';
-        core_storage_update();
-
-    // New game mode.
-    }else{
-        player_controlled = canvas_mode === 2;
-
-        if(newgame){
-            core_storage_save();
-        }
-    }
-}
-
-var gamearea_playerdist = 0;
-var key_left = false;
-var key_right = false;
-var obstacles = [];
-var particles = [];
-var particle_x_limit = 0;
-var player_controlled = false;
-var players = [];
-var spawners = [];
-
-window.onload = function(e){
+function repo_init(){
     core_storage_init({
       'data': {
         'audio-volume': 1,
@@ -520,4 +472,52 @@ window.onload = function(e){
           pageY
         );
     };
-};
+}
+
+function setmode_logic(newgame){
+    obstacles = [];
+    particles = [];
+    spawners = [];
+
+    // Main menu mode.
+    if(canvas_mode === 0){
+        document.body.innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br>'
+          + '<a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a></div></div>'
+          + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
+          + '<input id=movement-keys maxlength=2>Move ←→<br>'
+          + '<input disabled value=Click>Obstacles++<br>'
+          + '<input id=restart-key maxlength=1>Restart</div><hr>'
+          + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
+          + '<input id=score-goal>Goal<br>'
+          + 'Level:<ul><li><input id=gamearea-height>Height'
+          + '<li><input id=gamearea-width>Width</ul>'
+          + '<input id=ms-per-frame>ms/Frame<br>'
+          + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
+          + '<li><input id=number-of-obstacles>*2 #'
+          + '<li><input id=obstacle-size>+5&lt;Size</ul>'
+          + 'Particles:<ul><li><input id=number-of-particles>#'
+          + '<li><input id=particle-bounce>Bounce'
+          + '<li><input id=number-of-spawners>*2 Spawners'
+          + '<li><input id=particle-speed>&gt;Speed</ul>'
+          + '<a onclick=core_storage_reset()>Reset Settings</a></div></div>';
+        core_storage_update();
+
+    // New game mode.
+    }else{
+        player_controlled = canvas_mode === 2;
+
+        if(newgame){
+            core_storage_save();
+        }
+    }
+}
+
+var gamearea_playerdist = 0;
+var key_left = false;
+var key_right = false;
+var obstacles = [];
+var particles = [];
+var particle_x_limit = 0;
+var player_controlled = false;
+var players = [];
+var spawners = [];
