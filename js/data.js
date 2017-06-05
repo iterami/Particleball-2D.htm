@@ -1,6 +1,6 @@
 'use strict';
 
-function load_level(id){
+function load_data(id){
     document.getElementById('canvas').style.background = '#3c3c3c';
 
     // Get half of height and width of game area.
