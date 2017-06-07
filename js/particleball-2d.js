@@ -369,8 +369,8 @@ function logic(){
 }
 
 function repo_init(){
-    core_storage_init({
-      'data': {
+    core_repo_init({
+      'storage': {
         'audio-volume': 1,
         'gamearea-height': 500,
         'gamearea-width': 1000,
@@ -386,7 +386,7 @@ function repo_init(){
         'restart-key': 'H',
         'score-goal': 20,
       },
-      'prefix': 'Particleball-2D.htm-',
+      'title': 'Particleball-2D.htm',
     });
     audio_init();
     audio_create({
