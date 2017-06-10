@@ -117,7 +117,7 @@ function draw_logic(){
       || players[1]['score'] >= core_storage_data['score-goal']){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          core_storage_data['restart-key'] + ' = Restart',
+          'H = Restart',
           0,
           canvas_y / 2 + 25
         );
@@ -150,13 +150,13 @@ function logic(){
 
     // If player controlled, handle keypress movement...
     if(player_controlled){
-        if(key_left
+        if(core_keys[65]['state']
           && players[0]['paddle-x'] > -90){
             players[0]['paddle-x'] -= 2;
         }else if(players[0]['paddle-x'] < -90){
             players[0]['paddle-x'] = -90;
         }
-        if(key_right
+        if(core_keys[68]['state']
           && players[0]['paddle-x'] < 20){
             players[0]['paddle-x'] += 2;
         }else if(players[0]['paddle-x'] > 20){
@@ -370,11 +370,60 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
+      'keybinds': {
+        65: {},
+        68: {},
+        72: {
+          'todo': function(){
+            canvas_setmode({
+              'mode': canvas_mode,
+            });
+          },
+        },
+        81: {
+          'todo': canvas_menu_quit,
+        },
+      },
+      'mousebinds': {
+        'mousedown': {
+          'todo': function(){
+              if(canvas_mode <= 0){
+                  return;
+              }
+
+              var pageX = core_mouse['x'] - canvas_x;
+              var pageY = core_mouse['y'] - canvas_y;
+
+              // Check if clicked on obstacle.
+              for(var obstacle in obstacles){
+                  if(pageX >= obstacles[obstacle]['x']
+                    && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
+                    && pageY >= obstacles[obstacle]['y']
+                    && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
+                      // Delete the obstacle.
+                      obstacles.splice(
+                        obstacle % 2
+                          ? obstacle - 1
+                          : obstacle,
+                        2
+                      );
+
+                      return;
+                  }
+              }
+
+              // Clicks create new obstacles.
+              create_obstacle(
+                pageX,
+                pageY
+              );
+          },
+        },
+      },
       'storage': {
         'audio-volume': 1,
         'gamearea-height': 500,
         'gamearea-width': 1000,
-        'movement-keys': 'AD',
         'ms-per-frame': 25,
         'number-of-obstacles': 10,
         'number-of-particles': 100,
@@ -383,7 +432,6 @@ function repo_init(){
         'obstacle-size': 65,
         'particle-bounce': 1,
         'particle-speed': 1.5,
-        'restart-key': 'H',
         'score-goal': 20,
       },
       'title': 'Particleball-2D.htm',
@@ -397,81 +445,6 @@ function repo_init(){
       },
     });
     canvas_init();
-
-    window.onkeydown = function(e){
-        if(canvas_mode <= 0){
-            return;
-        }
-
-        var key = e.keyCode || e.which;
-
-        // ESC: menu.
-        if(key === 27){
-            core_escape();
-            return;
-        }
-
-        key = String.fromCharCode(key);
-
-        if(key === core_storage_data['movement-keys'][0]){
-            key_left = true;
-
-        }else if(key === core_storage_data['movement-keys'][1]){
-             key_right = true;
-
-        }else if(key === core_storage_data['restart-key']){
-            canvas_setmode({
-              'mode': canvas_mode,
-            });
-
-        }else if(key === 'Q'){
-            canvas_menu_quit();
-        }
-    };
-
-    window.onkeyup = function(e){
-        var key = String.fromCharCode(e.keyCode || e.which);
-
-        if(key === core_storage_data['movement-keys'][0]){
-            key_left = false;
-
-        }else if(key === core_storage_data['movement-keys'][1]){
-            key_right = false;
-        }
-    };
-
-    window.onmousedown = function(e){
-        if(canvas_mode <= 0){
-            return;
-        }
-
-        var pageX = e.pageX - canvas_x;
-        var pageY = e.pageY - canvas_y;
-
-        // Check if clicked on obstacle.
-        for(var obstacle in obstacles){
-            if(pageX >= obstacles[obstacle]['x']
-              && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
-              && pageY >= obstacles[obstacle]['y']
-              && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
-                // Delete the obstacle.
-                obstacles.splice(
-                  obstacle % 2
-                    ? obstacle - 1
-                    : obstacle,
-                  2
-                );
-
-                return;
-            }
-        }
-
-        // Clicks create new obstacles.
-        create_obstacle(
-          pageX,
-          pageY
-        );
-    };
 }
 
 function setmode_logic(newgame){
@@ -484,9 +457,7 @@ function setmode_logic(newgame){
         document.getElementById('wrap').innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br>'
           + '<a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a></div></div>'
           + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
-          + '<input id=movement-keys maxlength=2>Move ←→<br>'
-          + '<input disabled value=Click>Obstacles++<br>'
-          + '<input id=restart-key maxlength=1>Restart</div><hr>'
+          + '<input disabled value=Click>Obstacles++</div><hr>'
           + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
           + '<input id=score-goal>Goal<br>'
           + 'Level:<ul><li><input id=gamearea-height>Height'
@@ -513,8 +484,6 @@ function setmode_logic(newgame){
 }
 
 var gamearea_playerdist = 0;
-var key_left = false;
-var key_right = false;
 var obstacles = [];
 var particles = [];
 var particle_x_limit = 0;
