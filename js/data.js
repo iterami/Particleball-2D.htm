@@ -1,6 +1,11 @@
 'use strict';
 
 function load_data(id){
+    obstacles = [];
+    particles = [];
+    player_controlled = canvas_mode === 2;
+    spawners = [];
+
     document.getElementById('canvas').style.background = '#3c3c3c';
 
     // Get half of height and width of game area.

@@ -370,6 +370,7 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
+      'info': '<a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br><a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a>',
       'keybinds': {
         65: {},
         68: {},
@@ -380,10 +381,8 @@ function repo_init(){
             });
           },
         },
-        81: {
-          'todo': canvas_menu_quit,
-        },
       },
+      'menu': true,
       'mousebinds': {
         'mousedown': {
           'todo': function(){
@@ -434,6 +433,7 @@ function repo_init(){
         'particle-speed': 1.5,
         'score-goal': 20,
       },
+      'storage-menu': '<input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br><input id=score-goal>Goal<br>Level:<ul><li><input id=gamearea-height>Height<li><input id=gamearea-width>Width</ul><input id=ms-per-frame>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier<li><input id=number-of-obstacles>*2 #<li><input id=obstacle-size>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles>#<li><input id=particle-bounce>Bounce<li><input id=number-of-spawners>*2 Spawners<li><input id=particle-speed>&gt;Speed</ul>',
       'title': 'Particleball-2D.htm',
     });
     audio_init();
@@ -445,42 +445,6 @@ function repo_init(){
       },
     });
     canvas_init();
-}
-
-function setmode_logic(newgame){
-    obstacles = [];
-    particles = [];
-    spawners = [];
-
-    // Main menu mode.
-    if(canvas_mode === 0){
-        document.getElementById('wrap').innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br>'
-          + '<a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a></div></div>'
-          + '</div><div class=right><div><input disabled value=ESC>Menu<br>'
-          + '<input disabled value=Click>Obstacles++</div><hr>'
-          + '<div><input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br>'
-          + '<input id=score-goal>Goal<br>'
-          + 'Level:<ul><li><input id=gamearea-height>Height'
-          + '<li><input id=gamearea-width>Width</ul>'
-          + '<input id=ms-per-frame>ms/Frame<br>'
-          + 'Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier'
-          + '<li><input id=number-of-obstacles>*2 #'
-          + '<li><input id=obstacle-size>+5&lt;Size</ul>'
-          + 'Particles:<ul><li><input id=number-of-particles>#'
-          + '<li><input id=particle-bounce>Bounce'
-          + '<li><input id=number-of-spawners>*2 Spawners'
-          + '<li><input id=particle-speed>&gt;Speed</ul>'
-          + '<a onclick=core_storage_reset()>Reset Settings</a></div></div>';
-        core_storage_update();
-
-    // New game mode.
-    }else{
-        player_controlled = canvas_mode === 2;
-
-        if(newgame){
-            core_storage_save();
-        }
-    }
 }
 
 var gamearea_playerdist = 0;
