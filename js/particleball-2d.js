@@ -370,7 +370,7 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
-      'info': '<a onclick=canvas_setmode({mode:1,newgame:true})>AI vs AI</a><br><a onclick=canvas_setmode({mode:2,newgame:true})>Player vs AI</a>',
+      'info': '<input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="AI vs AI"><br><input onclick=canvas_setmode({mode:2,newgame:true}) type=button value="Player vs AI">',
       'keybinds': {
         65: {},
         68: {},
