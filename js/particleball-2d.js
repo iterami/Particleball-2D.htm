@@ -216,9 +216,8 @@ function logic(){
         // If particle has collided with a goal.
         if(particles[particle]['y'] + 2 > players[0]['goal-y']
           || particles[particle]['y'] - 2 < players[1]['goal-y'] + players[1]['goal-height']){
-            audio_start({
+            core_audio_start({
               'id': 'boop',
-              'volume-multiplier': core_storage_data['audio-volume'],
             });
 
             // Determine which player scored a goal.
@@ -420,7 +419,6 @@ function repo_init(){
         },
       },
       'storage': {
-        'audio-volume': 1,
         'gamearea-height': 500,
         'gamearea-width': 1000,
         'ms-per-frame': 25,
@@ -433,15 +431,13 @@ function repo_init(){
         'particle-speed': 1.5,
         'score-goal': 20,
       },
-      'storage-menu': '<input id=audio-volume max=1 min=0 step=0.01 type=range>Audio<br><input id=score-goal>Goal<br>Level:<ul><li><input id=gamearea-height>Height<li><input id=gamearea-width>Width</ul><input id=ms-per-frame>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier<li><input id=number-of-obstacles>*2 #<li><input id=obstacle-size>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles>#<li><input id=particle-bounce>Bounce<li><input id=number-of-spawners>*2 Spawners<li><input id=particle-speed>&gt;Speed</ul>',
+      'storage-menu': '<input id=score-goal>Goal<br>Level:<ul><li><input id=gamearea-height>Height<li><input id=gamearea-width>Width</ul><input id=ms-per-frame>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier<li><input id=number-of-obstacles>*2 #<li><input id=obstacle-size>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles>#<li><input id=particle-bounce>Bounce<li><input id=number-of-spawners>*2 Spawners<li><input id=particle-speed>&gt;Speed</ul>',
       'title': 'Particleball-2D.htm',
     });
-    audio_init();
-    audio_create({
+    core_audio_create({
       'id': 'boop',
       'properties': {
         'duration': .1,
-        'volume': .1,
       },
     });
     canvas_init();
