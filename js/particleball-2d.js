@@ -421,7 +421,6 @@ function repo_init(){
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
-        'ms-per-frame': 25,
         'number-of-obstacles': 10,
         'number-of-particles': 100,
         'number-of-spawners': 3,
@@ -431,7 +430,7 @@ function repo_init(){
         'particle-speed': 1.5,
         'score-goal': 20,
       },
-      'storage-menu': '<input id=score-goal>Goal<br>Level:<ul><li><input id=gamearea-height>Height<li><input id=gamearea-width>Width</ul><input id=ms-per-frame>ms/Frame<br>Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier<li><input id=number-of-obstacles>*2 #<li><input id=obstacle-size>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles>#<li><input id=particle-bounce>Bounce<li><input id=number-of-spawners>*2 Spawners<li><input id=particle-speed>&gt;Speed</ul>',
+      'storage-menu': '<input id=score-goal>Goal<br>Level:<ul><li><input id=gamearea-height>Height<li><input id=gamearea-width>Width</ul>Obstacles:<ul><li><input id=obstacle-multiplier>Multiplier<li><input id=number-of-obstacles>*2 #<li><input id=obstacle-size>+5&lt;Size</ul>Particles:<ul><li><input id=number-of-particles>#<li><input id=particle-bounce>Bounce<li><input id=number-of-spawners>*2 Spawners<li><input id=particle-speed>&gt;Speed</ul>',
       'title': 'Particleball-2D.htm',
     });
     core_audio_create({
