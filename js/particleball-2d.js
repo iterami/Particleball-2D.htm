@@ -374,7 +374,7 @@ function repo_init(){
           'duration': .1,
         },
       },
-      'info': '<input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="AI vs AI"><br><input onclick=canvas_setmode({mode:2,newgame:true}) type=button value="Player vs AI">',
+      'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="AI vs AI"><br><input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="Player vs AI">',
       'keybinds': {
         65: {},
         68: {},
@@ -390,10 +390,6 @@ function repo_init(){
       'mousebinds': {
         'mousedown': {
           'todo': function(){
-              if(canvas_mode <= 0){
-                  return;
-              }
-
               var pageX = core_mouse['x'] - canvas_x;
               var pageY = core_mouse['y'] - canvas_y;
 

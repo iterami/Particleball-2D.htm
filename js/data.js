@@ -3,7 +3,7 @@
 function load_data(id){
     obstacles = [];
     particles = [];
-    player_controlled = canvas_mode === 2;
+    player_controlled = canvas_mode === 1;
     spawners = [];
 
     document.getElementById('canvas').style.background = '#3c3c3c';
