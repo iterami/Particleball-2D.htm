@@ -369,6 +369,11 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
+      'audios': {
+        'boop': {
+          'duration': .1,
+        },
+      },
       'info': '<input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="AI vs AI"><br><input onclick=canvas_setmode({mode:2,newgame:true}) type=button value="Player vs AI">',
       'keybinds': {
         65: {},
@@ -432,12 +437,6 @@ function repo_init(){
       },
       'storage-menu': '<table><tr><td><input id=score-goal><td>Goal<tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 # of Obstacles<tr><td><input id=obstacle-size><td>+5 &lt; Obstacle Size<tr><td><input id=number-of-particles><td># of Particles<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
       'title': 'Particleball-2D.htm</table>',
-    });
-    core_audio_create({
-      'id': 'boop',
-      'properties': {
-        'duration': .1,
-      },
     });
     canvas_init();
 }
