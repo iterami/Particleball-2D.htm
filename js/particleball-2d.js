@@ -381,7 +381,7 @@ function repo_init(){
         72: {
           'todo': function(){
             canvas_setmode({
-              'mode': canvas_mode,
+              'mode': core_mode,
             });
           },
         },
