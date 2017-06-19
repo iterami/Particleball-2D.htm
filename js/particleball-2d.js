@@ -374,7 +374,7 @@ function repo_init(){
           'duration': .1,
         },
       },
-      'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="AI vs AI"><br><input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="Player vs AI">',
+      'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="AI vs AI"><input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="Player vs AI">',
       'keybinds': {
         65: {},
         68: {},
