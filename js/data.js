@@ -18,7 +18,7 @@ function load_data(id){
     // Setup player information.
     players = [
       {
-       'color': '#2d8930',
+       'color': core_storage_data['color-positive'],
         'goal-height': 20,
         'goal-width': 200,
         'goal-x': -100,
@@ -31,7 +31,7 @@ function load_data(id){
         'score': 0,
       },
       {
-        'color': '#f70',
+        'color': core_storage_data['color-negative'],
         'goal-height': 20,
         'goal-width': 200,
         'goal-x': -100,

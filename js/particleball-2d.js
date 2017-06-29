@@ -103,6 +103,7 @@ function draw_logic(){
         );
 
         // Draw score.
+        canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
           players[player]['score'] + '/' + core_storage_data['score-goal'],
           players[player]['paddle-x'],
