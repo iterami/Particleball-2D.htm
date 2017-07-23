@@ -1,5 +1,30 @@
 'use strict';
 
+function create_obstacle(obstacle_x, obstacle_y){
+    var obstacle_height = core_random_integer({
+      'max': core_storage_data['obstacle-size'],
+    }) + 5;
+    var obstacle_width = core_random_integer({
+      'max': core_storage_data['obstacle-size'],
+    }) + 5;
+
+    // Add new obstacle.
+    obstacles.push({
+      'height': obstacle_height,
+      'width': obstacle_width,
+      'x': obstacle_x - obstacle_width / 2,
+      'y': obstacle_y - obstacle_height / 2,
+    });
+
+    // Add mirrored verison of new obstacle.
+    obstacles.push({
+      'height': obstacle_height,
+      'width': obstacle_width,
+      'x': -obstacle_x - obstacle_width / 2,
+      'y': -obstacle_y - obstacle_height / 2,
+    });
+}
+
 function load_data(id){
     obstacles = [];
     particles = [];
