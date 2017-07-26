@@ -44,10 +44,10 @@ function draw_logic(){
         );
     }
 
+    // Draw particles.
     for(var particle in particles){
-        // Draw particles, #ddd if they are unclaimed and #player_color if they are claimed.
         canvas_buffer.fillStyle = particles[particle]['owner'] < 0
-          ? '#ddd'
+          ? core_storage_data['particle-color']
           : players[particles[particle]['owner']]['color'];
         canvas_buffer.fillRect(
           Math.round(particles[particle]['x']) - 2,
@@ -403,11 +403,12 @@ function repo_init(){
         'number-of-spawners': 3,
         'obstacle-multiplier': 1.01,
         'obstacle-size': 65,
+        'particle-color': '#dddddd',
         'particle-bounce': 1,
         'particle-speed': 1.5,
         'score-goal': 20,
       },
-      'storage-menu': '<table><tr><td><input id=score-goal><td>Goal<tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 # of Obstacles<tr><td><input id=obstacle-size><td>+5 &lt; Obstacle Size<tr><td><input id=number-of-particles><td># of Particles<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
+      'storage-menu': '<table><tr><td><input id=score-goal><td>Goal<tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 # of Obstacles<tr><td><input id=obstacle-size><td>+5 &lt; Obstacle Size<tr><td><input id=number-of-particles><td># of Particles<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
