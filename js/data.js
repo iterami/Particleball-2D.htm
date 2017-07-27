@@ -40,39 +40,31 @@ function load_data(id){
     particle_x_limit = gamearea_width_half - 2;
 
     // Setup player information.
-    players = [
-      {
-       'color': core_storage_data['color-positive'],
-        'goal-height': 20,
-        'goal-width': 200,
-        'goal-x': -100,
+    core_entity_create({
+      'id': 'player-0',
+      'properties': {
+        'color': core_storage_data['color-positive'],
         'goal-y': gamearea_height_half + 10,
-        'paddle-height': 5,
-        'paddle-width': 70,
-        'paddle-x': -35,
-        'paddle-x-move': 0,
         'paddle-y': gamearea_height_half,
-        'score': 0,
-        'target': false,
       },
-      {
+      'types': [
+        'player',
+      ],
+    });
+    core_entity_create({
+      'id': 'player-1',
+      'properties': {
         'color': core_storage_data['color-negative'],
-        'goal-height': 20,
-        'goal-width': 200,
-        'goal-x': -100,
         'goal-y': -gamearea_height_half - 30,
-        'paddle-height': 5,
-        'paddle-width': 70,
-        'paddle-x': -35,
-        'paddle-x-move': 0,
         'paddle-y': -gamearea_height_half - 5,
-        'score': 0,
-        'target': false,
       },
-    ];
+      'types': [
+        'player',
+      ],
+    });
 
     // Calculate distance between both players.
-    gamearea_playerdist = Math.abs(players[1]['paddle-y']) + players[0]['paddle-y'] + 5;
+    gamearea_playerdist = Math.abs(core_entities['player-1']['paddle-y']) + core_entities['player-0']['paddle-y'] + 5;
 
     // Require spawners.
     core_storage_data['number-of-spawners'] = Math.max(
