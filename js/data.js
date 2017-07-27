@@ -27,7 +27,6 @@ function create_obstacle(obstacle_x, obstacle_y){
 
 function load_data(id){
     obstacles = [];
-    particles = [];
     player_controlled = id === 1;
     spawners = [];
 
@@ -54,6 +53,7 @@ function load_data(id){
         'paddle-x-move': 0,
         'paddle-y': gamearea_height_half,
         'score': 0,
+        'target': false,
       },
       {
         'color': core_storage_data['color-negative'],
@@ -67,6 +67,7 @@ function load_data(id){
         'paddle-x-move': 0,
         'paddle-y': -gamearea_height_half - 5,
         'score': 0,
+        'target': false,
       },
     ];
 
