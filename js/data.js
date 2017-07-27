@@ -8,25 +8,32 @@ function create_obstacle(obstacle_x, obstacle_y){
       'max': core_storage_data['obstacle-size'],
     }) + 5;
 
-    // Add new obstacle.
-    obstacles.push({
-      'height': obstacle_height,
-      'width': obstacle_width,
-      'x': obstacle_x - obstacle_width / 2,
-      'y': obstacle_y - obstacle_height / 2,
+    // Add new obstacle and mirror.
+    core_entity_create({
+      'properties': {
+        'height': obstacle_height,
+        'width': obstacle_width,
+        'x': obstacle_x - obstacle_width / 2,
+        'y': obstacle_y - obstacle_height / 2,
+      },
+      'types': [
+        'obstacle',
+      ],
     });
-
-    // Add mirrored verison of new obstacle.
-    obstacles.push({
-      'height': obstacle_height,
-      'width': obstacle_width,
-      'x': -obstacle_x - obstacle_width / 2,
-      'y': -obstacle_y - obstacle_height / 2,
+    core_entity_create({
+      'properties': {
+        'height': obstacle_height,
+        'width': obstacle_width,
+        'x': -obstacle_x - obstacle_width / 2,
+        'y': -obstacle_y - obstacle_height / 2,
+      },
+      'types': [
+        'obstacle',
+      ],
     });
 }
 
 function load_data(id){
-    obstacles = [];
     player_controlled = id === 1;
 
     document.getElementById('canvas').style.background = '#3c3c3c';

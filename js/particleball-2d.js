@@ -24,14 +24,19 @@ function draw_logic(){
 
     // Draw obstacles.
     canvas_buffer.fillStyle = '#3c3c3c';
-    for(var obstacle in obstacles){
-        canvas_buffer.fillRect(
-          obstacles[obstacle]['x'],
-          obstacles[obstacle]['y'],
-          obstacles[obstacle]['width'],
-          obstacles[obstacle]['height']
-        );
-    }
+    core_group_modify({
+      'groups': [
+        'obstacle',
+      ],
+      'todo': function(entity){
+          canvas_buffer.fillRect(
+            core_entities[entity]['x'],
+            core_entities[entity]['y'],
+            core_entities[entity]['width'],
+            core_entities[entity]['height']
+          );
+      },
+    });
 
     // Draw spawners.
     canvas_buffer.fillStyle = '#476291';
@@ -220,36 +225,41 @@ function logic(){
               var bounce_y = 1;
 
               // Loop through obstacles to find collisions.
-              for(var obstacle in obstacles){
-                  // X collisions.
-                  if(core_entities[entity]['x'] >= obstacles[obstacle]['x']
-                    && core_entities[entity]['x'] <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']){
-                      if(core_entities[entity]['y-speed'] > 0){
-                          if(core_entities[entity]['y'] > obstacles[obstacle]['y'] - 2
-                            && core_entities[entity]['y'] < obstacles[obstacle]['y']){
-                              bounce_y = -core_storage_data['obstacle-multiplier'];
-                          }
+              core_group_modify({
+                'groups': [
+                  'obstacle',
+                ],
+                'todo': function(obstacle){
+                    // X collisions.
+                    if(core_entities[entity]['x'] >= core_entities[obstacle]['x']
+                      && core_entities[entity]['x'] <= core_entities[obstacle]['x'] + core_entities[obstacle]['width']){
+                        if(core_entities[entity]['y-speed'] > 0){
+                            if(core_entities[entity]['y'] > core_entities[obstacle]['y'] - 2
+                              && core_entities[entity]['y'] < core_entities[obstacle]['y']){
+                                bounce_y = -core_storage_data['obstacle-multiplier'];
+                            }
 
-                      }else if(core_entities[entity]['y'] > obstacles[obstacle]['y'] + obstacles[obstacle]['height']
-                        && core_entities[entity]['y'] < obstacles[obstacle]['y'] + obstacles[obstacle]['height'] + 2){
-                          bounce_y = -core_storage_data['obstacle-multiplier'];
-                      }
+                        }else if(core_entities[entity]['y'] > core_entities[obstacle]['y'] + core_entities[obstacle]['height']
+                          && core_entities[entity]['y'] < core_entities[obstacle]['y'] + core_entities[obstacle]['height'] + 2){
+                            bounce_y = -core_storage_data['obstacle-multiplier'];
+                        }
 
-                  // Y collisions.
-                  }else if(core_entities[entity]['y'] >= obstacles[obstacle]['y']
-                    && core_entities[entity]['y'] <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
-                      if(core_entities[entity]['x-speed'] > 0){
-                          if(core_entities[entity]['x'] > obstacles[obstacle]['x'] - 2
-                            && core_entities[entity]['x'] < obstacles[obstacle]['x']){
-                              bounce_x = -core_storage_data['obstacle-multiplier'];
-                          }
+                    // Y collisions.
+                    }else if(core_entities[entity]['y'] >= core_entities[obstacle]['y']
+                      && core_entities[entity]['y'] <= core_entities[obstacle]['y'] + core_entities[obstacle]['height']){
+                        if(core_entities[entity]['x-speed'] > 0){
+                            if(core_entities[entity]['x'] > core_entities[obstacle]['x'] - 2
+                              && core_entities[entity]['x'] < core_entities[obstacle]['x']){
+                                bounce_x = -core_storage_data['obstacle-multiplier'];
+                            }
 
-                      }else if(core_entities[entity]['x'] > obstacles[obstacle]['x'] + obstacles[obstacle]['width']
-                        && core_entities[entity]['x'] < obstacles[obstacle]['x'] + obstacles[obstacle]['width'] + 2){
-                          bounce_x = -core_storage_data['obstacle-multiplier'];
-                      }
-                  }
-              }
+                        }else if(core_entities[entity]['x'] > core_entities[obstacle]['x'] + core_entities[obstacle]['width']
+                          && core_entities[entity]['x'] < core_entities[obstacle]['x'] + core_entities[obstacle]['width'] + 2){
+                            bounce_x = -core_storage_data['obstacle-multiplier'];
+                        }
+                    }
+                },
+              });
 
               // Check for collisions with player paddles or edges of game area.
               if(core_entities[entity]['y'] > core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']
@@ -395,38 +405,6 @@ function repo_init(){
         },
       },
       'menu': true,
-      'mousebinds': {
-        'mousedown': {
-          'todo': function(){
-              var pageX = core_mouse['x'] - canvas_x;
-              var pageY = core_mouse['y'] - canvas_y;
-
-              // Check if clicked on obstacle.
-              for(var obstacle in obstacles){
-                  if(pageX >= obstacles[obstacle]['x']
-                    && pageX <= obstacles[obstacle]['x'] + obstacles[obstacle]['width']
-                    && pageY >= obstacles[obstacle]['y']
-                    && pageY <= obstacles[obstacle]['y'] + obstacles[obstacle]['height']){
-                      // Delete the obstacle.
-                      obstacles.splice(
-                        obstacle % 2
-                          ? obstacle - 1
-                          : obstacle,
-                        2
-                      );
-
-                      return;
-                  }
-              }
-
-              // Clicks create new obstacles.
-              create_obstacle(
-                pageX,
-                pageY
-              );
-          },
-        },
-      },
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
@@ -444,6 +422,9 @@ function repo_init(){
       'title': 'Particleball-2D.htm',
     });
 
+    core_entity_set({
+      'type': 'obstacle',
+    });
     core_entity_set({
       'properties': {
         'owner': -1,
@@ -472,6 +453,5 @@ function repo_init(){
 }
 
 var gamearea_playerdist = 0;
-var obstacles = [];
 var particle_x_limit = 0;
 var player_controlled = false;
