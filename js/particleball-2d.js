@@ -60,7 +60,7 @@ function draw_logic(){
         'particle',
       ],
       'todo': function(entity){
-        canvas_buffer.fillStyle = core_entities[entity]['owner'] < 0
+        canvas_buffer.fillStyle = core_entities[entity]['owner'] === false
           ? core_storage_data['particle-color']
           : core_entities[core_entities[entity]['owner']]['color'];
         canvas_buffer.fillRect(
@@ -203,7 +203,7 @@ function logic(){
               }
 
               // Increase the scoring players score by 1.
-              if(core_entities[entity]['owner'] === temp_player){
+              if(core_entities[entity]['owner'] === 'player-' + temp_player){
                   core_entities['player-' + temp_player]['score'] += 1;
               }
 
@@ -271,7 +271,7 @@ function logic(){
                             && core_entities[entity]['y-speed'] > 0
                             && core_entities[entity]['y'] + 2 >= core_entities['player-0']['paddle-y']){
                               core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
-                              core_entities[entity]['owner'] = 0;
+                              core_entities[entity]['owner'] = 'player-0';
                               bounce_y = -1;
                           }
 
@@ -279,7 +279,7 @@ function logic(){
                         && core_entities[entity]['x'] < core_entities['player-1']['paddle-x'] + core_entities['player-1']['paddle-width'] + 2
                         && core_entities[entity]['y-speed'] < 0
                         && core_entities[entity]['y'] - 2 <= core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']){
-                          core_entities[entity]['owner'] = 1;
+                          core_entities[entity]['owner'] = 'player-1';
                           bounce_y = -1;
                       }
 
@@ -427,7 +427,7 @@ function repo_init(){
     });
     core_entity_set({
       'properties': {
-        'owner': -1,
+        'owner': false,
       },
       'type': 'particle',
     });
