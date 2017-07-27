@@ -28,7 +28,6 @@ function create_obstacle(obstacle_x, obstacle_y){
 function load_data(id){
     obstacles = [];
     player_controlled = id === 1;
-    spawners = [];
 
     document.getElementById('canvas').style.background = '#3c3c3c';
 
@@ -82,16 +81,24 @@ function load_data(id){
         });
 
         // Add new spawner and mirror.
-        spawners.push(
-          [
-            spawner_x,
-            spawner_y
+        core_entity_create({
+          'properties': {
+            'x': spawner_x,
+            'y': spawner_y,
+          },
+          'types': [
+            'spawner',
           ],
-          [
-            -spawner_x,
-            -spawner_y
-          ]
-        );
+        });
+        core_entity_create({
+          'properties': {
+            'x': -spawner_x,
+            'y': -spawner_y,
+          },
+          'types': [
+            'spawner',
+          ],
+        });
     }while(loop_counter--);
 
     if(core_storage_data['number-of-obstacles'] > 0){

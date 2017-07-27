@@ -35,14 +35,19 @@ function draw_logic(){
 
     // Draw spawners.
     canvas_buffer.fillStyle = '#476291';
-    for(var spawner in spawners){
-        canvas_buffer.fillRect(
-          spawners[spawner][0] - 4,
-          spawners[spawner][1] - 4,
-          8,
-          8
-        );
-    }
+    core_group_modify({
+      'groups': [
+        'spawner',
+      ],
+      'todo': function(entity){
+          canvas_buffer.fillRect(
+            core_entities[entity]['x'] - 4,
+            core_entities[entity]['y'] - 4,
+            8,
+            8
+          );
+      },
+    });
 
     // Draw particles.
     core_group_modify({
@@ -130,16 +135,16 @@ function logic(){
     //   is less than max, add new particle.
     if(core_entity_info['particle']['count'] < core_storage_data['number-of-particles']){
         // Pick a random spawner.
-        var random_spawner = core_random_integer({
-          'max': spawners.length,
+        var random_spawner = core_random_key({
+          'object': core_groups['spawner'],
         });
 
         // Add particle.
         core_entity_create({
           'properties': {
-            'x': spawners[random_spawner][0],
+            'x': core_entities[random_spawner]['x'],
             'x-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
-            'y': spawners[random_spawner][1],
+            'y': core_entities[random_spawner]['y'],
             'y-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
           },
           'types': [
@@ -459,6 +464,9 @@ function repo_init(){
       },
       'type': 'player',
     });
+    core_entity_set({
+      'type': 'spawner',
+    });
 
     canvas_init();
 }
@@ -467,4 +475,3 @@ var gamearea_playerdist = 0;
 var obstacles = [];
 var particle_x_limit = 0;
 var player_controlled = false;
-var spawners = [];
