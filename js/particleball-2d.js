@@ -392,6 +392,28 @@ function repo_init(){
           'duration': .1,
         },
       },
+      'entities': {
+        'obstacle': {},
+        'particle': {
+          'properties': {
+            'owner': false,
+          },
+        },
+        'player': {
+          'properties': {
+            'goal-height': 20,
+            'goal-width': 200,
+            'goal-x': -100,
+            'paddle-height': 5,
+            'paddle-width': 70,
+            'paddle-x': -35,
+            'paddle-x-move': 0,
+            'score': 0,
+            'target': false,
+          },
+        },
+        'spawner': {},
+      },
       'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="AI vs AI"><input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="Player vs AI">',
       'keybinds': {
         65: {},
@@ -421,34 +443,6 @@ function repo_init(){
       'storage-menu': '<table><tr><td><input id=score-goal><td>Goal<tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 # of Obstacles<tr><td><input id=obstacle-size><td>+5 &lt; Obstacle Size<tr><td><input id=number-of-particles><td># of Particles<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
       'title': 'Particleball-2D.htm',
     });
-
-    core_entity_set({
-      'type': 'obstacle',
-    });
-    core_entity_set({
-      'properties': {
-        'owner': false,
-      },
-      'type': 'particle',
-    });
-    core_entity_set({
-      'properties': {
-        'goal-height': 20,
-        'goal-width': 200,
-        'goal-x': -100,
-        'paddle-height': 5,
-        'paddle-width': 70,
-        'paddle-x': -35,
-        'paddle-x-move': 0,
-        'score': 0,
-        'target': false,
-      },
-      'type': 'player',
-    });
-    core_entity_set({
-      'type': 'spawner',
-    });
-
     canvas_init();
 }
 
