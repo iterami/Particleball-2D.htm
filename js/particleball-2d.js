@@ -8,7 +8,11 @@ function draw_logic(){
     );
 
     // Draw gamearea background.
-    canvas_buffer.fillStyle = '#000';
+    canvas_setproperties({
+      'properties': {
+        'fillStyle': '#000',
+      },
+    });
     canvas_buffer.fillRect(
       -core_storage_data['gamearea-width'] / 2,
       -core_storage_data['gamearea-height'] / 2,
@@ -23,7 +27,11 @@ function draw_logic(){
     );
 
     // Draw obstacles.
-    canvas_buffer.fillStyle = '#3c3c3c';
+    canvas_setproperties({
+      'properties': {
+        'fillStyle': '#3c3c3c',
+      },
+    });
     core_group_modify({
       'groups': [
         'obstacle',
@@ -39,7 +47,11 @@ function draw_logic(){
     });
 
     // Draw spawners.
-    canvas_buffer.fillStyle = '#476291';
+    canvas_setproperties({
+      'properties': {
+        'fillStyle': '#476291',
+      },
+    });
     core_group_modify({
       'groups': [
         'spawner',
@@ -60,15 +72,19 @@ function draw_logic(){
         'particle',
       ],
       'todo': function(entity){
-        canvas_buffer.fillStyle = core_entities[entity]['owner'] === false
-          ? core_storage_data['particle-color']
-          : core_entities[core_entities[entity]['owner']]['color'];
-        canvas_buffer.fillRect(
-          Math.round(core_entities[entity]['x']) - 2,
-          Math.round(core_entities[entity]['y']) - 2,
-          4,
-          4
-        );
+          canvas_setproperties({
+            'properties': {
+              'fillStyle': core_entities[entity]['owner'] === false
+                ? core_storage_data['particle-color']
+                : core_entities[core_entities[entity]['owner']]['color'],
+            },
+          });
+          canvas_buffer.fillRect(
+            Math.round(core_entities[entity]['x']) - 2,
+            Math.round(core_entities[entity]['y']) - 2,
+            4,
+            4
+          );
       },
     });
 
@@ -78,7 +94,11 @@ function draw_logic(){
       ],
       'todo': function(entity){
           // Set color to player color.
-          canvas_buffer.fillStyle = core_entities[entity]['color'];
+          canvas_setproperties({
+            'properties': {
+              'fillStyle': core_entities[entity]['color'],
+            },
+          });
 
           // Draw paddle.
           canvas_buffer.fillRect(
@@ -97,7 +117,11 @@ function draw_logic(){
           );
 
           // Draw score.
-          canvas_buffer.fillStyle = '#fff';
+          canvas_setproperties({
+            'properties': {
+              'fillStyle': '#fff',
+            },
+          });
           canvas_buffer.fillText(
             core_entities[entity]['score'] + '/' + core_storage_data['score-goal'],
             core_entities[entity]['paddle-x'],
@@ -111,7 +135,11 @@ function draw_logic(){
     // Players win if they have score-goal points.
     if(core_entities['player-0']['score'] >= core_storage_data['score-goal']
       || core_entities['player-1']['score'] >= core_storage_data['score-goal']){
-        canvas_buffer.fillStyle = '#fff';
+        canvas_setproperties({
+          'properties': {
+            'fillStyle': '#fff',
+          },
+        });
         canvas_buffer.fillText(
           'H = Restart',
           0,
@@ -126,7 +154,11 @@ function draw_logic(){
         var winner = core_entities['player-0']['score'] > core_entities['player-1']['score']
           ? 0
           : 1;
-        canvas_buffer.fillStyle = core_entities[winner]['color'];
+        canvas_setproperties({
+          'properties': {
+            'fillStyle': core_entities[winner]['color'],
+          },
+        });
         canvas_buffer.fillText(
           'Player ' + winner + ' wins!',
           0,
