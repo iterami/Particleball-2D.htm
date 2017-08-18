@@ -446,7 +446,26 @@ function repo_init(){
         },
         'spawner': {},
       },
-      'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="AI vs AI"><input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="Player vs AI">',
+      'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
+      'info-events': {
+        'ai-vs-ai': {
+          'todo': function(){
+              canvas_setmode({
+                'newgame': true,
+              });
+          },
+          'type': 'onclick',
+        },
+        'ai-vs-player': {
+          'todo': function(){
+              canvas_setmode({
+                'mode': 1,
+                'newgame': true,
+              });
+          },
+          'type': 'onclick',
+        },
+      },
       'keybinds': {
         65: {},
         68: {},
