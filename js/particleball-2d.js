@@ -454,7 +454,6 @@ function repo_init(){
                 'newgame': true,
               });
           },
-          'type': 'onclick',
         },
         'ai-vs-player': {
           'todo': function(){
@@ -463,7 +462,6 @@ function repo_init(){
                 'newgame': true,
               });
           },
-          'type': 'onclick',
         },
       },
       'keybinds': {
