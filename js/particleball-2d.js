@@ -335,7 +335,7 @@ function logic(){
       },
     });
 
-    // Calculate movement direction for next frame if player0 ai is tracking a particle.
+    // Calculate movement direction if player0 ai is tracking a particle.
     var paddle_position = core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] / 2;
     if(core_entities['player-0']['target'] === false){
         if(paddle_position === 0){
@@ -353,7 +353,7 @@ function logic(){
           : -2;
     }
 
-    // Calculate movement direction for next frame if player1 ai is tracking a particle.
+    // Calculate movement direction if player1 ai is tracking a particle.
     paddle_position = core_entities['player-1']['paddle-x'] + core_entities['player-1']['paddle-width'] / 2;
     if(core_entities['player-1']['target'] === false){
         if(paddle_position === 0){
