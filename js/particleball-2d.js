@@ -3,8 +3,8 @@
 function draw_logic(){
     canvas_buffer.save();
     canvas_buffer.translate(
-      canvas_x,
-      canvas_y
+      canvas_properties['width-half'],
+      canvas_properties['height-half']
     );
 
     // Draw gamearea background.
@@ -143,12 +143,12 @@ function draw_logic(){
         canvas_buffer.fillText(
           'H = Restart',
           0,
-          canvas_y / 2 + 25
+          canvas_properties['height-half'] / 2 + 25
         );
         canvas_buffer.fillText(
           'ESC = Main Menu',
           0,
-          canvas_y / 2 + 50
+          canvas_properties['height-half'] / 2 + 50
         );
 
         var winner = core_entities['player-0']['score'] > core_entities['player-1']['score']
@@ -162,7 +162,7 @@ function draw_logic(){
         canvas_buffer.fillText(
           'Player ' + winner + ' wins!',
           0,
-          canvas_y / 2
+          canvas_properties['height-half'] / 2
         );
     }
 }
