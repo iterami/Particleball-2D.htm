@@ -122,3 +122,7 @@ function load_data(id){
         }while(loop_counter--);
     }
 }
+
+var gamearea_playerdist = 0;
+var particle_x_limit = 0;
+var player_controlled = false;

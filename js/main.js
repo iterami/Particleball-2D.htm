@@ -494,7 +494,3 @@ function repo_init(){
     });
     canvas_init();
 }
-
-var gamearea_playerdist = 0;
-var particle_x_limit = 0;
-var player_controlled = false;
