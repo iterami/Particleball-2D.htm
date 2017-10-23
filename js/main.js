@@ -446,6 +446,11 @@ function repo_init(){
         },
         'spawner': {},
       },
+      'globals': {
+        'gamearea_playerdist': 0,
+        'particle_x_limit': 0,
+        'player_controlled': false,
+      },
       'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
       'info-events': {
         'ai-vs-ai': {
