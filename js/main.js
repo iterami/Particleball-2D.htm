@@ -381,13 +381,13 @@ function logic(){
 
     // If player controlled, handle keypress movement...
     if(player_controlled){
-        if(core_keys[65]['state']
+        if(core_keys[core_storage_data['move-←']]['state']
           && core_entities['player-0']['paddle-x'] > -90){
             core_entities['player-0']['paddle-x'] -= 2;
         }else if(core_entities['player-0']['paddle-x'] < -90){
             core_entities['player-0']['paddle-x'] = -90;
         }
-        if(core_keys[68]['state']
+        if(core_keys[core_storage_data['move-→']]['state']
           && core_entities['player-0']['paddle-x'] < 20){
             core_entities['player-0']['paddle-x'] += 2;
         }else if(core_entities['player-0']['paddle-x'] > 20){
@@ -470,8 +470,6 @@ function repo_init(){
       },
       'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
       'keybinds': {
-        65: {},
-        68: {},
         72: {
           'todo': function(){
             canvas_setmode({
