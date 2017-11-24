@@ -36,8 +36,6 @@ function create_obstacle(obstacle_x, obstacle_y){
 function load_data(id){
     player_controlled = id === 1;
 
-    document.getElementById('canvas').style.background = '#3c3c3c';
-
     // Get half of height and width of game area.
     var gamearea_height_half = core_storage_data['gamearea-height'] / 2;
     var gamearea_width_half = core_storage_data['gamearea-width'] / 2;
