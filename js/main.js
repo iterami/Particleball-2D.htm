@@ -10,7 +10,7 @@ function draw_logic(){
     // Draw gamearea background.
     canvas_setproperties({
       'properties': {
-        'fillStyle': '#3c3c3c',
+        'fillStyle': '#000',
       },
     });
     canvas_buffer.fillRect(
@@ -29,7 +29,7 @@ function draw_logic(){
     // Draw obstacles.
     canvas_setproperties({
       'properties': {
-        'fillStyle': '#000',
+        'fillStyle': '#3c3c3c',
       },
     });
     core_group_modify({
