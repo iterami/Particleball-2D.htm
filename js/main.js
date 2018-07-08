@@ -151,7 +151,7 @@ function draw_logic(){
           canvas_properties['height-half'] / 2 + 50
         );
 
-        var winner = core_entities['player-0']['score'] > core_entities['player-1']['score']
+        let winner = core_entities['player-0']['score'] > core_entities['player-1']['score']
           ? 0
           : 1;
         canvas_setproperties({
@@ -172,7 +172,7 @@ function logic(){
     //   is less than max, add new particle.
     if(core_entity_info['particle']['count'] < core_storage_data['number-of-particles']){
         // Pick a random spawner.
-        var random_spawner = core_random_key({
+        let random_spawner = core_random_key({
           'object': core_groups['spawner'],
         });
 
@@ -224,7 +224,7 @@ function logic(){
               });
 
               // Determine which player scored a goal.
-              var temp_player = 0;
+              let temp_player = 0;
               if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']){
                   temp_player = 1;
               }
@@ -253,8 +253,8 @@ function logic(){
               });
 
           }else{
-              var bounce_x = 1;
-              var bounce_y = 1;
+              let bounce_x = 1;
+              let bounce_y = 1;
 
               // Loop through obstacles to find collisions.
               core_group_modify({
@@ -336,7 +336,7 @@ function logic(){
     });
 
     // Calculate movement direction if player0 ai is tracking a particle.
-    var paddle_position = core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] / 2;
+    let paddle_position = core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] / 2;
     if(core_entities['player-0']['target'] === false){
         if(paddle_position === 0){
             core_entities['player-0']['paddle-x-move'] = 0;
