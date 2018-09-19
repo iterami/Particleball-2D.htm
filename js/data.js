@@ -1,6 +1,6 @@
 'use strict';
 
-function create_obstacle(obstacle_x, obstacle_y){
+function create_obstacle(id, obstacle_x, obstacle_y){
     let obstacle_height = core_random_integer({
       'max': core_storage_data['obstacle-size'],
     }) + 5;
@@ -10,6 +10,7 @@ function create_obstacle(obstacle_x, obstacle_y){
 
     // Add new obstacle and mirror.
     core_entity_create({
+      'id': 'obstacle-a' + id,
       'properties': {
         'height': obstacle_height,
         'width': obstacle_width,
@@ -21,6 +22,7 @@ function create_obstacle(obstacle_x, obstacle_y){
       ],
     });
     core_entity_create({
+      'id': 'obstacle-b' + id,
       'properties': {
         'height': obstacle_height,
         'width': obstacle_width,
@@ -89,6 +91,7 @@ function load_data(id){
 
         // Add new spawner and mirror.
         core_entity_create({
+          'id': 'spawner-a' + loop_counter,
           'properties': {
             'x': spawner_x,
             'y': spawner_y,
@@ -98,6 +101,7 @@ function load_data(id){
           ],
         });
         core_entity_create({
+          'id': 'spawner-b' + loop_counter,
           'properties': {
             'x': -spawner_x,
             'y': -spawner_y,
@@ -112,6 +116,7 @@ function load_data(id){
         let loop_counter = core_storage_data['number-of-obstacles'] - 1;
         do{
             create_obstacle(
+              loop_counter,
               core_random_integer({
                 'max': gamearea_width_half * 2,
               }) - gamearea_width_half,
