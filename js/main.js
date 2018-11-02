@@ -170,7 +170,7 @@ function draw_logic(){
 function logic(){
     // If the current number of particles
     //   is less than max, add new particle.
-    if(core_entity_info['particle']['count'] < core_storage_data['number-of-particles']){
+    if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
         // Pick a random spawner.
         let random_spawner = core_random_key({
           'object': core_groups['spawner'],
@@ -483,18 +483,18 @@ function repo_init(){
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
-        'number-of-obstacles': 10,
-        'number-of-particles': 100,
-        'number-of-spawners': 3,
+        'obstacle-count': 10,
         'obstacle-multiplier': 1.01,
         'obstacle-size': 65,
-        'particle-color': '#dddddd',
         'particle-bounce': 1,
+        'particle-color': '#dddddd',
+        'particle-max': 100,
         'particle-speed': 1.5,
         'score-decrease': false,
         'score-goal': 20,
+        'spawner-count': 3,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 Obstacles Count<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=number-of-particles><td>Particle Count<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();

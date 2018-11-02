@@ -75,12 +75,12 @@ function load_data(id){
     gamearea_playerdist = Math.abs(core_entities['player-1']['paddle-y']) + core_entities['player-0']['paddle-y'] + 5;
 
     // Require spawners.
-    core_storage_data['number-of-spawners'] = Math.max(
-      core_storage_data['number-of-spawners'],
+    core_storage_data['spawner-count'] = Math.max(
+      core_storage_data['spawner-count'],
       1
     );
 
-    let loop_counter = core_storage_data['number-of-spawners'] - 1;
+    let loop_counter = core_storage_data['spawner-count'] - 1;
     do{
         let spawner_x = core_random_integer({
           'max': gamearea_width_half * 2,
@@ -112,8 +112,8 @@ function load_data(id){
         });
     }while(loop_counter--);
 
-    if(core_storage_data['number-of-obstacles'] > 0){
-        let loop_counter = core_storage_data['number-of-obstacles'] - 1;
+    if(core_storage_data['obstacle-count'] > 0){
+        let loop_counter = core_storage_data['obstacle-count'] - 1;
         do{
             create_obstacle(
               loop_counter,
