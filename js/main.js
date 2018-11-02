@@ -229,8 +229,9 @@ function logic(){
                   temp_player = 1;
               }
 
-              // Decrease the other players score by 1 if it is greater than 0.
-              if(core_entities['player-' + (1 - temp_player)]['score'] > 0){
+              // If score can decrease and score is greater than 0, decrease the other players score by 1.
+              if(core_storage_data['score-decrease']
+                && core_entities['player-' + (1 - temp_player)]['score'] > 0){
                   core_entities['player-' + (1 - temp_player)]['score'] -= 1;
               }
 
@@ -490,9 +491,10 @@ function repo_init(){
         'particle-color': '#dddddd',
         'particle-bounce': 1,
         'particle-speed': 1.5,
+        'score-decrease': false,
         'score-goal': 20,
       },
-      'storage-menu': '<table><tr><td><input id=score-goal><td>Goal<tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 Obstacles Count<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=number-of-particles><td>Particle Count<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=number-of-obstacles><td>*2 Obstacles Count<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=number-of-particles><td>Particle Count<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=number-of-spawners><td>*2 Spawners</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
