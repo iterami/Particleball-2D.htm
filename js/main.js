@@ -496,7 +496,7 @@ function repo_init(){
         'gamearea-height': 500,
         'gamearea-width': 1000,
         'obstacle-count': 10,
-        'obstacle-distance': 0,
+        'obstacle-distance': 150,
         'obstacle-multiplier': 1.01,
         'obstacle-size': 65,
         'particle-bounce': 1,
