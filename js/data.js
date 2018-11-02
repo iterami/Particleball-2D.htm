@@ -44,7 +44,7 @@ function load_data(id){
     let gamearea_height_half = core_storage_data['gamearea-height'] / 2;
     let gamearea_width_half = core_storage_data['gamearea-width'] / 2;
 
-    // Particle_x_limit is how far particles can go on x axis positive or negative.
+    // How far particles can go on x axis positive or negative.
     particle_x_limit = gamearea_width_half - 2;
 
     // Setup player information.
@@ -74,10 +74,14 @@ function load_data(id){
     // Calculate distance between both players.
     gamearea_playerdist = Math.abs(core_entities['player-1']['paddle-y']) + core_entities['player-0']['paddle-y'] + 5;
 
-    // Require spawners.
+    // Enforce valid spawners.
     core_storage_data['spawner-count'] = Math.max(
       core_storage_data['spawner-count'],
       1
+    );
+    core_storage_data['spawner-distance'] = Math.min(
+      core_storage_data['spawner-distance'],
+      core_storage_data['gamearea-width'] / 2 - 5
     );
 
     let loop_counter = core_storage_data['spawner-count'] - 1;
@@ -88,6 +92,11 @@ function load_data(id){
         let spawner_y = core_random_integer({
           'max': (gamearea_playerdist - 25) / 4,
         });
+        if(Math.abs(spawner_x) < core_storage_data['spawner-distance']){
+            spawner_x = core_storage_data['spawner-distance'] * (spawner_x > 0
+              ? 1
+              : -1);
+        }
 
         // Add new spawner and mirror.
         core_entity_create({
@@ -115,11 +124,18 @@ function load_data(id){
     if(core_storage_data['obstacle-count'] > 0){
         let loop_counter = core_storage_data['obstacle-count'] - 1;
         do{
+            let obstacle_x = core_random_integer({
+              'max': gamearea_width_half * 2,
+            }) - gamearea_width_half;
+            if(Math.abs(obstacle_x) < core_storage_data['obstacle-distance']){
+                obstacle_x = core_storage_data['obstacle-distance'] * (obstacle_x > 0
+                  ? 1
+                  : -1);
+            }
+
             create_obstacle(
               loop_counter,
-              core_random_integer({
-                'max': gamearea_width_half * 2,
-              }) - gamearea_width_half,
+              obstacle_x,
               core_random_integer({
                 'max': (gamearea_playerdist - 25) / 2,
               })

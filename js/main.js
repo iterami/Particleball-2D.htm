@@ -484,6 +484,7 @@ function repo_init(){
         'gamearea-height': 500,
         'gamearea-width': 1000,
         'obstacle-count': 10,
+        'obstacle-distance': 0,
         'obstacle-multiplier': 1.01,
         'obstacle-size': 65,
         'particle-bounce': 1,
@@ -493,8 +494,9 @@ function repo_init(){
         'score-decrease': false,
         'score-goal': 20,
         'spawner-count': 3,
+        'spawner-distance': 0,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
