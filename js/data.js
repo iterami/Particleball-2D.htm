@@ -93,7 +93,7 @@ function load_data(id){
           'max': (gamearea_playerdist - 25) / 4,
         });
         if(Math.abs(spawner_x) < core_storage_data['spawner-distance']){
-            spawner_x = core_storage_data['spawner-distance'] * (spawner_x > 0
+            spawner_x += core_storage_data['spawner-distance'] * (spawner_x > 0
               ? 1
               : -1);
         }
@@ -128,7 +128,7 @@ function load_data(id){
               'max': gamearea_width_half * 2,
             }) - gamearea_width_half;
             if(Math.abs(obstacle_x) < core_storage_data['obstacle-distance']){
-                obstacle_x = core_storage_data['obstacle-distance'] * (obstacle_x > 0
+                obstacle_x += core_storage_data['obstacle-distance'] * (obstacle_x > 0
                   ? 1
                   : -1);
             }
