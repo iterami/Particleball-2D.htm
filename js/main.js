@@ -327,9 +327,21 @@ function logic(){
                   }
               }
 
-              // Move core_entities.
               core_entities[entity]['x-speed'] *= bounce_x;
               core_entities[entity]['y-speed'] *= bounce_y;
+
+              // Remove particles that are moving too fast.
+              if(core_entities[entity]['x-speed'] > core_storage_data['gamearea-width']
+                || core_entities[entity]['y-speed'] > core_storage_data['gamearea-height']){
+                  core_entity_remove({
+                    'entities': [
+                      entity,
+                    ],
+                  });
+
+                  return;
+              }
+
               core_entities[entity]['x'] += core_entities[entity]['x-speed'];
               core_entities[entity]['y'] += core_entities[entity]['y-speed'];
           }
