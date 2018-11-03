@@ -156,7 +156,7 @@ function draw_logic(){
           : 1;
         canvas_setproperties({
           'properties': {
-            'fillStyle': core_entities[winner]['color'],
+            'fillStyle': core_entities['player-' + winner]['color'],
           },
         });
         canvas_buffer.fillText(
@@ -424,7 +424,7 @@ function logic(){
       ],
       'todo': function(entity){
           if(core_entities[entity]['score'] >= core_storage_data['score-goal']){
-              window.clearInterval(canvas_interval);
+              window.clearInterval(core_intervals['canvas_interval']);
           }
       },
     });
