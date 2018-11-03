@@ -21,9 +21,9 @@ function draw_logic(){
     );
     canvas_buffer.fillRect(
       -90,
-      -core_entities['player-0']['goal-y'],
+      -core_storage_data['gamearea-height'] / 2 - 20,
       180,
-      gamearea_playerdist + 20
+      gamearea_playerdist + 40
     );
 
     // Draw obstacles.
@@ -132,9 +132,7 @@ function draw_logic(){
 
     canvas_buffer.restore();
 
-    // Players win if they have score-goal points.
-    if(core_entities['player-0']['score'] >= core_storage_data['score-goal']
-      || core_entities['player-1']['score'] >= core_storage_data['score-goal']){
+    if(winner !== false){
         canvas_setproperties({
           'properties': {
             'fillStyle': '#fff',
@@ -151,16 +149,13 @@ function draw_logic(){
           canvas_properties['height-half'] / 2 + 50
         );
 
-        let winner = core_entities['player-0']['score'] > core_entities['player-1']['score']
-          ? 0
-          : 1;
         canvas_setproperties({
           'properties': {
-            'fillStyle': core_entities['player-' + winner]['color'],
+            'fillStyle': core_entities[winner]['color'],
           },
         });
         canvas_buffer.fillText(
-          'Player ' + winner + ' wins!',
+          winner + ' wins!',
           0,
           canvas_properties['height-half'] / 2
         );
@@ -168,6 +163,10 @@ function draw_logic(){
 }
 
 function logic(){
+    if(core_entity_info['spawner']['count'] === 0){
+        return;
+    }
+
     // If the current number of particles
     //   is less than max, add new particle.
     if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
@@ -424,7 +423,8 @@ function logic(){
       ],
       'todo': function(entity){
           if(core_entities[entity]['score'] >= core_storage_data['score-goal']){
-              window.clearInterval(core_intervals['canvas_interval']);
+              winner = entity;
+              core_interval_pause_all();
           }
       },
     });
@@ -480,6 +480,7 @@ function repo_init(){
         'gamearea_playerdist': 0,
         'particle_x_limit': 0,
         'player_controlled': false,
+        'winner': false,
       },
       'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
       'keybinds': {
