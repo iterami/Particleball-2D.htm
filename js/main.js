@@ -123,7 +123,7 @@ function draw_logic(){
             },
           });
           canvas_buffer.fillText(
-            core_entities[entity]['score'] + '/' + core_storage_data['score-goal'],
+            core_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
             core_entities[entity]['paddle-x'],
             core_entities[entity]['paddle-y'] + (entity === 'player-0' ? 60 : -35)
           );
@@ -131,35 +131,6 @@ function draw_logic(){
     });
 
     canvas_buffer.restore();
-
-    if(winner !== false){
-        canvas_setproperties({
-          'properties': {
-            'fillStyle': '#fff',
-          },
-        });
-        canvas_buffer.fillText(
-          'H = Restart',
-          0,
-          canvas_properties['height-half'] / 2 + 25
-        );
-        canvas_buffer.fillText(
-          'ESC = Main Menu',
-          0,
-          canvas_properties['height-half'] / 2 + 50
-        );
-
-        canvas_setproperties({
-          'properties': {
-            'fillStyle': core_entities[winner]['color'],
-          },
-        });
-        canvas_buffer.fillText(
-          winner + ' wins!',
-          0,
-          canvas_properties['height-half'] / 2
-        );
-    }
 }
 
 function logic(){
@@ -417,17 +388,18 @@ function logic(){
     }
 
     // End game if any player has >= score-goal score.
-    core_group_modify({
-      'groups': [
-        'player',
-      ],
-      'todo': function(entity){
-          if(core_entities[entity]['score'] >= core_storage_data['score-goal']){
-              winner = entity;
-              core_interval_pause_all();
-          }
-      },
-    });
+    if(winner === false){
+        core_group_modify({
+          'groups': [
+            'player',
+          ],
+          'todo': function(entity){
+              if(core_entities[entity]['score'] >= core_storage_data['score-goal']){
+                  winner = entity;
+              }
+          },
+        });
+    }
 }
 
 function repo_init(){
