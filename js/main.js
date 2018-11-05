@@ -239,12 +239,12 @@ function logic(){
                         if(core_entities[entity]['y-speed'] > 0){
                             if(core_entities[entity]['y'] > core_entities[obstacle]['y'] - 2
                               && core_entities[entity]['y'] < core_entities[obstacle]['y']){
-                                bounce_y = -core_storage_data['obstacle-multiplier'];
+                                bounce_y = -core_storage_data['obstacle-multiplier-y'];
                             }
 
                         }else if(core_entities[entity]['y'] > core_entities[obstacle]['y'] + core_entities[obstacle]['height']
                           && core_entities[entity]['y'] < core_entities[obstacle]['y'] + core_entities[obstacle]['height'] + 2){
-                            bounce_y = -core_storage_data['obstacle-multiplier'];
+                            bounce_y = -core_storage_data['obstacle-multiplier-y'];
                         }
 
                     // Y collisions.
@@ -253,12 +253,12 @@ function logic(){
                         if(core_entities[entity]['x-speed'] > 0){
                             if(core_entities[entity]['x'] > core_entities[obstacle]['x'] - 2
                               && core_entities[entity]['x'] < core_entities[obstacle]['x']){
-                                bounce_x = -core_storage_data['obstacle-multiplier'];
+                                bounce_x = -core_storage_data['obstacle-multiplier-x'];
                             }
 
                         }else if(core_entities[entity]['x'] > core_entities[obstacle]['x'] + core_entities[obstacle]['width']
                           && core_entities[entity]['x'] < core_entities[obstacle]['x'] + core_entities[obstacle]['width'] + 2){
-                            bounce_x = -core_storage_data['obstacle-multiplier'];
+                            bounce_x = -core_storage_data['obstacle-multiplier-x'];
                         }
                     }
                 },
@@ -470,9 +470,9 @@ function repo_init(){
         'gamearea-width': 1000,
         'obstacle-count': 10,
         'obstacle-distance': 150,
-        'obstacle-multiplier': 1.01,
+        'obstacle-multiplier-x': 1.01,
+        'obstacle-multiplier-y': 1.01,
         'obstacle-size': 65,
-        'particle-bounce': 1,
         'particle-color': '#dddddd',
         'particle-max': 100,
         'particle-speed': 1.5,
@@ -481,7 +481,7 @@ function repo_init(){
         'spawner-count': 3,
         'spawner-distance': 0,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier><td>Obstacle Multiplier<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-bounce><td>Particle Bounce<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
