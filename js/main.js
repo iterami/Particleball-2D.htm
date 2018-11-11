@@ -141,23 +141,43 @@ function logic(){
     // If the current number of particles
     //   is less than max, add new particle.
     if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
-        // Pick a random spawner.
         let random_spawner = core_random_key({
           'object': core_groups['spawner'],
         });
+        let x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+        let y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
 
-        // Add particle.
         core_entity_create({
           'properties': {
             'x': core_entities[random_spawner]['x'],
-            'x-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
+            'x-speed': x_speed,
             'y': core_entities[random_spawner]['y'],
-            'y-speed': Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'],
+            'y-speed': y_speed,
           },
           'types': [
             'particle',
           ],
         });
+
+        if(core_storage_data['spawner-mirror']){
+            let id = 'spawner-';
+            id += random_spawner[8] === 'a'
+              ? 'b'
+              : 'a';
+            id += random_spawner[9];
+
+            core_entity_create({
+              'properties': {
+                'x': core_entities[id]['x'],
+                'x-speed': -x_speed,
+                'y': core_entities[id]['y'],
+                'y-speed': -y_speed,
+              },
+              'types': [
+                'particle',
+              ],
+            });
+        }
     }
 
     // Reset movements for recalculation.
@@ -273,7 +293,9 @@ function logic(){
                             && core_entities[entity]['x'] < core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] + 2
                             && core_entities[entity]['y-speed'] > 0
                             && core_entities[entity]['y'] + 2 >= core_entities['player-0']['paddle-y']){
-                              core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                              if(core_storage_data['paddle-random']){
+                                  core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                              }
                               core_entities[entity]['owner'] = 'player-0';
                               bounce_y = -1;
                           }
@@ -282,6 +304,9 @@ function logic(){
                         && core_entities[entity]['x'] < core_entities['player-1']['paddle-x'] + core_entities['player-1']['paddle-width'] + 2
                         && core_entities[entity]['y-speed'] < 0
                         && core_entities[entity]['y'] - 2 <= core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']){
+                          if(core_storage_data['paddle-random']){
+                              core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                          }
                           core_entities[entity]['owner'] = 'player-1';
                           bounce_y = -1;
                       }
@@ -473,6 +498,7 @@ function repo_init(){
         'obstacle-multiplier-x': 1.01,
         'obstacle-multiplier-y': 1.01,
         'obstacle-size': 65,
+        'paddle-random': false,
         'particle-color': '#dddddd',
         'particle-max': 100,
         'particle-speed': 1.5,
@@ -480,8 +506,9 @@ function repo_init(){
         'score-goal': 20,
         'spawner-count': 3,
         'spawner-distance': 0,
+        'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
