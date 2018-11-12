@@ -498,7 +498,7 @@ function repo_init(){
         'obstacle-multiplier-x': 1.01,
         'obstacle-multiplier-y': 1.01,
         'obstacle-size': 65,
-        'paddle-random': false,
+        'paddle-random': true,
         'particle-color': '#dddddd',
         'particle-max': 100,
         'particle-speed': 1.5,
