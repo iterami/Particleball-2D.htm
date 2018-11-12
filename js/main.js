@@ -189,7 +189,7 @@ function logic(){
         'particle',
       ],
       'todo': function(entity){
-          // If particle is with 90 pixels of center of goal.
+          // If particle is within 90 pixels of center of goal.
           if(Math.abs(core_entities[entity]['x']) < 90){
               // If particle is moving downwards...
               if(core_entities[entity]['y-speed'] > 0){
@@ -209,10 +209,6 @@ function logic(){
           // If particle has collided with a goal.
           if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']
             || core_entities[entity]['y'] - 2 < core_entities['player-1']['goal-y'] + core_entities['player-1']['goal-height']){
-              core_audio_start({
-                'id': 'boop',
-              });
-
               // Determine which player scored a goal.
               let temp_player = 0;
               if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']){
@@ -241,6 +237,10 @@ function logic(){
                 'entities': [
                   entity,
                 ],
+              });
+
+              core_audio_start({
+                'id': 'boop',
               });
 
           }else{
@@ -383,6 +383,7 @@ function logic(){
     core_entities['player-1']['paddle-x'] += core_entities['player-1']['paddle-x-move'];
     if(core_entities['player-1']['paddle-x'] > 20){
         core_entities['player-1']['paddle-x'] = 20;
+
     }else if(core_entities['player-1']['paddle-x'] < -90){
         core_entities['player-1']['paddle-x'] = -90;
     }
@@ -392,12 +393,15 @@ function logic(){
         if(core_keys[core_storage_data['move-←']]['state']
           && core_entities['player-0']['paddle-x'] > -90){
             core_entities['player-0']['paddle-x'] -= 2;
+
         }else if(core_entities['player-0']['paddle-x'] < -90){
             core_entities['player-0']['paddle-x'] = -90;
         }
+
         if(core_keys[core_storage_data['move-→']]['state']
           && core_entities['player-0']['paddle-x'] < 20){
             core_entities['player-0']['paddle-x'] += 2;
+
         }else if(core_entities['player-0']['paddle-x'] > 20){
             core_entities['player-0']['paddle-x'] = 20;
         }
@@ -407,6 +411,7 @@ function logic(){
         core_entities['player-0']['paddle-x'] += core_entities['player-0']['paddle-x-move'];
         if(core_entities['player-0']['paddle-x'] > 20){
             core_entities['player-0']['paddle-x'] = 20;
+
         }else if(core_entities['player-0']['paddle-x'] < -90){
             core_entities['player-0']['paddle-x'] = -90;
         }
