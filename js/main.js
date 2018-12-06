@@ -104,7 +104,7 @@ function draw_logic(){
           canvas_buffer.fillRect(
             core_entities[entity]['paddle-x'],
             core_entities[entity]['paddle-y'],
-            core_entities[entity]['paddle-width'],
+            core_storage_data['paddle-width'],
             core_entities[entity]['paddle-height']
           );
 
@@ -290,7 +290,7 @@ function logic(){
                   if(Math.abs(core_entities[entity]['x']) < 88){
                       if(core_entities[entity]['y'] > 0){
                           if(core_entities[entity]['x'] > core_entities['player-0']['paddle-x'] - 2
-                            && core_entities[entity]['x'] < core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] + 2
+                            && core_entities[entity]['x'] < core_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] + 2
                             && core_entities[entity]['y-speed'] > 0
                             && core_entities[entity]['y'] + 2 >= core_entities['player-0']['paddle-y']){
                               if(core_storage_data['paddle-random']){
@@ -301,7 +301,7 @@ function logic(){
                           }
 
                       }else if(core_entities[entity]['x'] > core_entities['player-1']['paddle-x'] - 2
-                        && core_entities[entity]['x'] < core_entities['player-1']['paddle-x'] + core_entities['player-1']['paddle-width'] + 2
+                        && core_entities[entity]['x'] < core_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] + 2
                         && core_entities[entity]['y-speed'] < 0
                         && core_entities[entity]['y'] - 2 <= core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']){
                           if(core_storage_data['paddle-random']){
@@ -344,7 +344,7 @@ function logic(){
     });
 
     // Calculate movement direction if player0 ai is tracking a particle.
-    let paddle_position = core_entities['player-0']['paddle-x'] + core_entities['player-0']['paddle-width'] / 2;
+    let paddle_position = core_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] / 2;
     if(core_entities['player-0']['target'] === false){
         if(paddle_position === 0){
             core_entities['player-0']['paddle-x-move'] = 0;
@@ -362,7 +362,7 @@ function logic(){
     }
 
     // Calculate movement direction if player1 ai is tracking a particle.
-    paddle_position = core_entities['player-1']['paddle-x'] + core_entities['player-1']['paddle-width'] / 2;
+    paddle_position = core_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] / 2;
     if(core_entities['player-1']['target'] === false){
         if(paddle_position === 0){
             core_entities['player-1']['paddle-x-move'] = 0;
@@ -452,7 +452,6 @@ function repo_init(){
             'goal-width': 200,
             'goal-x': -100,
             'paddle-height': 5,
-            'paddle-width': 70,
             'paddle-x': -35,
             'paddle-x-move': 0,
             'score': 0,
@@ -504,6 +503,7 @@ function repo_init(){
         'obstacle-multiplier-y': 1.01,
         'obstacle-size': 65,
         'paddle-random': true,
+        'paddle-width': 70,
         'particle-color': '#dddddd',
         'particle-max': 100,
         'particle-speed': 1.5,
@@ -513,7 +513,7 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly<tr><td><input id=paddle-width><td>Paddle Width<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
