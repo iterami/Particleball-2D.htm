@@ -20,9 +20,9 @@ function draw_logic(){
       core_storage_data['gamearea-height']
     );
     canvas_buffer.fillRect(
-      -90,
+      -core_storage_data['goal-width'] / 2,
       -core_storage_data['gamearea-height'] / 2 - 20,
-      180,
+      core_storage_data['goal-width'],
       gamearea_playerdist + 40
     );
 
@@ -110,10 +110,10 @@ function draw_logic(){
 
           // Draw goal.
           canvas_buffer.fillRect(
-            core_entities[entity]['goal-x'],
+            -core_storage_data['goal-width'] / 2 - 20,
             core_entities[entity]['goal-y'],
-            core_entities[entity]['goal-width'],
-            core_entities[entity]['goal-height']
+            core_storage_data['goal-width'] + 40,
+            20
           );
 
           // Draw score.
@@ -180,6 +180,9 @@ function logic(){
         }
     }
 
+    let goal_width_half = core_storage_data['goal-width'] / 2;
+    let paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
+
     // Reset movements for recalculation.
     core_entities['player-0']['target'] = false;
     core_entities['player-1']['target'] = false;
@@ -189,8 +192,8 @@ function logic(){
         'particle',
       ],
       'todo': function(entity){
-          // If particle is within 90 pixels of center of goal.
-          if(Math.abs(core_entities[entity]['x']) < 90){
+          // If particle is within goal_width_half pixels of center of goal.
+          if(Math.abs(core_entities[entity]['x']) < goal_width_half){
               // If particle is moving downwards...
               if(core_entities[entity]['y-speed'] > 0){
                   // Link player 0 AI to track this particle if it is closest.
@@ -208,7 +211,7 @@ function logic(){
 
           // If particle has collided with a goal.
           if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']
-            || core_entities[entity]['y'] - 2 < core_entities['player-1']['goal-y'] + core_entities['player-1']['goal-height']){
+            || core_entities[entity]['y'] - 2 < core_entities['player-1']['goal-y'] + 20){
               // Determine which player scored a goal.
               let temp_player = 0;
               if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']){
@@ -287,7 +290,7 @@ function logic(){
               // Check for collisions with player paddles or edges of game area.
               if(core_entities[entity]['y'] > core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']
                 && core_entities[entity]['y'] < core_entities['player-0']['paddle-y']){
-                  if(Math.abs(core_entities[entity]['x']) < 88){
+                  if(Math.abs(core_entities[entity]['x']) < goal_width_half){
                       if(core_entities[entity]['y'] > 0){
                           if(core_entities[entity]['x'] > core_entities['player-0']['paddle-x'] - 2
                             && core_entities[entity]['x'] < core_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] + 2
@@ -381,39 +384,39 @@ function logic(){
 
     // Move player 1 paddle, prevent from moving past goal boundaries.
     core_entities['player-1']['paddle-x'] += core_entities['player-1']['paddle-x-move'];
-    if(core_entities['player-1']['paddle-x'] > 20){
-        core_entities['player-1']['paddle-x'] = 20;
+    if(core_entities['player-1']['paddle-x'] > paddle_x_max){
+        core_entities['player-1']['paddle-x'] = paddle_x_max;
 
-    }else if(core_entities['player-1']['paddle-x'] < -90){
-        core_entities['player-1']['paddle-x'] = -90;
+    }else if(core_entities['player-1']['paddle-x'] < -goal_width_half){
+        core_entities['player-1']['paddle-x'] = -goal_width_half;
     }
 
     // If player controlled, handle keypress movement...
     if(player_controlled){
         if(core_keys[core_storage_data['move-←']]['state']
-          && core_entities['player-0']['paddle-x'] > -90){
+          && core_entities['player-0']['paddle-x'] > -goal_width_half){
             core_entities['player-0']['paddle-x'] -= core_storage_data['paddle-speed'];
 
-        }else if(core_entities['player-0']['paddle-x'] < -90){
-            core_entities['player-0']['paddle-x'] = -90;
+        }else if(core_entities['player-0']['paddle-x'] < -goal_width_half){
+            core_entities['player-0']['paddle-x'] = -goal_width_half;
         }
 
         if(core_keys[core_storage_data['move-→']]['state']
-          && core_entities['player-0']['paddle-x'] < 20){
+          && core_entities['player-0']['paddle-x'] < paddle_x_max){
             core_entities['player-0']['paddle-x'] += core_storage_data['paddle-speed'];
 
-        }else if(core_entities['player-0']['paddle-x'] > 20){
-            core_entities['player-0']['paddle-x'] = 20;
+        }else if(core_entities['player-0']['paddle-x'] > paddle_x_max){
+            core_entities['player-0']['paddle-x'] = paddle_x_max;
         }
 
     // ...else move via AI.
     }else{
         core_entities['player-0']['paddle-x'] += core_entities['player-0']['paddle-x-move'];
-        if(core_entities['player-0']['paddle-x'] > 20){
-            core_entities['player-0']['paddle-x'] = 20;
+        if(core_entities['player-0']['paddle-x'] > paddle_x_max){
+            core_entities['player-0']['paddle-x'] = paddle_x_max;
 
-        }else if(core_entities['player-0']['paddle-x'] < -90){
-            core_entities['player-0']['paddle-x'] = -90;
+        }else if(core_entities['player-0']['paddle-x'] < -goal_width_half){
+            core_entities['player-0']['paddle-x'] = -goal_width_half;
         }
     }
 
@@ -448,8 +451,6 @@ function repo_init(){
         },
         'player': {
           'properties': {
-            'goal-height': 20,
-            'goal-width': 200,
             'goal-x': -100,
             'paddle-height': 5,
             'paddle-x': -35,
@@ -497,6 +498,7 @@ function repo_init(){
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
+        'goal-width': 180,
         'obstacle-count': 10,
         'obstacle-distance': 150,
         'obstacle-multiplier-x': 1.01,
@@ -514,7 +516,8 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height'
+      'storage-menu': '<table><tr><td><input id=goal-width><td>Goal Width'
+        + '<tr><td><input id=gamearea-height><td>Level Height'
         + '<tr><td><input id=gamearea-width><td>Level Width'
         + '<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X'
         + '<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y'
