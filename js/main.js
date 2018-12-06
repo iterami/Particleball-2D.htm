@@ -513,7 +513,23 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height<tr><td><input id=gamearea-width><td>Level Width<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y<tr><td><input id=obstacle-count><td>*2 Obstacles Count<tr><td><input id=obstacle-distance><td>Obstacle Minimum X<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly<tr><td><input id=paddle-width><td>Paddle Width<tr><td><input id=particle-color type=color><td>Particle Color<tr><td><input id=particle-max><td>Particle Limit<tr><td><input id=particle-speed><td>&gt; Particle Speed<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable<tr><td><input id=score-goal><td>Score Goal<tr><td><input id=spawner-count><td>*2 Spawners<tr><td><input id=spawner-distance><td>Spawner Minimum X<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
+      'storage-menu': '<table><tr><td><input id=gamearea-height><td>Level Height'
+        + '<tr><td><input id=gamearea-width><td>Level Width'
+        + '<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X'
+        + '<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y'
+        + '<tr><td><input id=obstacle-count><td>*2 Obstacles Count'
+        + '<tr><td><input id=obstacle-distance><td>Obstacle Minimum X'
+        + '<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size'
+        + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
+        + '<tr><td><input id=paddle-width><td>Paddle Width'
+        + '<tr><td><input id=particle-color type=color><td>Particle Color'
+        + '<tr><td><input id=particle-max><td>Particle Limit'
+        + '<tr><td><input id=particle-speed><td>&gt; Particle Speed'
+        + '<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable'
+        + '<tr><td><input id=score-goal><td>Score Goal'
+        + '<tr><td><input id=spawner-count><td>*2 Spawners'
+        + '<tr><td><input id=spawner-distance><td>Spawner Minimum X'
+        + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
     });
     canvas_init();
