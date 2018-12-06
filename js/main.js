@@ -351,14 +351,14 @@ function logic(){
 
         }else{
             core_entities['player-0']['paddle-x-move'] = paddle_position < 0
-              ? 2
-              : -2;
+              ? core_storage_data['paddle-speed']
+              : -core_storage_data['paddle-speed'];
         }
 
     }else{
         core_entities['player-0']['paddle-x-move'] = core_entities[core_entities['player-0']['target']]['x'] > paddle_position
-          ? 2
-          : -2;
+          ? core_storage_data['paddle-speed']
+          : -core_storage_data['paddle-speed'];
     }
 
     // Calculate movement direction if player1 ai is tracking a particle.
@@ -369,14 +369,14 @@ function logic(){
 
         }else{
             core_entities['player-1']['paddle-x-move'] = paddle_position < 0
-              ? 2
-              : -2;
+              ? core_storage_data['paddle-speed']
+              : -core_storage_data['paddle-speed'];
         }
 
     }else{
         core_entities['player-1']['paddle-x-move'] = core_entities[core_entities['player-1']['target']]['x'] > paddle_position
-          ? 2
-          : -2;
+          ? core_storage_data['paddle-speed']
+          : -core_storage_data['paddle-speed'];
     }
 
     // Move player 1 paddle, prevent from moving past goal boundaries.
@@ -392,7 +392,7 @@ function logic(){
     if(player_controlled){
         if(core_keys[core_storage_data['move-←']]['state']
           && core_entities['player-0']['paddle-x'] > -90){
-            core_entities['player-0']['paddle-x'] -= 2;
+            core_entities['player-0']['paddle-x'] -= core_storage_data['paddle-speed'];
 
         }else if(core_entities['player-0']['paddle-x'] < -90){
             core_entities['player-0']['paddle-x'] = -90;
@@ -400,7 +400,7 @@ function logic(){
 
         if(core_keys[core_storage_data['move-→']]['state']
           && core_entities['player-0']['paddle-x'] < 20){
-            core_entities['player-0']['paddle-x'] += 2;
+            core_entities['player-0']['paddle-x'] += core_storage_data['paddle-speed'];
 
         }else if(core_entities['player-0']['paddle-x'] > 20){
             core_entities['player-0']['paddle-x'] = 20;
@@ -503,6 +503,7 @@ function repo_init(){
         'obstacle-multiplier-y': 1.01,
         'obstacle-size': 65,
         'paddle-random': true,
+        'paddle-speed': 2,
         'paddle-width': 70,
         'particle-color': '#dddddd',
         'particle-max': 100,
@@ -521,6 +522,7 @@ function repo_init(){
         + '<tr><td><input id=obstacle-distance><td>Obstacle Minimum X'
         + '<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size'
         + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
+        + '<tr><td><input id=paddle-speed><td>Paddle Speed'
         + '<tr><td><input id=paddle-width><td>Paddle Width'
         + '<tr><td><input id=particle-color type=color><td>Particle Color'
         + '<tr><td><input id=particle-max><td>Particle Limit'
