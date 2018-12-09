@@ -138,46 +138,53 @@ function logic(){
         return;
     }
 
-    // If the current number of particles
-    //   is less than max, add new particle.
-    if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
-        let random_spawner = core_random_key({
-          'object': core_groups['spawner'],
-        });
-        let x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
-        let y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
-
-        core_entity_create({
-          'properties': {
-            'x': core_entities[random_spawner]['x'],
-            'x-speed': x_speed,
-            'y': core_entities[random_spawner]['y'],
-            'y-speed': y_speed,
-          },
-          'types': [
-            'particle',
-          ],
-        });
-
-        if(core_storage_data['spawner-mirror']){
-            let id = 'spawner-';
-            id += random_spawner[8] === 'a'
-              ? 'b'
-              : 'a';
-            id += random_spawner[9];
+    // Check if a new particle should be added.
+    if(particle_frames >= core_storage_data['particle-frames']){
+        // If the current number of particles is less than max, add new particle.
+        if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
+            let random_spawner = core_random_key({
+              'object': core_groups['spawner'],
+            });
+            let x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+            let y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
 
             core_entity_create({
               'properties': {
-                'x': core_entities[id]['x'],
-                'x-speed': -x_speed,
-                'y': core_entities[id]['y'],
-                'y-speed': -y_speed,
+                'x': core_entities[random_spawner]['x'],
+                'x-speed': x_speed,
+                'y': core_entities[random_spawner]['y'],
+                'y-speed': y_speed,
               },
               'types': [
                 'particle',
               ],
             });
+
+            if(core_storage_data['spawner-mirror']){
+                let id = 'spawner-';
+                id += random_spawner[8] === 'a'
+                  ? 'b'
+                  : 'a';
+                id += random_spawner[9];
+
+                core_entity_create({
+                  'properties': {
+                    'x': core_entities[id]['x'],
+                    'x-speed': -x_speed,
+                    'y': core_entities[id]['y'],
+                    'y-speed': -y_speed,
+                  },
+                  'types': [
+                    'particle',
+                  ],
+                });
+            }
+
+            particle_frames = 0;
         }
+
+    }else{
+        particle_frames++;
     }
 
     let goal_width_half = core_storage_data['goal-width'] / 2;
@@ -480,6 +487,7 @@ function repo_init(){
       },
       'globals': {
         'gamearea_playerdist': 0,
+        'particle_frames': 0,
         'particle_x_limit': 0,
         'player_controlled': false,
         'winner': false,
@@ -508,6 +516,7 @@ function repo_init(){
         'paddle-speed': 2,
         'paddle-width': 70,
         'particle-color': '#dddddd',
+        'particle-frames': 1,
         'particle-max': 100,
         'particle-speed': 1.5,
         'score-decrease': false,
@@ -516,7 +525,8 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=goal-width><td>Goal Width'
+      'storage-menu': '<table><tr><td><input id=particle-frames><td>Frames/Particle'
+        + '<tr><td><input id=goal-width><td>Goal Width'
         + '<tr><td><input id=gamearea-height><td>Level Height'
         + '<tr><td><input id=gamearea-width><td>Level Width'
         + '<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X'

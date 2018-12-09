@@ -37,7 +37,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
 
 function load_data(id){
     canvas_properties['clearColor'] = '#3c3c3c';
-
+    particle_frames = core_storage_data['particle-frames'];
     player_controlled = id === 1;
 
     // Get half of height and width of game area.
