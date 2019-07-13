@@ -8,7 +8,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
       'max': core_storage_data['obstacle-size'],
     }) + 5;
 
-    // Add new obstacle and mirror.
+    // Add two obstacles to maintain symmetry.
     core_entity_create({
       'id': 'obstacle-a' + id,
       'properties': {
