@@ -249,7 +249,7 @@ function logic(){
                 ],
               });
 
-              core_audio_start({
+              audio_start({
                 'id': 'boop',
               });
 
@@ -444,11 +444,6 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
-      'audios': {
-        'boop': {
-          'duration': .1,
-        },
-      },
       'entities': {
         'obstacle': {},
         'particle': {
@@ -546,6 +541,13 @@ function repo_init(){
         + '<tr><td><input id=spawner-distance><td>Spawner Minimum X'
         + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
+    });
+    audio_create({
+      'audios': {
+        'boop': {
+          'duration': .1,
+        },
+      },
     });
     canvas_init();
 }
