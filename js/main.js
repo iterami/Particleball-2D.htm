@@ -32,16 +32,16 @@ function draw_logic(){
         'fillStyle': '#3c3c3c',
       },
     });
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'obstacle',
       ],
       'todo': function(entity){
           canvas_buffer.fillRect(
-            core_entities[entity]['x'],
-            core_entities[entity]['y'],
-            core_entities[entity]['width'],
-            core_entities[entity]['height']
+            entity_entities[entity]['x'],
+            entity_entities[entity]['y'],
+            entity_entities[entity]['width'],
+            entity_entities[entity]['height']
           );
       },
     });
@@ -52,14 +52,14 @@ function draw_logic(){
         'fillStyle': '#476291',
       },
     });
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'spawner',
       ],
       'todo': function(entity){
           canvas_buffer.fillRect(
-            core_entities[entity]['x'] - 4,
-            core_entities[entity]['y'] - 4,
+            entity_entities[entity]['x'] - 4,
+            entity_entities[entity]['y'] - 4,
             8,
             8
           );
@@ -67,28 +67,28 @@ function draw_logic(){
     });
 
     // Draw particles.
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'particle',
       ],
       'todo': function(entity){
           canvas_setproperties({
             'properties': {
-              'fillStyle': core_entities[entity]['owner'] === false
+              'fillStyle': entity_entities[entity]['owner'] === false
                 ? core_storage_data['particle-color']
-                : core_entities[core_entities[entity]['owner']]['color'],
+                : entity_entities[entity_entities[entity]['owner']]['color'],
             },
           });
           canvas_buffer.fillRect(
-            Math.round(core_entities[entity]['x']) - 2,
-            Math.round(core_entities[entity]['y']) - 2,
+            Math.round(entity_entities[entity]['x']) - 2,
+            Math.round(entity_entities[entity]['y']) - 2,
             4,
             4
           );
       },
     });
 
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'player',
       ],
@@ -96,22 +96,22 @@ function draw_logic(){
           // Set color to player color.
           canvas_setproperties({
             'properties': {
-              'fillStyle': core_entities[entity]['color'],
+              'fillStyle': entity_entities[entity]['color'],
             },
           });
 
           // Draw paddle.
           canvas_buffer.fillRect(
-            core_entities[entity]['paddle-x'],
-            core_entities[entity]['paddle-y'],
+            entity_entities[entity]['paddle-x'],
+            entity_entities[entity]['paddle-y'],
             core_storage_data['paddle-width'],
-            core_entities[entity]['paddle-height']
+            entity_entities[entity]['paddle-height']
           );
 
           // Draw goal.
           canvas_buffer.fillRect(
             -core_storage_data['goal-width'] / 2 - 20,
-            core_entities[entity]['goal-y'],
+            entity_entities[entity]['goal-y'],
             core_storage_data['goal-width'] + 40,
             20
           );
@@ -123,9 +123,9 @@ function draw_logic(){
             },
           });
           canvas_buffer.fillText(
-            core_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
-            core_entities[entity]['paddle-x'],
-            core_entities[entity]['paddle-y'] + (entity === 'player-0' ? 60 : -35)
+            entity_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
+            entity_entities[entity]['paddle-x'],
+            entity_entities[entity]['paddle-y'] + (entity === 'player-0' ? 60 : -35)
           );
       },
     });
@@ -134,25 +134,25 @@ function draw_logic(){
 }
 
 function logic(){
-    if(core_entity_info['spawner']['count'] === 0){
+    if(entity_info['spawner']['count'] === 0){
         return;
     }
 
     // Check if a new particle should be added.
     if(particle_frames >= core_storage_data['particle-frames']){
         // If the current number of particles is less than max, add new particle.
-        if(core_entity_info['particle']['count'] < core_storage_data['particle-max']){
+        if(entity_info['particle']['count'] < core_storage_data['particle-max']){
             let random_spawner = core_random_key({
-              'object': core_groups['spawner'],
+              'object': entity_groups['spawner'],
             });
             let x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
             let y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
 
-            core_entity_create({
+            entity_create({
               'properties': {
-                'x': core_entities[random_spawner]['x'],
+                'x': entity_entities[random_spawner]['x'],
                 'x-speed': x_speed,
-                'y': core_entities[random_spawner]['y'],
+                'y': entity_entities[random_spawner]['y'],
                 'y-speed': y_speed,
               },
               'types': [
@@ -167,11 +167,11 @@ function logic(){
                   : 'a';
                 id += random_spawner[9];
 
-                core_entity_create({
+                entity_create({
                   'properties': {
-                    'x': core_entities[id]['x'],
+                    'x': entity_entities[id]['x'],
                     'x-speed': -x_speed,
-                    'y': core_entities[id]['y'],
+                    'y': entity_entities[id]['y'],
                     'y-speed': -y_speed,
                   },
                   'types': [
@@ -191,59 +191,59 @@ function logic(){
     let paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
 
     // Reset movements for recalculation.
-    core_entities['player-0']['target'] = false;
-    core_entities['player-1']['target'] = false;
+    entity_entities['player-0']['target'] = false;
+    entity_entities['player-1']['target'] = false;
 
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'particle',
       ],
       'todo': function(entity){
           // If particle is within goal_width_half pixels of center of goal.
-          if(Math.abs(core_entities[entity]['x']) < goal_width_half){
+          if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
               // If particle is moving downwards...
-              if(core_entities[entity]['y-speed'] > 0){
+              if(entity_entities[entity]['y-speed'] > 0){
                   // Link player 0 AI to track this particle if it is closest.
-                  if((core_entities['player-0']['target'] === false || core_entities[entity]['y'] > core_entities[core_entities['player-0']['target']]['y'])
-                    && core_entities[entity]['y'] < core_entities['player-0']['paddle-y']){
-                      core_entities['player-0']['target'] = entity;
+                  if((entity_entities['player-0']['target'] === false || entity_entities[entity]['y'] > entity_entities[entity_entities['player-0']['target']]['y'])
+                    && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
+                      entity_entities['player-0']['target'] = entity;
                   }
 
               // ...else link player 1 AI to track this particle if it is closest.
-              }else if((core_entities['player-1']['target'] === false || core_entities[entity]['y'] < core_entities[core_entities['player-1']['target']]['y'])
-                && core_entities[entity]['y'] > core_entities['player-1']['paddle-y']){
-                  core_entities['player-1']['target'] = entity;
+              }else if((entity_entities['player-1']['target'] === false || entity_entities[entity]['y'] < entity_entities[entity_entities['player-1']['target']]['y'])
+                && entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y']){
+                  entity_entities['player-1']['target'] = entity;
               }
           }
 
           // If particle has collided with a goal.
-          if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']
-            || core_entities[entity]['y'] - 2 < core_entities['player-1']['goal-y'] + 20){
+          if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']
+            || entity_entities[entity]['y'] - 2 < entity_entities['player-1']['goal-y'] + 20){
               // Determine which player scored a goal.
               let temp_player = 0;
-              if(core_entities[entity]['y'] + 2 > core_entities['player-0']['goal-y']){
+              if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']){
                   temp_player = 1;
               }
 
               // If score can decrease and score is greater than 0, decrease the other players score by 1.
               if(core_storage_data['score-decrease']
-                && core_entities['player-' + (1 - temp_player)]['score'] > 0){
-                  core_entities['player-' + (1 - temp_player)]['score'] -= 1;
+                && entity_entities['player-' + (1 - temp_player)]['score'] > 0){
+                  entity_entities['player-' + (1 - temp_player)]['score'] -= 1;
               }
 
               // Increase the scoring players score by 1.
-              if(core_entities[entity]['owner'] === 'player-' + temp_player){
-                  core_entities['player-' + temp_player]['score'] += 1;
+              if(entity_entities[entity]['owner'] === 'player-' + temp_player){
+                  entity_entities['player-' + temp_player]['score'] += 1;
               }
 
-              if(core_entities['player-0']['target'] === entity){
-                  core_entities['player-0']['target'] = false;
+              if(entity_entities['player-0']['target'] === entity){
+                  entity_entities['player-0']['target'] = false;
               }
-              if(core_entities['player-1']['target'] === entity){
-                  core_entities['player-1']['target'] = false;
+              if(entity_entities['player-1']['target'] === entity){
+                  entity_entities['player-1']['target'] = false;
               }
 
-              core_entity_remove({
+              entity_remove({
                 'entities': [
                   entity,
                 ],
@@ -258,36 +258,36 @@ function logic(){
               let bounce_y = 1;
 
               // Loop through obstacles to find collisions.
-              core_group_modify({
+              entity_group_modify({
                 'groups': [
                   'obstacle',
                 ],
                 'todo': function(obstacle){
                     // X collisions.
-                    if(core_entities[entity]['x'] >= core_entities[obstacle]['x']
-                      && core_entities[entity]['x'] <= core_entities[obstacle]['x'] + core_entities[obstacle]['width']){
-                        if(core_entities[entity]['y-speed'] > 0){
-                            if(core_entities[entity]['y'] > core_entities[obstacle]['y'] - 2
-                              && core_entities[entity]['y'] < core_entities[obstacle]['y']){
+                    if(entity_entities[entity]['x'] >= entity_entities[obstacle]['x']
+                      && entity_entities[entity]['x'] <= entity_entities[obstacle]['x'] + entity_entities[obstacle]['width']){
+                        if(entity_entities[entity]['y-speed'] > 0){
+                            if(entity_entities[entity]['y'] > entity_entities[obstacle]['y'] - 2
+                              && entity_entities[entity]['y'] < entity_entities[obstacle]['y']){
                                 bounce_y = -core_storage_data['obstacle-multiplier-y'];
                             }
 
-                        }else if(core_entities[entity]['y'] > core_entities[obstacle]['y'] + core_entities[obstacle]['height']
-                          && core_entities[entity]['y'] < core_entities[obstacle]['y'] + core_entities[obstacle]['height'] + 2){
+                        }else if(entity_entities[entity]['y'] > entity_entities[obstacle]['y'] + entity_entities[obstacle]['height']
+                          && entity_entities[entity]['y'] < entity_entities[obstacle]['y'] + entity_entities[obstacle]['height'] + 2){
                             bounce_y = -core_storage_data['obstacle-multiplier-y'];
                         }
 
                     // Y collisions.
-                    }else if(core_entities[entity]['y'] >= core_entities[obstacle]['y']
-                      && core_entities[entity]['y'] <= core_entities[obstacle]['y'] + core_entities[obstacle]['height']){
-                        if(core_entities[entity]['x-speed'] > 0){
-                            if(core_entities[entity]['x'] > core_entities[obstacle]['x'] - 2
-                              && core_entities[entity]['x'] < core_entities[obstacle]['x']){
+                    }else if(entity_entities[entity]['y'] >= entity_entities[obstacle]['y']
+                      && entity_entities[entity]['y'] <= entity_entities[obstacle]['y'] + entity_entities[obstacle]['height']){
+                        if(entity_entities[entity]['x-speed'] > 0){
+                            if(entity_entities[entity]['x'] > entity_entities[obstacle]['x'] - 2
+                              && entity_entities[entity]['x'] < entity_entities[obstacle]['x']){
                                 bounce_x = -core_storage_data['obstacle-multiplier-x'];
                             }
 
-                        }else if(core_entities[entity]['x'] > core_entities[obstacle]['x'] + core_entities[obstacle]['width']
-                          && core_entities[entity]['x'] < core_entities[obstacle]['x'] + core_entities[obstacle]['width'] + 2){
+                        }else if(entity_entities[entity]['x'] > entity_entities[obstacle]['x'] + entity_entities[obstacle]['width']
+                          && entity_entities[entity]['x'] < entity_entities[obstacle]['x'] + entity_entities[obstacle]['width'] + 2){
                             bounce_x = -core_storage_data['obstacle-multiplier-x'];
                         }
                     }
@@ -295,50 +295,50 @@ function logic(){
               });
 
               // Check for collisions with player paddles or edges of game area.
-              if(core_entities[entity]['y'] > core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']
-                && core_entities[entity]['y'] < core_entities['player-0']['paddle-y']){
-                  if(Math.abs(core_entities[entity]['x']) < goal_width_half){
-                      if(core_entities[entity]['y'] > 0){
-                          if(core_entities[entity]['x'] > core_entities['player-0']['paddle-x'] - 2
-                            && core_entities[entity]['x'] < core_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] + 2
-                            && core_entities[entity]['y-speed'] > 0
-                            && core_entities[entity]['y'] + 2 >= core_entities['player-0']['paddle-y']){
+              if(entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height']
+                && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
+                  if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
+                      if(entity_entities[entity]['y'] > 0){
+                          if(entity_entities[entity]['x'] > entity_entities['player-0']['paddle-x'] - 2
+                            && entity_entities[entity]['x'] < entity_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] + 2
+                            && entity_entities[entity]['y-speed'] > 0
+                            && entity_entities[entity]['y'] + 2 >= entity_entities['player-0']['paddle-y']){
                               if(core_storage_data['paddle-random']){
-                                  core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                                  entity_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
                               }
-                              core_entities[entity]['owner'] = 'player-0';
+                              entity_entities[entity]['owner'] = 'player-0';
                               bounce_y = -1;
                           }
 
-                      }else if(core_entities[entity]['x'] > core_entities['player-1']['paddle-x'] - 2
-                        && core_entities[entity]['x'] < core_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] + 2
-                        && core_entities[entity]['y-speed'] < 0
-                        && core_entities[entity]['y'] - 2 <= core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height']){
+                      }else if(entity_entities[entity]['x'] > entity_entities['player-1']['paddle-x'] - 2
+                        && entity_entities[entity]['x'] < entity_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] + 2
+                        && entity_entities[entity]['y-speed'] < 0
+                        && entity_entities[entity]['y'] - 2 <= entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height']){
                           if(core_storage_data['paddle-random']){
-                              core_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                              entity_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
                           }
-                          core_entities[entity]['owner'] = 'player-1';
+                          entity_entities[entity]['owner'] = 'player-1';
                           bounce_y = -1;
                       }
 
                   // Left/right wall collisions.
-                  }else if(Math.abs(core_entities[entity]['x']) > particle_x_limit){
+                  }else if(Math.abs(entity_entities[entity]['x']) > particle_x_limit){
                       bounce_x = -1;
 
                   // Player paddle collisions.
-                  }else if((core_entities[entity]['y-speed'] < 0 && core_entities[entity]['y'] - 2 <= core_entities['player-1']['paddle-y'] + core_entities['player-1']['paddle-height'])
-                    || (core_entities[entity]['y-speed'] > 0 && core_entities[entity]['y'] + 2 >= core_entities['player-0']['paddle-y'])){
+                  }else if((entity_entities[entity]['y-speed'] < 0 && entity_entities[entity]['y'] - 2 <= entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height'])
+                    || (entity_entities[entity]['y-speed'] > 0 && entity_entities[entity]['y'] + 2 >= entity_entities['player-0']['paddle-y'])){
                       bounce_y = -1;
                   }
               }
 
-              core_entities[entity]['x-speed'] *= bounce_x;
-              core_entities[entity]['y-speed'] *= bounce_y;
+              entity_entities[entity]['x-speed'] *= bounce_x;
+              entity_entities[entity]['y-speed'] *= bounce_y;
 
               // Remove particles that are moving too fast.
-              if(core_entities[entity]['x-speed'] > core_storage_data['gamearea-width']
-                || core_entities[entity]['y-speed'] > core_storage_data['gamearea-height']){
-                  core_entity_remove({
+              if(entity_entities[entity]['x-speed'] > core_storage_data['gamearea-width']
+                || entity_entities[entity]['y-speed'] > core_storage_data['gamearea-height']){
+                  entity_remove({
                     'entities': [
                       entity,
                     ],
@@ -347,94 +347,94 @@ function logic(){
                   return;
               }
 
-              core_entities[entity]['x'] += core_entities[entity]['x-speed'];
-              core_entities[entity]['y'] += core_entities[entity]['y-speed'];
+              entity_entities[entity]['x'] += entity_entities[entity]['x-speed'];
+              entity_entities[entity]['y'] += entity_entities[entity]['y-speed'];
           }
       },
     });
 
     // Calculate movement direction if player0 ai is tracking a particle.
-    let paddle_position = core_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] / 2;
-    if(core_entities['player-0']['target'] === false){
+    let paddle_position = entity_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    if(entity_entities['player-0']['target'] === false){
         if(paddle_position === 0){
-            core_entities['player-0']['paddle-x-move'] = 0;
+            entity_entities['player-0']['paddle-x-move'] = 0;
 
         }else{
-            core_entities['player-0']['paddle-x-move'] = paddle_position < 0
+            entity_entities['player-0']['paddle-x-move'] = paddle_position < 0
               ? core_storage_data['paddle-speed']
               : -core_storage_data['paddle-speed'];
         }
 
     }else{
-        core_entities['player-0']['paddle-x-move'] = core_entities[core_entities['player-0']['target']]['x'] > paddle_position
+        entity_entities['player-0']['paddle-x-move'] = entity_entities[entity_entities['player-0']['target']]['x'] > paddle_position
           ? core_storage_data['paddle-speed']
           : -core_storage_data['paddle-speed'];
     }
 
     // Calculate movement direction if player1 ai is tracking a particle.
-    paddle_position = core_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] / 2;
-    if(core_entities['player-1']['target'] === false){
+    paddle_position = entity_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    if(entity_entities['player-1']['target'] === false){
         if(paddle_position === 0){
-            core_entities['player-1']['paddle-x-move'] = 0;
+            entity_entities['player-1']['paddle-x-move'] = 0;
 
         }else{
-            core_entities['player-1']['paddle-x-move'] = paddle_position < 0
+            entity_entities['player-1']['paddle-x-move'] = paddle_position < 0
               ? core_storage_data['paddle-speed']
               : -core_storage_data['paddle-speed'];
         }
 
     }else{
-        core_entities['player-1']['paddle-x-move'] = core_entities[core_entities['player-1']['target']]['x'] > paddle_position
+        entity_entities['player-1']['paddle-x-move'] = entity_entities[entity_entities['player-1']['target']]['x'] > paddle_position
           ? core_storage_data['paddle-speed']
           : -core_storage_data['paddle-speed'];
     }
 
     // Move player 1 paddle, prevent from moving past goal boundaries.
-    core_entities['player-1']['paddle-x'] += core_entities['player-1']['paddle-x-move'];
-    if(core_entities['player-1']['paddle-x'] > paddle_x_max){
-        core_entities['player-1']['paddle-x'] = paddle_x_max;
+    entity_entities['player-1']['paddle-x'] += entity_entities['player-1']['paddle-x-move'];
+    if(entity_entities['player-1']['paddle-x'] > paddle_x_max){
+        entity_entities['player-1']['paddle-x'] = paddle_x_max;
 
-    }else if(core_entities['player-1']['paddle-x'] < -goal_width_half){
-        core_entities['player-1']['paddle-x'] = -goal_width_half;
+    }else if(entity_entities['player-1']['paddle-x'] < -goal_width_half){
+        entity_entities['player-1']['paddle-x'] = -goal_width_half;
     }
 
     // If player controlled, handle keypress movement...
     if(player_controlled){
         if(core_keys[core_storage_data['move-←']]['state']
-          && core_entities['player-0']['paddle-x'] > -goal_width_half){
-            core_entities['player-0']['paddle-x'] -= core_storage_data['paddle-speed'];
+          && entity_entities['player-0']['paddle-x'] > -goal_width_half){
+            entity_entities['player-0']['paddle-x'] -= core_storage_data['paddle-speed'];
 
-        }else if(core_entities['player-0']['paddle-x'] < -goal_width_half){
-            core_entities['player-0']['paddle-x'] = -goal_width_half;
+        }else if(entity_entities['player-0']['paddle-x'] < -goal_width_half){
+            entity_entities['player-0']['paddle-x'] = -goal_width_half;
         }
 
         if(core_keys[core_storage_data['move-→']]['state']
-          && core_entities['player-0']['paddle-x'] < paddle_x_max){
-            core_entities['player-0']['paddle-x'] += core_storage_data['paddle-speed'];
+          && entity_entities['player-0']['paddle-x'] < paddle_x_max){
+            entity_entities['player-0']['paddle-x'] += core_storage_data['paddle-speed'];
 
-        }else if(core_entities['player-0']['paddle-x'] > paddle_x_max){
-            core_entities['player-0']['paddle-x'] = paddle_x_max;
+        }else if(entity_entities['player-0']['paddle-x'] > paddle_x_max){
+            entity_entities['player-0']['paddle-x'] = paddle_x_max;
         }
 
     // ...else move via AI.
     }else{
-        core_entities['player-0']['paddle-x'] += core_entities['player-0']['paddle-x-move'];
-        if(core_entities['player-0']['paddle-x'] > paddle_x_max){
-            core_entities['player-0']['paddle-x'] = paddle_x_max;
+        entity_entities['player-0']['paddle-x'] += entity_entities['player-0']['paddle-x-move'];
+        if(entity_entities['player-0']['paddle-x'] > paddle_x_max){
+            entity_entities['player-0']['paddle-x'] = paddle_x_max;
 
-        }else if(core_entities['player-0']['paddle-x'] < -goal_width_half){
-            core_entities['player-0']['paddle-x'] = -goal_width_half;
+        }else if(entity_entities['player-0']['paddle-x'] < -goal_width_half){
+            entity_entities['player-0']['paddle-x'] = -goal_width_half;
         }
     }
 
     // End game if any player has >= score-goal score.
     if(winner === false){
-        core_group_modify({
+        entity_group_modify({
           'groups': [
             'player',
           ],
           'todo': function(entity){
-              if(core_entities[entity]['score'] >= core_storage_data['score-goal']){
+              if(entity_entities[entity]['score'] >= core_storage_data['score-goal']){
                   winner = entity;
               }
           },
@@ -444,25 +444,6 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
-      'entities': {
-        'obstacle': {},
-        'particle': {
-          'properties': {
-            'owner': false,
-          },
-        },
-        'player': {
-          'properties': {
-            'goal-x': -100,
-            'paddle-height': 5,
-            'paddle-x': -35,
-            'paddle-x-move': 0,
-            'score': 0,
-            'target': false,
-          },
-        },
-        'spawner': {},
-      },
       'events': {
         'ai-vs-ai': {
           'onclick': function(){
@@ -541,6 +522,29 @@ function repo_init(){
         + '<tr><td><input id=spawner-distance><td>Spawner Minimum X'
         + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
+    });
+    entity_set({
+      'type': 'obstacle',
+    });
+    entity_set({
+      'properties': {
+        'owner': false,
+      },
+      'type': 'particle',
+    });
+    entity_set({
+      'type': 'spawner',
+    });
+    entity_set({
+      'properties': {
+        'goal-x': -100,
+        'paddle-height': 5,
+        'paddle-x': -35,
+        'paddle-x-move': 0,
+        'score': 0,
+        'target': false,
+      },
+      'type': 'player',
     });
     audio_create({
       'audios': {

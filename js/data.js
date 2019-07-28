@@ -9,7 +9,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
     }) + 5;
 
     // Add two obstacles to maintain symmetry.
-    core_entity_create({
+    entity_create({
       'id': 'obstacle-a' + id,
       'properties': {
         'height': obstacle_height,
@@ -21,7 +21,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
         'obstacle',
       ],
     });
-    core_entity_create({
+    entity_create({
       'id': 'obstacle-b' + id,
       'properties': {
         'height': obstacle_height,
@@ -48,7 +48,7 @@ function load_data(id){
     particle_x_limit = gamearea_width_half - 2;
 
     // Setup player information.
-    core_entity_create({
+    entity_create({
       'id': 'player-0',
       'properties': {
         'color': core_storage_data['color-positive'],
@@ -59,7 +59,7 @@ function load_data(id){
         'player',
       ],
     });
-    core_entity_create({
+    entity_create({
       'id': 'player-1',
       'properties': {
         'color': core_storage_data['color-negative'],
@@ -72,7 +72,7 @@ function load_data(id){
     });
 
     // Calculate distance between both players.
-    gamearea_playerdist = Math.abs(core_entities['player-1']['paddle-y']) + core_entities['player-0']['paddle-y'] + 5;
+    gamearea_playerdist = Math.abs(entity_entities['player-1']['paddle-y']) + entity_entities['player-0']['paddle-y'] + 5;
 
     // Enforce valid spawners.
     core_storage_data['spawner-count'] = Math.max(
@@ -99,7 +99,7 @@ function load_data(id){
         }
 
         // Add new spawner and mirror.
-        core_entity_create({
+        entity_create({
           'id': 'spawner-a' + loop_counter,
           'properties': {
             'x': spawner_x,
@@ -109,7 +109,7 @@ function load_data(id){
             'spawner',
           ],
         });
-        core_entity_create({
+        entity_create({
           'id': 'spawner-b' + loop_counter,
           'properties': {
             'x': -spawner_x,
