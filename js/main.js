@@ -448,7 +448,7 @@ function repo_init(){
         'ai-vs-ai': {
           'onclick': function(){
               canvas_setmode({
-                'newgame': true,
+                'mode': 0,
               });
           },
         },
@@ -456,7 +456,6 @@ function repo_init(){
           'onclick': function(){
               canvas_setmode({
                 'mode': 1,
-                'newgame': true,
               });
           },
         },
@@ -469,16 +468,12 @@ function repo_init(){
         'winner': false,
       },
       'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
-      'keybinds': {
-        72: {
-          'todo': function(){
-            canvas_setmode({
-              'mode': core_mode,
-            });
-          },
-        },
-      },
       'menu': true,
+      'reset': function(){
+          canvas_setmode({
+            'mode': core_mode,
+          });
+      },
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
