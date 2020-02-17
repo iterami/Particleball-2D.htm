@@ -142,11 +142,11 @@ function logic(){
     if(particle_frames >= core_storage_data['particle-frames']){
         // If the current number of particles is less than max, add new particle.
         if(entity_info['particle']['count'] < core_storage_data['particle-max']){
-            let random_spawner = core_random_key({
+            const random_spawner = core_random_key({
               'object': entity_groups['spawner'],
             });
-            let x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
-            let y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+            const x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+            const y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
 
             entity_create({
               'properties': {
@@ -187,8 +187,8 @@ function logic(){
         particle_frames++;
     }
 
-    let goal_width_half = core_storage_data['goal-width'] / 2;
-    let paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
+    const goal_width_half = core_storage_data['goal-width'] / 2;
+    const paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
 
     // Reset movements for recalculation.
     entity_entities['player-0']['target'] = false;

@@ -1,10 +1,10 @@
 'use strict';
 
 function create_obstacle(id, obstacle_x, obstacle_y){
-    let obstacle_height = core_random_integer({
+    const obstacle_height = core_random_integer({
       'max': core_storage_data['obstacle-size'],
     }) + 5;
-    let obstacle_width = core_random_integer({
+    const obstacle_width = core_random_integer({
       'max': core_storage_data['obstacle-size'],
     }) + 5;
 
@@ -41,8 +41,8 @@ function load_data(id){
     player_controlled = id === 1;
 
     // Get half of height and width of game area.
-    let gamearea_height_half = core_storage_data['gamearea-height'] / 2;
-    let gamearea_width_half = core_storage_data['gamearea-width'] / 2;
+    const gamearea_height_half = core_storage_data['gamearea-height'] / 2;
+    const gamearea_width_half = core_storage_data['gamearea-width'] / 2;
 
     // How far particles can go on x axis positive or negative.
     particle_x_limit = gamearea_width_half - 2;
@@ -86,10 +86,10 @@ function load_data(id){
 
     let loop_counter = core_storage_data['spawner-count'] - 1;
     do{
-        let spawner_x = core_random_integer({
+        const spawner_x = core_random_integer({
           'max': gamearea_width_half * 2,
         }) - gamearea_width_half;
-        let spawner_y = core_random_integer({
+        const spawner_y = core_random_integer({
           'max': (gamearea_playerdist - 25) / 4,
         });
         if(Math.abs(spawner_x) < core_storage_data['spawner-distance']){
