@@ -8,7 +8,6 @@ function create_obstacle(id, obstacle_x, obstacle_y){
       'max': core_storage_data['obstacle-size'],
     }) + 5;
 
-    // Add two obstacles to maintain symmetry.
     entity_create({
       'id': 'obstacle-a' + id,
       'properties': {
@@ -40,14 +39,10 @@ function load_data(id){
     particle_frames = core_storage_data['particle-frames'];
     player_controlled = id === 1;
 
-    // Get half of height and width of game area.
     const gamearea_height_half = core_storage_data['gamearea-height'] / 2;
     const gamearea_width_half = core_storage_data['gamearea-width'] / 2;
-
-    // How far particles can go on x axis positive or negative.
     particle_x_limit = gamearea_width_half - 2;
 
-    // Setup player information.
     entity_create({
       'id': 'player-0',
       'properties': {
@@ -71,10 +66,8 @@ function load_data(id){
       ],
     });
 
-    // Calculate distance between both players.
     gamearea_playerdist = Math.abs(entity_entities['player-1']['paddle-y']) + entity_entities['player-0']['paddle-y'] + 5;
 
-    // Enforce valid spawners.
     core_storage_data['spawner-count'] = Math.max(
       core_storage_data['spawner-count'],
       1
@@ -98,7 +91,6 @@ function load_data(id){
               : -1);
         }
 
-        // Add new spawner and mirror.
         entity_create({
           'id': 'spawner-a' + loop_counter,
           'properties': {

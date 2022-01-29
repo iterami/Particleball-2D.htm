@@ -7,7 +7,6 @@ function repo_drawlogic(){
       canvas_properties['height-half']
     );
 
-    // Draw gamearea background.
     canvas_setproperties({
       'properties': {
         'fillStyle': '#000',
@@ -26,7 +25,6 @@ function repo_drawlogic(){
       gamearea_playerdist + 40
     );
 
-    // Draw obstacles.
     canvas_setproperties({
       'properties': {
         'fillStyle': '#3c3c3c',
@@ -46,7 +44,6 @@ function repo_drawlogic(){
       },
     });
 
-    // Draw spawners.
     canvas_setproperties({
       'properties': {
         'fillStyle': '#476291',
@@ -66,7 +63,6 @@ function repo_drawlogic(){
       },
     });
 
-    // Draw particles.
     entity_group_modify({
       'groups': [
         'particle',
@@ -93,14 +89,12 @@ function repo_drawlogic(){
         'player',
       ],
       'todo': function(entity){
-          // Set color to player color.
           canvas_setproperties({
             'properties': {
               'fillStyle': entity_entities[entity]['color'],
             },
           });
 
-          // Draw paddle.
           canvas_buffer.fillRect(
             entity_entities[entity]['paddle-x'],
             entity_entities[entity]['paddle-y'],
@@ -108,7 +102,6 @@ function repo_drawlogic(){
             entity_entities[entity]['paddle-height']
           );
 
-          // Draw goal.
           canvas_buffer.fillRect(
             -core_storage_data['goal-width'] / 2 - 20,
             entity_entities[entity]['goal-y'],
@@ -116,7 +109,6 @@ function repo_drawlogic(){
             20
           );
 
-          // Draw score.
           canvas_setproperties({
             'properties': {
               'fillStyle': '#fff',
@@ -138,9 +130,7 @@ function repo_logic(){
         return;
     }
 
-    // Check if a new particle should be added.
     if(particle_frames >= core_storage_data['particle-frames']){
-        // If the current number of particles is less than max, add new particle.
         if(entity_info['particle']['count'] < core_storage_data['particle-max']){
             const random_spawner = core_random_key({
               'object': entity_groups['spawner'],
@@ -190,7 +180,6 @@ function repo_logic(){
     const goal_width_half = core_storage_data['goal-width'] / 2;
     const paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
 
-    // Reset movements for recalculation.
     entity_entities['player-0']['target'] = false;
     entity_entities['player-1']['target'] = false;
 
@@ -199,39 +188,31 @@ function repo_logic(){
         'particle',
       ],
       'todo': function(entity){
-          // If particle is within goal_width_half pixels of center of goal.
           if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
-              // If particle is moving downwards...
               if(entity_entities[entity]['y-speed'] > 0){
-                  // Link player 0 AI to track this particle if it is closest.
                   if((entity_entities['player-0']['target'] === false || entity_entities[entity]['y'] > entity_entities[entity_entities['player-0']['target']]['y'])
                     && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
                       entity_entities['player-0']['target'] = entity;
                   }
 
-              // ...else link player 1 AI to track this particle if it is closest.
               }else if((entity_entities['player-1']['target'] === false || entity_entities[entity]['y'] < entity_entities[entity_entities['player-1']['target']]['y'])
                 && entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y']){
                   entity_entities['player-1']['target'] = entity;
               }
           }
 
-          // If particle has collided with a goal.
           if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']
             || entity_entities[entity]['y'] - 2 < entity_entities['player-1']['goal-y'] + 20){
-              // Determine which player scored a goal.
               let temp_player = 0;
               if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']){
                   temp_player = 1;
               }
 
-              // If score can decrease and score is greater than 0, decrease the other players score by 1.
               if(core_storage_data['score-decrease']
                 && entity_entities['player-' + (1 - temp_player)]['score'] > 0){
                   entity_entities['player-' + (1 - temp_player)]['score'] -= 1;
               }
 
-              // Increase the scoring players score by 1.
               if(entity_entities[entity]['owner'] === 'player-' + temp_player){
                   entity_entities['player-' + temp_player]['score'] += 1;
               }
@@ -257,13 +238,11 @@ function repo_logic(){
               let bounce_x = 1;
               let bounce_y = 1;
 
-              // Loop through obstacles to find collisions.
               entity_group_modify({
                 'groups': [
                   'obstacle',
                 ],
                 'todo': function(obstacle){
-                    // X collisions.
                     if(entity_entities[entity]['x'] >= entity_entities[obstacle]['x']
                       && entity_entities[entity]['x'] <= entity_entities[obstacle]['x'] + entity_entities[obstacle]['width']){
                         if(entity_entities[entity]['y-speed'] > 0){
@@ -277,7 +256,6 @@ function repo_logic(){
                             bounce_y = -core_storage_data['obstacle-multiplier-y'];
                         }
 
-                    // Y collisions.
                     }else if(entity_entities[entity]['y'] >= entity_entities[obstacle]['y']
                       && entity_entities[entity]['y'] <= entity_entities[obstacle]['y'] + entity_entities[obstacle]['height']){
                         if(entity_entities[entity]['x-speed'] > 0){
@@ -294,7 +272,6 @@ function repo_logic(){
                 },
               });
 
-              // Check for collisions with player paddles or edges of game area.
               if(entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height']
                 && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
                   if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
@@ -321,11 +298,9 @@ function repo_logic(){
                           bounce_y = -1;
                       }
 
-                  // Left/right wall collisions.
                   }else if(Math.abs(entity_entities[entity]['x']) > particle_x_limit){
                       bounce_x = -1;
 
-                  // Player paddle collisions.
                   }else if((entity_entities[entity]['y-speed'] < 0 && entity_entities[entity]['y'] - 2 <= entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height'])
                     || (entity_entities[entity]['y-speed'] > 0 && entity_entities[entity]['y'] + 2 >= entity_entities['player-0']['paddle-y'])){
                       bounce_y = -1;
@@ -335,7 +310,6 @@ function repo_logic(){
               entity_entities[entity]['x-speed'] *= bounce_x;
               entity_entities[entity]['y-speed'] *= bounce_y;
 
-              // Remove particles that are moving too fast.
               if(entity_entities[entity]['x-speed'] > core_storage_data['gamearea-width']
                 || entity_entities[entity]['y-speed'] > core_storage_data['gamearea-height']){
                   entity_remove({
@@ -353,7 +327,6 @@ function repo_logic(){
       },
     });
 
-    // Calculate movement direction if player0 ai is tracking a particle.
     let paddle_position = entity_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] / 2;
     if(entity_entities['player-0']['target'] === false){
         if(paddle_position === 0){
@@ -371,7 +344,6 @@ function repo_logic(){
           : -core_storage_data['paddle-speed'];
     }
 
-    // Calculate movement direction if player1 ai is tracking a particle.
     paddle_position = entity_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] / 2;
     if(entity_entities['player-1']['target'] === false){
         if(paddle_position === 0){
@@ -389,7 +361,6 @@ function repo_logic(){
           : -core_storage_data['paddle-speed'];
     }
 
-    // Move player 1 paddle, prevent from moving past goal boundaries.
     entity_entities['player-1']['paddle-x'] += entity_entities['player-1']['paddle-x-move'];
     if(entity_entities['player-1']['paddle-x'] > paddle_x_max){
         entity_entities['player-1']['paddle-x'] = paddle_x_max;
@@ -398,7 +369,6 @@ function repo_logic(){
         entity_entities['player-1']['paddle-x'] = -goal_width_half;
     }
 
-    // If player controlled, handle keypress movement...
     if(player_controlled){
         if(core_keys[core_storage_data['move-←']]['state']
           && entity_entities['player-0']['paddle-x'] > -goal_width_half){
@@ -416,7 +386,6 @@ function repo_logic(){
             entity_entities['player-0']['paddle-x'] = paddle_x_max;
         }
 
-    // ...else move via AI.
     }else{
         entity_entities['player-0']['paddle-x'] += entity_entities['player-0']['paddle-x-move'];
         if(entity_entities['player-0']['paddle-x'] > paddle_x_max){
@@ -427,7 +396,6 @@ function repo_logic(){
         }
     }
 
-    // End game if any player has >= score-goal score.
     if(winner === false){
         entity_group_modify({
           'groups': [
@@ -503,25 +471,25 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input id=particle-frames><td>Frames/Particle'
-        + '<tr><td><input id=goal-width><td>Goal Width'
-        + '<tr><td><input id=gamearea-height><td>Level Height'
-        + '<tr><td><input id=gamearea-width><td>Level Width'
-        + '<tr><td><input id=obstacle-multiplier-x><td>Obstacle Bounce Multiplier X'
-        + '<tr><td><input id=obstacle-multiplier-y><td>Obstacle Bounce Multiplier Y'
-        + '<tr><td><input id=obstacle-count><td>*2 Obstacles Count'
-        + '<tr><td><input id=obstacle-distance><td>Obstacle Minimum X'
-        + '<tr><td><input id=obstacle-size><td>+5&lt; Obstacle Size'
+      'storage-menu': '<table><tr><td><input id=particle-frames min=1 type=number><td>Frames/Particle'
+        + '<tr><td><input id=goal-width min=1 type=number><td>Goal Width'
+        + '<tr><td><input id=gamearea-height min=1 type=number><td>Level Height'
+        + '<tr><td><input id=gamearea-width min=1 type=number><td>Level Width'
+        + '<tr><td><input id=obstacle-multiplier-x type=number><td>Obstacle Bounce Multiplier X'
+        + '<tr><td><input id=obstacle-multiplier-y type=number><td>Obstacle Bounce Multiplier Y'
+        + '<tr><td><input id=obstacle-count min=0 type=number><td>*2 Obstacles Count'
+        + '<tr><td><input id=obstacle-distance min=1 type=number><td>Obstacle Minimum X'
+        + '<tr><td><input id=obstacle-size type=number><td>+5&lt; Obstacle Size'
         + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
-        + '<tr><td><input id=paddle-speed><td>Paddle Speed'
-        + '<tr><td><input id=paddle-width><td>Paddle Width'
+        + '<tr><td><input id=paddle-speed type=number><td>Paddle Speed'
+        + '<tr><td><input id=paddle-width min=1 type=number><td>Paddle Width'
         + '<tr><td><input id=particle-color type=color><td>Particle Color'
-        + '<tr><td><input id=particle-max><td>Particle Limit'
-        + '<tr><td><input id=particle-speed><td>&gt; Particle Speed'
+        + '<tr><td><input id=particle-max min=1 type=number><td>Particle Limit'
+        + '<tr><td><input id=particle-speed type=number><td>&gt; Particle Speed'
         + '<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable'
-        + '<tr><td><input id=score-goal><td>Score Goal'
-        + '<tr><td><input id=spawner-count><td>*2 Spawners'
-        + '<tr><td><input id=spawner-distance><td>Spawner Minimum X'
+        + '<tr><td><input id=score-goal min=1 type=number><td>Score Goal'
+        + '<tr><td><input id=spawner-count min=1 type=number><td>*2 Spawners'
+        + '<tr><td><input id=spawner-distance type=number><td>Spawner Minimum X'
         + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
     });
