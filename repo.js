@@ -137,8 +137,8 @@ function load_data(id){
 }
 
 function repo_drawlogic(){
-    canvas_buffer.save();
-    canvas_buffer.translate(
+    canvas.save();
+    canvas.translate(
       canvas_properties['width-half'],
       canvas_properties['height-half']
     );
@@ -148,13 +148,13 @@ function repo_drawlogic(){
         'fillStyle': '#000',
       },
     });
-    canvas_buffer.fillRect(
+    canvas.fillRect(
       -core_storage_data['gamearea-width'] / 2,
       -core_storage_data['gamearea-height'] / 2,
       core_storage_data['gamearea-width'],
       core_storage_data['gamearea-height']
     );
-    canvas_buffer.fillRect(
+    canvas.fillRect(
       -core_storage_data['goal-width'] / 2,
       -core_storage_data['gamearea-height'] / 2 - 20,
       core_storage_data['goal-width'],
@@ -171,7 +171,7 @@ function repo_drawlogic(){
         'obstacle',
       ],
       'todo': function(entity){
-          canvas_buffer.fillRect(
+          canvas.fillRect(
             entity_entities[entity]['x'],
             entity_entities[entity]['y'],
             entity_entities[entity]['width'],
@@ -190,7 +190,7 @@ function repo_drawlogic(){
         'spawner',
       ],
       'todo': function(entity){
-          canvas_buffer.fillRect(
+          canvas.fillRect(
             entity_entities[entity]['x'] - 4,
             entity_entities[entity]['y'] - 4,
             8,
@@ -211,7 +211,7 @@ function repo_drawlogic(){
                 : entity_entities[entity_entities[entity]['owner']]['color'],
             },
           });
-          canvas_buffer.fillRect(
+          canvas.fillRect(
             Math.round(entity_entities[entity]['x']) - 2,
             Math.round(entity_entities[entity]['y']) - 2,
             4,
@@ -231,14 +231,14 @@ function repo_drawlogic(){
             },
           });
 
-          canvas_buffer.fillRect(
+          canvas.fillRect(
             entity_entities[entity]['paddle-x'],
             entity_entities[entity]['paddle-y'],
             core_storage_data['paddle-width'],
             entity_entities[entity]['paddle-height']
           );
 
-          canvas_buffer.fillRect(
+          canvas.fillRect(
             -core_storage_data['goal-width'] / 2 - 20,
             entity_entities[entity]['goal-y'],
             core_storage_data['goal-width'] + 40,
@@ -250,7 +250,7 @@ function repo_drawlogic(){
               'fillStyle': '#fff',
             },
           });
-          canvas_buffer.fillText(
+          canvas.fillText(
             entity_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
             entity_entities[entity]['paddle-x'],
             entity_entities[entity]['paddle-y'] + (entity === 'player-0' ? 60 : -35)
@@ -258,7 +258,7 @@ function repo_drawlogic(){
       },
     });
 
-    canvas_buffer.restore();
+    canvas.restore();
 }
 
 function repo_logic(){
