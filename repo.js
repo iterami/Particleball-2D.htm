@@ -46,7 +46,7 @@ function load_data(id){
     entity_create({
       'id': 'player-0',
       'properties': {
-        'color': core_storage_data['color-positive'],
+        'color': '#206620',
         'goal-y': gamearea_height_half + 10,
         'paddle-y': gamearea_height_half,
       },
@@ -57,7 +57,7 @@ function load_data(id){
     entity_create({
       'id': 'player-1',
       'properties': {
-        'color': core_storage_data['color-negative'],
+        'color': '#663366',
         'goal-y': -gamearea_height_half - 30,
         'paddle-y': -gamearea_height_half - 5,
       },
