@@ -268,9 +268,7 @@ function repo_logic(){
 
     if(particle_frames >= core_storage_data['particle-frames']){
         if(entity_info['particle']['count'] < core_storage_data['particle-max']){
-            const random_spawner = core_random_key({
-              'object': entity_groups['spawner'],
-            });
+            const random_spawner = core_random_key(entity_groups['spawner']);
             const x_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
             const y_speed = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
 
