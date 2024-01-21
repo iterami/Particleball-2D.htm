@@ -576,7 +576,7 @@ function repo_init(){
         'player_controlled': false,
         'winner': false,
       },
-      'info': '<input id=ai-vs-ai type=button value="AI vs AI"><input id=ai-vs-player type=button value="Player vs AI">',
+      'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
       'reset': function(){
           canvas_setmode({
