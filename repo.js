@@ -364,9 +364,7 @@ function repo_logic(){
                 ],
               });
 
-              audio_start({
-                'id': 'boop',
-              });
+              audio_start('boop');
 
           }else{
               let bounce_x = 1;
@@ -649,13 +647,6 @@ function repo_init(){
         'target': false,
       },
       'type': 'player',
-    });
-    audio_create({
-      'audios': {
-        'boop': {
-          'duration': .1,
-        },
-      },
     });
     canvas_init();
 }
