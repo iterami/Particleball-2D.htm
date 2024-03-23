@@ -144,9 +144,7 @@ function repo_drawlogic(){
     );
 
     canvas_setproperties({
-      'properties': {
-        'fillStyle': '#000',
-      },
+      'fillStyle': '#000',
     });
     canvas.fillRect(
       -core_storage_data['gamearea-width'] / 2,
@@ -162,9 +160,7 @@ function repo_drawlogic(){
     );
 
     canvas_setproperties({
-      'properties': {
-        'fillStyle': '#3c3c3c',
-      },
+      'fillStyle': '#3c3c3c',
     });
     entity_group_modify({
       'groups': [
@@ -181,9 +177,7 @@ function repo_drawlogic(){
     });
 
     canvas_setproperties({
-      'properties': {
-        'fillStyle': '#476291',
-      },
+      'fillStyle': '#476291',
     });
     entity_group_modify({
       'groups': [
@@ -205,11 +199,9 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas_setproperties({
-            'properties': {
-              'fillStyle': entity_entities[entity]['owner'] === false
-                ? core_storage_data['particle-color']
-                : entity_entities[entity_entities[entity]['owner']]['color'],
-            },
+            'fillStyle': entity_entities[entity]['owner'] === false
+              ? core_storage_data['particle-color']
+              : entity_entities[entity_entities[entity]['owner']]['color'],
           });
           canvas.fillRect(
             Math.round(entity_entities[entity]['x']) - 2,
@@ -226,9 +218,7 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas_setproperties({
-            'properties': {
-              'fillStyle': entity_entities[entity]['color'],
-            },
+            'fillStyle': entity_entities[entity]['color'],
           });
 
           canvas.fillRect(
@@ -246,9 +236,7 @@ function repo_drawlogic(){
           );
 
           canvas_setproperties({
-            'properties': {
-              'fillStyle': '#fff',
-            },
+            'fillStyle': '#fff',
           });
           canvas.fillText(
             entity_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
