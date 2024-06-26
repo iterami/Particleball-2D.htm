@@ -36,7 +36,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
 
 function load_data(id){
     canvas_properties['clearColor'] = '#3c3c3c';
-    particle_frames = core_storage_data['particle-frames'];
+    particle_frames = Math.floor(core_storage_data['particle-frames']);
     player_controlled = id === 1;
 
     const gamearea_height_half = core_storage_data['gamearea-height'] / 2;
@@ -68,10 +68,10 @@ function load_data(id){
 
     gamearea_playerdist = Math.abs(entity_entities['player-1']['paddle-y']) + entity_entities['player-0']['paddle-y'] + 5;
 
-    core_storage_data['spawner-count'] = Math.max(
+    core_storage_data['spawner-count'] = Math.floor(Math.max(
       core_storage_data['spawner-count'],
       1
-    );
+    ));
     core_storage_data['spawner-distance'] = Math.min(
       core_storage_data['spawner-distance'],
       core_storage_data['gamearea-width'] / 2 - 5
@@ -114,7 +114,7 @@ function load_data(id){
     }while(loop_counter--);
 
     if(core_storage_data['obstacle-count'] > 0){
-        let loop_counter = core_storage_data['obstacle-count'] - 1;
+        let loop_counter = Math.floor(core_storage_data['obstacle-count']) - 1;
         do{
             let obstacle_x = core_random_integer({
               'max': gamearea_width_half * 2,
@@ -542,16 +542,12 @@ function repo_init(){
       'events': {
         'ai-vs-ai': {
           'onclick': function(){
-              canvas_setmode({
-                'mode': 0,
-              });
+              canvas_setmode(0);
           },
         },
         'ai-vs-player': {
           'onclick': function(){
-              canvas_setmode({
-                'mode': 1,
-              });
+              canvas_setmode(1);
           },
         },
       },
@@ -565,9 +561,7 @@ function repo_init(){
       'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
       'reset': function(){
-          canvas_setmode({
-            'mode': core_mode,
-          });
+          canvas_setmode(core_mode);
       },
       'storage': {
         'gamearea-height': 500,
@@ -591,24 +585,24 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
-      'storage-menu': '<table><tr><td><input class=mini id=particle-frames min=1 step=any type=number><td>Frames/Particle'
+      'storage-menu': '<table><tr><td><input class=mini id=particle-frames min=1 step=1 type=number><td>Frames/Particle'
         + '<tr><td><input class=mini id=goal-width min=1 step=any type=number><td>Goal Width'
         + '<tr><td><input class=mini id=gamearea-height min=1 step=any type=number><td>Level Height'
         + '<tr><td><input class=mini id=gamearea-width min=1 step=any type=number><td>Level Width'
         + '<tr><td><input class=mini id=obstacle-multiplier-x step=any type=number><td>Obstacle Bounce Multiplier X'
         + '<tr><td><input class=mini id=obstacle-multiplier-y step=any type=number><td>Obstacle Bounce Multiplier Y'
-        + '<tr><td><input class=mini id=obstacle-count min=0 step=any type=number><td>*2 Obstacles Count'
+        + '<tr><td><input class=mini id=obstacle-count min=0 step=1 type=number><td>*2 Obstacles Count'
         + '<tr><td><input class=mini id=obstacle-distance min=1 step=any type=number><td>Obstacle Minimum X'
         + '<tr><td><input class=mini id=obstacle-size step=any type=number><td>+5&lt; Obstacle Size'
         + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
         + '<tr><td><input class=mini id=paddle-speed step=any type=number><td>Paddle Speed'
         + '<tr><td><input class=mini id=paddle-width min=1 step=any type=number><td>Paddle Width'
         + '<tr><td><input id=particle-color type=color><td>Particle Color'
-        + '<tr><td><input class=mini id=particle-max min=1 step=any type=number><td>Particle Limit'
+        + '<tr><td><input class=mini id=particle-max min=1 step=1 type=number><td>Particle Limit'
         + '<tr><td><input class=mini id=particle-speed step=any type=number><td>&gt; Particle Speed'
         + '<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable'
-        + '<tr><td><input class=mini id=score-goal min=1 step=any type=number><td>Score Goal'
-        + '<tr><td><input class=mini id=spawner-count min=1 step=any type=number><td>*2 Spawners'
+        + '<tr><td><input class=mini id=score-goal min=1 step=1 type=number><td>Score Goal'
+        + '<tr><td><input class=mini id=spawner-count min=1 step=1 type=number><td>*2 Spawners'
         + '<tr><td><input class=mini id=spawner-distance step=any type=number><td>Spawner Minimum X'
         + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
       'title': 'Particleball-2D.htm',
