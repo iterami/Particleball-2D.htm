@@ -168,10 +168,10 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas.fillRect(
-            entity_entities[entity]['x'],
-            entity_entities[entity]['y'],
-            entity_entities[entity]['width'],
-            entity_entities[entity]['height']
+            entity['x'],
+            entity['y'],
+            entity['width'],
+            entity['height']
           );
       },
     });
@@ -185,8 +185,8 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas.fillRect(
-            entity_entities[entity]['x'] - 4,
-            entity_entities[entity]['y'] - 4,
+            entity['x'] - 4,
+            entity['y'] - 4,
             8,
             8
           );
@@ -199,13 +199,13 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas_setproperties({
-            'fillStyle': entity_entities[entity]['owner'] === false
+            'fillStyle': entity['owner'] === false
               ? core_storage_data['particle-color']
-              : entity_entities[entity_entities[entity]['owner']]['color'],
+              : entity_entities[entity['owner']]['color'],
           });
           canvas.fillRect(
-            Math.round(entity_entities[entity]['x']) - 2,
-            Math.round(entity_entities[entity]['y']) - 2,
+            Math.round(entity['x']) - 2,
+            Math.round(entity['y']) - 2,
             4,
             4
           );
@@ -218,19 +218,19 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           canvas_setproperties({
-            'fillStyle': entity_entities[entity]['color'],
+            'fillStyle': entity['color'],
           });
 
           canvas.fillRect(
-            entity_entities[entity]['paddle-x'],
-            entity_entities[entity]['paddle-y'],
+            entity['paddle-x'],
+            entity['paddle-y'],
             core_storage_data['paddle-width'],
-            entity_entities[entity]['paddle-height']
+            entity['paddle-height']
           );
 
           canvas.fillRect(
             -core_storage_data['goal-width'] / 2 - 20,
-            entity_entities[entity]['goal-y'],
+            entity['goal-y'],
             core_storage_data['goal-width'] + 40,
             20
           );
@@ -239,9 +239,9 @@ function repo_drawlogic(){
             'fillStyle': '#fff',
           });
           canvas.fillText(
-            entity_entities[entity]['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
-            entity_entities[entity]['paddle-x'],
-            entity_entities[entity]['paddle-y'] + (entity === 'player-0' ? 60 : -35)
+            entity['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
+            entity['paddle-x'],
+            entity['paddle-y'] + (entity === 'player-0' ? 60 : -35)
           );
       },
     });
@@ -302,31 +302,33 @@ function repo_logic(){
     const goal_width_half = core_storage_data['goal-width'] / 2;
     const paddle_x_max = goal_width_half - core_storage_data['paddle-width'];
 
-    entity_entities['player-0']['target'] = false;
-    entity_entities['player-1']['target'] = false;
+    const player_0 = entity_entities['player-0'];
+    const player_1 = entity_entities['player-1'];
+    player_0['target'] = false;
+    player_1['target'] = false;
 
     entity_group_modify({
       'groups': [
         'particle',
       ],
       'todo': function(entity){
-          if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
-              if(entity_entities[entity]['y-speed'] > 0){
-                  if((entity_entities['player-0']['target'] === false || entity_entities[entity]['y'] > entity_entities[entity_entities['player-0']['target']]['y'])
-                    && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
-                      entity_entities['player-0']['target'] = entity;
+          if(Math.abs(entity['x']) < goal_width_half){
+              if(entity['y-speed'] > 0){
+                  if((player_0['target'] === false || entity['y'] > entity_entities[player_0['target']]['y'])
+                    && entity['y'] < player_0['paddle-y']){
+                      player_0['target'] = entity['id'];
                   }
 
-              }else if((entity_entities['player-1']['target'] === false || entity_entities[entity]['y'] < entity_entities[entity_entities['player-1']['target']]['y'])
-                && entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y']){
-                  entity_entities['player-1']['target'] = entity;
+              }else if((player_1['target'] === false || entity['y'] < entity_entities[player_1['target']]['y'])
+                && entity['y'] > player_1['paddle-y']){
+                  player_1['target'] = entity['id'];
               }
           }
 
-          if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']
-            || entity_entities[entity]['y'] - 2 < entity_entities['player-1']['goal-y'] + 20){
+          if(entity['y'] + 2 > player_0['goal-y']
+            || entity['y'] - 2 < player_1['goal-y'] + 20){
               let temp_player = 0;
-              if(entity_entities[entity]['y'] + 2 > entity_entities['player-0']['goal-y']){
+              if(entity['y'] + 2 > player_0['goal-y']){
                   temp_player = 1;
               }
 
@@ -335,20 +337,20 @@ function repo_logic(){
                   entity_entities['player-' + (1 - temp_player)]['score'] -= 1;
               }
 
-              if(entity_entities[entity]['owner'] === 'player-' + temp_player){
+              if(entity['owner'] === 'player-' + temp_player){
                   entity_entities['player-' + temp_player]['score'] += 1;
               }
 
-              if(entity_entities['player-0']['target'] === entity){
-                  entity_entities['player-0']['target'] = false;
+              if(player_0['target'] === entity['id']){
+                  player_0['target'] = false;
               }
-              if(entity_entities['player-1']['target'] === entity){
-                  entity_entities['player-1']['target'] = false;
+              if(player_1['target'] === entity['id']){
+                  player_1['target'] = false;
               }
 
               entity_remove({
                 'entities': [
-                  entity,
+                  entity['id'],
                 ],
               });
 
@@ -363,156 +365,156 @@ function repo_logic(){
                   'obstacle',
                 ],
                 'todo': function(obstacle){
-                    if(entity_entities[entity]['x'] >= entity_entities[obstacle]['x']
-                      && entity_entities[entity]['x'] <= entity_entities[obstacle]['x'] + entity_entities[obstacle]['width']){
-                        if(entity_entities[entity]['y-speed'] > 0){
-                            if(entity_entities[entity]['y'] > entity_entities[obstacle]['y'] - 2
-                              && entity_entities[entity]['y'] < entity_entities[obstacle]['y']){
+                    if(entity['x'] >= obstacle['x']
+                      && entity['x'] <= obstacle['x'] + obstacle['width']){
+                        if(entity['y-speed'] > 0){
+                            if(entity['y'] > obstacle['y'] - 2
+                              && entity['y'] < obstacle['y']){
                                 bounce_y = -core_storage_data['obstacle-multiplier-y'];
                             }
 
-                        }else if(entity_entities[entity]['y'] > entity_entities[obstacle]['y'] + entity_entities[obstacle]['height']
-                          && entity_entities[entity]['y'] < entity_entities[obstacle]['y'] + entity_entities[obstacle]['height'] + 2){
+                        }else if(entity['y'] > obstacle['y'] + obstacle['height']
+                          && entity['y'] < obstacle['y'] + obstacle['height'] + 2){
                             bounce_y = -core_storage_data['obstacle-multiplier-y'];
                         }
 
-                    }else if(entity_entities[entity]['y'] >= entity_entities[obstacle]['y']
-                      && entity_entities[entity]['y'] <= entity_entities[obstacle]['y'] + entity_entities[obstacle]['height']){
-                        if(entity_entities[entity]['x-speed'] > 0){
-                            if(entity_entities[entity]['x'] > entity_entities[obstacle]['x'] - 2
-                              && entity_entities[entity]['x'] < entity_entities[obstacle]['x']){
+                    }else if(entity['y'] >= obstacle['y']
+                      && entity['y'] <= obstacle['y'] + obstacle['height']){
+                        if(entity['x-speed'] > 0){
+                            if(entity['x'] > obstacle['x'] - 2
+                              && entity['x'] < obstacle['x']){
                                 bounce_x = -core_storage_data['obstacle-multiplier-x'];
                             }
 
-                        }else if(entity_entities[entity]['x'] > entity_entities[obstacle]['x'] + entity_entities[obstacle]['width']
-                          && entity_entities[entity]['x'] < entity_entities[obstacle]['x'] + entity_entities[obstacle]['width'] + 2){
+                        }else if(entity['x'] > obstacle['x'] + obstacle['width']
+                          && entity['x'] < obstacle['x'] + obstacle['width'] + 2){
                             bounce_x = -core_storage_data['obstacle-multiplier-x'];
                         }
                     }
                 },
               });
 
-              if(entity_entities[entity]['y'] > entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height']
-                && entity_entities[entity]['y'] < entity_entities['player-0']['paddle-y']){
-                  if(Math.abs(entity_entities[entity]['x']) < goal_width_half){
-                      if(entity_entities[entity]['y'] > 0){
-                          if(entity_entities[entity]['x'] > entity_entities['player-0']['paddle-x'] - 2
-                            && entity_entities[entity]['x'] < entity_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] + 2
-                            && entity_entities[entity]['y-speed'] > 0
-                            && entity_entities[entity]['y'] + 2 >= entity_entities['player-0']['paddle-y']){
+              if(entity['y'] > player_1['paddle-y'] + player_1['paddle-height']
+                && entity['y'] < player_0['paddle-y']){
+                  if(Math.abs(entity['x']) < goal_width_half){
+                      if(entity['y'] > 0){
+                          if(entity['x'] > player_0['paddle-x'] - 2
+                            && entity['x'] < player_0['paddle-x'] + core_storage_data['paddle-width'] + 2
+                            && entity['y-speed'] > 0
+                            && entity['y'] + 2 >= player_0['paddle-y']){
                               if(core_storage_data['paddle-random']){
-                                  entity_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                                  entity['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
                               }
-                              entity_entities[entity]['owner'] = 'player-0';
+                              entity['owner'] = 'player-0';
                               bounce_y = -1;
                           }
 
-                      }else if(entity_entities[entity]['x'] > entity_entities['player-1']['paddle-x'] - 2
-                        && entity_entities[entity]['x'] < entity_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] + 2
-                        && entity_entities[entity]['y-speed'] < 0
-                        && entity_entities[entity]['y'] - 2 <= entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height']){
+                      }else if(entity['x'] > player_1['paddle-x'] - 2
+                        && entity['x'] < player_1['paddle-x'] + core_storage_data['paddle-width'] + 2
+                        && entity['y-speed'] < 0
+                        && entity['y'] - 2 <= player_1['paddle-y'] + player_1['paddle-height']){
                           if(core_storage_data['paddle-random']){
-                              entity_entities[entity]['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
+                              entity['x-speed'] = Math.random() * (core_storage_data['particle-speed'] * 2) - core_storage_data['particle-speed'];
                           }
-                          entity_entities[entity]['owner'] = 'player-1';
+                          entity['owner'] = 'player-1';
                           bounce_y = -1;
                       }
 
-                  }else if(Math.abs(entity_entities[entity]['x']) > particle_x_limit){
+                  }else if(Math.abs(entity['x']) > particle_x_limit){
                       bounce_x = -1;
 
-                  }else if((entity_entities[entity]['y-speed'] < 0 && entity_entities[entity]['y'] - 2 <= entity_entities['player-1']['paddle-y'] + entity_entities['player-1']['paddle-height'])
-                    || (entity_entities[entity]['y-speed'] > 0 && entity_entities[entity]['y'] + 2 >= entity_entities['player-0']['paddle-y'])){
+                  }else if((entity['y-speed'] < 0 && entity['y'] - 2 <= player_1['paddle-y'] + player_1['paddle-height'])
+                    || (entity['y-speed'] > 0 && entity['y'] + 2 >= player_0['paddle-y'])){
                       bounce_y = -1;
                   }
               }
 
-              entity_entities[entity]['x-speed'] *= bounce_x;
-              entity_entities[entity]['y-speed'] *= bounce_y;
+              entity['x-speed'] *= bounce_x;
+              entity['y-speed'] *= bounce_y;
 
-              if(entity_entities[entity]['x-speed'] > core_storage_data['gamearea-width']
-                || entity_entities[entity]['y-speed'] > core_storage_data['gamearea-height']){
+              if(entity['x-speed'] > core_storage_data['gamearea-width']
+                || entity['y-speed'] > core_storage_data['gamearea-height']){
                   entity_remove({
                     'entities': [
-                      entity,
+                      entity['id'],
                     ],
                   });
 
                   return;
               }
 
-              entity_entities[entity]['x'] += entity_entities[entity]['x-speed'];
-              entity_entities[entity]['y'] += entity_entities[entity]['y-speed'];
+              entity['x'] += entity['x-speed'];
+              entity['y'] += entity['y-speed'];
           }
       },
     });
 
-    let paddle_position = entity_entities['player-0']['paddle-x'] + core_storage_data['paddle-width'] / 2;
-    if(entity_entities['player-0']['target'] === false){
+    let paddle_position = player_0['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    if(player_0['target'] === false){
         if(paddle_position === 0){
-            entity_entities['player-0']['paddle-x-move'] = 0;
+            player_0['paddle-x-move'] = 0;
 
         }else{
-            entity_entities['player-0']['paddle-x-move'] = paddle_position < 0
+            player_0['paddle-x-move'] = paddle_position < 0
               ? core_storage_data['paddle-speed']
               : -core_storage_data['paddle-speed'];
         }
 
     }else{
-        entity_entities['player-0']['paddle-x-move'] = entity_entities[entity_entities['player-0']['target']]['x'] > paddle_position
+        player_0['paddle-x-move'] = entity_entities[player_0['target']]['x'] > paddle_position
           ? core_storage_data['paddle-speed']
           : -core_storage_data['paddle-speed'];
     }
 
-    paddle_position = entity_entities['player-1']['paddle-x'] + core_storage_data['paddle-width'] / 2;
-    if(entity_entities['player-1']['target'] === false){
+    paddle_position = player_1['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    if(player_1['target'] === false){
         if(paddle_position === 0){
-            entity_entities['player-1']['paddle-x-move'] = 0;
+            player_1['paddle-x-move'] = 0;
 
         }else{
-            entity_entities['player-1']['paddle-x-move'] = paddle_position < 0
+            player_1['paddle-x-move'] = paddle_position < 0
               ? core_storage_data['paddle-speed']
               : -core_storage_data['paddle-speed'];
         }
 
     }else{
-        entity_entities['player-1']['paddle-x-move'] = entity_entities[entity_entities['player-1']['target']]['x'] > paddle_position
+        player_1['paddle-x-move'] = entity_entities[player_1['target']]['x'] > paddle_position
           ? core_storage_data['paddle-speed']
           : -core_storage_data['paddle-speed'];
     }
 
-    entity_entities['player-1']['paddle-x'] += entity_entities['player-1']['paddle-x-move'];
-    if(entity_entities['player-1']['paddle-x'] > paddle_x_max){
-        entity_entities['player-1']['paddle-x'] = paddle_x_max;
+    player_1['paddle-x'] += player_1['paddle-x-move'];
+    if(player_1['paddle-x'] > paddle_x_max){
+        player_1['paddle-x'] = paddle_x_max;
 
-    }else if(entity_entities['player-1']['paddle-x'] < -goal_width_half){
-        entity_entities['player-1']['paddle-x'] = -goal_width_half;
+    }else if(player_1['paddle-x'] < -goal_width_half){
+        player_1['paddle-x'] = -goal_width_half;
     }
 
     if(player_controlled){
         if(core_keys[core_storage_data['move-←']]['state']
-          && entity_entities['player-0']['paddle-x'] > -goal_width_half){
-            entity_entities['player-0']['paddle-x'] -= core_storage_data['paddle-speed'];
+          && player_0['paddle-x'] > -goal_width_half){
+            player_0['paddle-x'] -= core_storage_data['paddle-speed'];
 
-        }else if(entity_entities['player-0']['paddle-x'] < -goal_width_half){
-            entity_entities['player-0']['paddle-x'] = -goal_width_half;
+        }else if(player_0['paddle-x'] < -goal_width_half){
+            player_0['paddle-x'] = -goal_width_half;
         }
 
         if(core_keys[core_storage_data['move-→']]['state']
-          && entity_entities['player-0']['paddle-x'] < paddle_x_max){
-            entity_entities['player-0']['paddle-x'] += core_storage_data['paddle-speed'];
+          && player_0['paddle-x'] < paddle_x_max){
+            player_0['paddle-x'] += core_storage_data['paddle-speed'];
 
-        }else if(entity_entities['player-0']['paddle-x'] > paddle_x_max){
-            entity_entities['player-0']['paddle-x'] = paddle_x_max;
+        }else if(player_0['paddle-x'] > paddle_x_max){
+            player_0['paddle-x'] = paddle_x_max;
         }
 
     }else{
-        entity_entities['player-0']['paddle-x'] += entity_entities['player-0']['paddle-x-move'];
-        if(entity_entities['player-0']['paddle-x'] > paddle_x_max){
-            entity_entities['player-0']['paddle-x'] = paddle_x_max;
+        player_0['paddle-x'] += player_0['paddle-x-move'];
+        if(player_0['paddle-x'] > paddle_x_max){
+            player_0['paddle-x'] = paddle_x_max;
 
-        }else if(entity_entities['player-0']['paddle-x'] < -goal_width_half){
-            entity_entities['player-0']['paddle-x'] = -goal_width_half;
+        }else if(player_0['paddle-x'] < -goal_width_half){
+            player_0['paddle-x'] = -goal_width_half;
         }
     }
 
@@ -522,8 +524,8 @@ function repo_logic(){
             'player',
           ],
           'todo': function(entity){
-              if(entity_entities[entity]['score'] >= core_storage_data['score-goal']){
-                  winner = entity;
+              if(entity['score'] >= core_storage_data['score-goal']){
+                  winner = entity['id'];
               }
           },
         });
