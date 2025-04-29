@@ -535,7 +535,7 @@ function repo_logic(){
 function repo_escape(){
     if(!entity_entities['player-0']
       && !core_menu_open){
-        reset();
+        reset(0);
     }
 }
 
@@ -544,12 +544,12 @@ function repo_init(){
       'events': {
         'ai-vs-ai': {
           'onclick': function(){
-              canvas_setmode(0);
+              reset(0);
           },
         },
         'ai-vs-player': {
           'onclick': function(){
-              canvas_setmode(1);
+              reset(1);
           },
         },
       },
@@ -633,6 +633,10 @@ function repo_init(){
     canvas_init();
 }
 
-function reset(){
-    canvas_setmode(core_mode);
+function reset(mode){
+    if(particle_x_limit > 0
+      && !globalThis.confirm('Start new game?')){
+        return;
+    }
+    canvas_setmode(mode);
 }
