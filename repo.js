@@ -535,7 +535,7 @@ function repo_logic(){
 function repo_escape(){
     if(!entity_entities['player-0']
       && !core_menu_open){
-        core_repo_reset();
+        reset();
     }
 }
 
@@ -562,9 +562,6 @@ function repo_init(){
       },
       'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
-      'reset': function(){
-          canvas_setmode(core_mode);
-      },
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
@@ -587,6 +584,7 @@ function repo_init(){
         'spawner-distance': 0,
         'spawner-mirror': true,
       },
+      'storage-controls': true,
       'storage-menu': '<table><tr><td><input class=mini id=particle-frames min=1 step=1 type=number><td>Frames/Particle'
         + '<tr><td><input class=mini id=goal-width min=1 step=any type=number><td>Goal Width'
         + '<tr><td><input class=mini id=gamearea-height min=1 step=any type=number><td>Level Height'
@@ -633,4 +631,8 @@ function repo_init(){
       'type': 'player',
     });
     canvas_init();
+}
+
+function reset(){
+    canvas_setmode(core_mode);
 }
