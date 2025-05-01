@@ -492,7 +492,24 @@ function repo_logic(){
     }
 
     if(player_controlled){
-        if(core_keys[core_storage_data['move-←']]['state']
+        let move_left = false;
+        let move_right = false;
+        if(core_mobile){
+            if(core_mouse['down-0']){
+                if(core_mouse['movement-x'] > 5){
+                    move_right = true;
+
+                }else if(core_mouse['movement-x'] < -5){
+                    move_left = true;
+                }
+            }
+
+        }else{
+            move_left = core_keys[core_storage_data['move-←']]['state'];
+            move_right = core_keys[core_storage_data['move-→']]['state'];
+        }
+
+        if(move_left
           && player_0['paddle-x'] > -goal_width_half){
             player_0['paddle-x'] -= core_storage_data['paddle-speed'];
 
@@ -500,7 +517,7 @@ function repo_logic(){
             player_0['paddle-x'] = -goal_width_half;
         }
 
-        if(core_keys[core_storage_data['move-→']]['state']
+        if(move_right
           && player_0['paddle-x'] < paddle_x_max){
             player_0['paddle-x'] += core_storage_data['paddle-speed'];
 
@@ -562,6 +579,9 @@ function repo_init(){
       },
       'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
+      'mousebinds': core_mobile
+        ? {}
+        : void 0,
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
