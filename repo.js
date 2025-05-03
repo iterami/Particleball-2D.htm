@@ -239,9 +239,9 @@ function repo_drawlogic(){
             'fillStyle': '#fff',
           });
           canvas.fillText(
-            entity['score'] + '/' + core_storage_data['score-goal'] + (entity === winner ? ' WINNER': ''),
+            entity['score'] + '/' + core_storage_data['score-goal'] + (entity['id'] === winner ? ' WINNER': ''),
             entity['paddle-x'],
-            entity['paddle-y'] + (entity === 'player-0' ? 60 : -35)
+            entity['paddle-y'] + (entity['id'] === 'player-0' ? 60 : -35)
           );
       },
     });
