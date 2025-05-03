@@ -449,24 +449,7 @@ function repo_logic(){
       },
     });
 
-    let paddle_position = player_0['paddle-x'] + core_storage_data['paddle-width'] / 2;
-    if(player_0['target'] === false){
-        if(paddle_position === 0){
-            player_0['paddle-x-move'] = 0;
-
-        }else{
-            player_0['paddle-x-move'] = paddle_position < 0
-              ? core_storage_data['paddle-speed']
-              : -core_storage_data['paddle-speed'];
-        }
-
-    }else{
-        player_0['paddle-x-move'] = entity_entities[player_0['target']]['x'] > paddle_position
-          ? core_storage_data['paddle-speed']
-          : -core_storage_data['paddle-speed'];
-    }
-
-    paddle_position = player_1['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    let paddle_position = player_1['paddle-x'] + core_storage_data['paddle-width'] / 2;
     if(player_1['target'] === false){
         if(paddle_position === 0){
             player_1['paddle-x-move'] = 0;
@@ -483,6 +466,23 @@ function repo_logic(){
           : -core_storage_data['paddle-speed'];
     }
 
+    paddle_position = player_0['paddle-x'] + core_storage_data['paddle-width'] / 2;
+    if(player_0['target'] === false){
+        if(paddle_position === 0){
+            player_0['paddle-x-move'] = 0;
+
+        }else{
+            player_0['paddle-x-move'] = paddle_position < 0
+              ? core_storage_data['paddle-speed']
+              : -core_storage_data['paddle-speed'];
+        }
+
+    }else{
+        player_0['paddle-x-move'] = entity_entities[player_0['target']]['x'] > paddle_position
+          ? core_storage_data['paddle-speed']
+          : -core_storage_data['paddle-speed'];
+    }
+
     player_1['paddle-x'] += player_1['paddle-x-move'];
     if(player_1['paddle-x'] > paddle_x_max){
         player_1['paddle-x'] = paddle_x_max;
@@ -495,13 +495,12 @@ function repo_logic(){
         let move_left = false;
         let move_right = false;
         if(core_mobile){
-            if(core_mouse['down-0']){
-                if(core_mouse['movement-x'] > 0){
-                    move_right = true;
+            const x = core_mouse['x'] - canvas_properties['width-half'];
+            if(x > paddle_position){
+                move_right = true;
 
-                }else if(core_mouse['movement-x'] < -0){
-                    move_left = true;
-                }
+            }else if(x < paddle_position){
+                move_left = true;
             }
 
         }else{
