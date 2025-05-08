@@ -495,7 +495,7 @@ function repo_logic(){
         let move_left = false;
         let move_right = false;
         if(core_mobile){
-            const x = core_mouse['x'] - canvas_properties['width-half'];
+            const x = core_pointer['x'] - canvas_properties['width-half'];
             if(x > paddle_position){
                 move_right = true;
 
@@ -578,7 +578,7 @@ function repo_init(){
       },
       'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
-      'mousebinds': core_mobile
+      'pointerbinds': core_mobile
         ? {}
         : void 0,
       'storage': {
