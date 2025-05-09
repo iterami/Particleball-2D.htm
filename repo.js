@@ -492,20 +492,15 @@ function repo_logic(){
     }
 
     if(player_controlled){
-        let move_left = false;
-        let move_right = false;
-        if(core_mobile){
-            const x = core_pointer['x'] - canvas_properties['width-half'];
-            if(x > paddle_position){
+        let move_left = core_keys[core_storage_data['move-←']]['state'];
+        let move_right = core_keys[core_storage_data['move-→']]['state'];
+        if(core_pointer['down-0']){
+            if(core_pointer['x'] - canvas_properties['width-half'] > paddle_position){
                 move_right = true;
 
-            }else if(x < paddle_position){
+            }else{
                 move_left = true;
             }
-
-        }else{
-            move_left = core_keys[core_storage_data['move-←']]['state'];
-            move_right = core_keys[core_storage_data['move-→']]['state'];
         }
 
         if(move_left
@@ -578,9 +573,7 @@ function repo_init(){
       },
       'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
       'menu': true,
-      'pointerbinds': core_mobile
-        ? {}
-        : void 0,
+      'pointerbinds': {},
       'storage': {
         'gamearea-height': 500,
         'gamearea-width': 1000,
