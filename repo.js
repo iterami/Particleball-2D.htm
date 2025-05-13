@@ -552,6 +552,13 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
+      'beforeunload': {
+        'todo': function(event){
+            if(particle_x_limit > 0){
+                event.preventDefault();
+            }
+        },
+      },
       'events': {
         'ai-vs-ai': {
           'onclick': function(){
