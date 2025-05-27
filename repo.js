@@ -355,7 +355,9 @@ function repo_init(){
       },
       'type': 'player',
     });
-    canvas_init();
+    canvas_init({
+      'cursor': 'pointer',
+    });
 }
 
 function repo_logic(){
