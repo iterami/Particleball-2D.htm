@@ -249,6 +249,115 @@ function repo_drawlogic(){
     canvas.restore();
 }
 
+function repo_escape(){
+    if(!entity_entities['player-0']
+      && !core_menu_open){
+        reset(0);
+    }
+}
+
+function repo_init(){
+    core_repo_init({
+      'beforeunload': {
+        'todo': function(event){
+            if(particle_x_limit > 0){
+                event.preventDefault();
+            }
+        },
+      },
+      'events': {
+        'ai-vs-ai': {
+          'onclick': function(){
+              reset(0);
+          },
+        },
+        'ai-vs-player': {
+          'onclick': function(){
+              reset(1);
+          },
+        },
+      },
+      'globals': {
+        'gamearea_playerdist': 0,
+        'particle_frames': 0,
+        'particle_x_limit': 0,
+        'player_controlled': false,
+        'winner': false,
+      },
+      'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
+      'menu': true,
+      'pointerbinds': {},
+      'storage': {
+        'gamearea-height': 500,
+        'gamearea-width': 1000,
+        'goal-width': 180,
+        'obstacle-count': 10,
+        'obstacle-distance': 150,
+        'obstacle-multiplier-x': 1.01,
+        'obstacle-multiplier-y': 1.01,
+        'obstacle-size': 65,
+        'paddle-random': true,
+        'paddle-speed': 2,
+        'paddle-width': 70,
+        'particle-color': '#dddddd',
+        'particle-frames': 1,
+        'particle-max': 100,
+        'particle-speed': 1.5,
+        'score-decrease': false,
+        'score-goal': 20,
+        'spawner-count': 3,
+        'spawner-distance': 0,
+        'spawner-mirror': true,
+      },
+      'storage-controls': true,
+      'storage-menu': '<table><tr><td><input class=mini id=particle-frames min=1 step=1 type=number><td>Frames/Particle'
+        + '<tr><td><input class=mini id=goal-width min=1 step=any type=number><td>Goal Width'
+        + '<tr><td><input class=mini id=gamearea-height min=1 step=any type=number><td>Level Height'
+        + '<tr><td><input class=mini id=gamearea-width min=1 step=any type=number><td>Level Width'
+        + '<tr><td><input class=mini id=obstacle-multiplier-x step=any type=number><td>Obstacle Bounce Multiplier X'
+        + '<tr><td><input class=mini id=obstacle-multiplier-y step=any type=number><td>Obstacle Bounce Multiplier Y'
+        + '<tr><td><input class=mini id=obstacle-count min=0 step=1 type=number><td>*2 Obstacles Count'
+        + '<tr><td><input class=mini id=obstacle-distance min=1 step=any type=number><td>Obstacle Minimum X'
+        + '<tr><td><input class=mini id=obstacle-size step=any type=number><td>+5&lt; Obstacle Size'
+        + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
+        + '<tr><td><input class=mini id=paddle-speed step=any type=number><td>Paddle Speed'
+        + '<tr><td><input class=mini id=paddle-width min=1 step=any type=number><td>Paddle Width'
+        + '<tr><td><input id=particle-color type=color><td>Particle Color'
+        + '<tr><td><input class=mini id=particle-max min=1 step=1 type=number><td>Particle Limit'
+        + '<tr><td><input class=mini id=particle-speed step=any type=number><td>&gt; Particle Speed'
+        + '<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable'
+        + '<tr><td><input class=mini id=score-goal min=1 step=1 type=number><td>Score Goal'
+        + '<tr><td><input class=mini id=spawner-count min=1 step=1 type=number><td>*2 Spawners'
+        + '<tr><td><input class=mini id=spawner-distance step=any type=number><td>Spawner Minimum X'
+        + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
+      'title': 'Particleball-2D.htm',
+    });
+    entity_set({
+      'type': 'obstacle',
+    });
+    entity_set({
+      'properties': {
+        'owner': false,
+      },
+      'type': 'particle',
+    });
+    entity_set({
+      'type': 'spawner',
+    });
+    entity_set({
+      'properties': {
+        'goal-x': -100,
+        'paddle-height': 5,
+        'paddle-x': -35,
+        'paddle-x-move': 0,
+        'score': 0,
+        'target': false,
+      },
+      'type': 'player',
+    });
+    canvas_init();
+}
+
 function repo_logic(){
     if(entity_info['spawner']['count'] === 0){
         return;
@@ -541,115 +650,6 @@ function repo_logic(){
           },
         });
     }
-}
-
-function repo_escape(){
-    if(!entity_entities['player-0']
-      && !core_menu_open){
-        reset(0);
-    }
-}
-
-function repo_init(){
-    core_repo_init({
-      'beforeunload': {
-        'todo': function(event){
-            if(particle_x_limit > 0){
-                event.preventDefault();
-            }
-        },
-      },
-      'events': {
-        'ai-vs-ai': {
-          'onclick': function(){
-              reset(0);
-          },
-        },
-        'ai-vs-player': {
-          'onclick': function(){
-              reset(1);
-          },
-        },
-      },
-      'globals': {
-        'gamearea_playerdist': 0,
-        'particle_frames': 0,
-        'particle_x_limit': 0,
-        'player_controlled': false,
-        'winner': false,
-      },
-      'info': '<button id=ai-vs-ai type=button>AI vs AI</button><button id=ai-vs-player type=button>Player vs AI</button>',
-      'menu': true,
-      'pointerbinds': {},
-      'storage': {
-        'gamearea-height': 500,
-        'gamearea-width': 1000,
-        'goal-width': 180,
-        'obstacle-count': 10,
-        'obstacle-distance': 150,
-        'obstacle-multiplier-x': 1.01,
-        'obstacle-multiplier-y': 1.01,
-        'obstacle-size': 65,
-        'paddle-random': true,
-        'paddle-speed': 2,
-        'paddle-width': 70,
-        'particle-color': '#dddddd',
-        'particle-frames': 1,
-        'particle-max': 100,
-        'particle-speed': 1.5,
-        'score-decrease': false,
-        'score-goal': 20,
-        'spawner-count': 3,
-        'spawner-distance': 0,
-        'spawner-mirror': true,
-      },
-      'storage-controls': true,
-      'storage-menu': '<table><tr><td><input class=mini id=particle-frames min=1 step=1 type=number><td>Frames/Particle'
-        + '<tr><td><input class=mini id=goal-width min=1 step=any type=number><td>Goal Width'
-        + '<tr><td><input class=mini id=gamearea-height min=1 step=any type=number><td>Level Height'
-        + '<tr><td><input class=mini id=gamearea-width min=1 step=any type=number><td>Level Width'
-        + '<tr><td><input class=mini id=obstacle-multiplier-x step=any type=number><td>Obstacle Bounce Multiplier X'
-        + '<tr><td><input class=mini id=obstacle-multiplier-y step=any type=number><td>Obstacle Bounce Multiplier Y'
-        + '<tr><td><input class=mini id=obstacle-count min=0 step=1 type=number><td>*2 Obstacles Count'
-        + '<tr><td><input class=mini id=obstacle-distance min=1 step=any type=number><td>Obstacle Minimum X'
-        + '<tr><td><input class=mini id=obstacle-size step=any type=number><td>+5&lt; Obstacle Size'
-        + '<tr><td><input id=paddle-random type=checkbox><td>Paddles Reflect Randomly'
-        + '<tr><td><input class=mini id=paddle-speed step=any type=number><td>Paddle Speed'
-        + '<tr><td><input class=mini id=paddle-width min=1 step=any type=number><td>Paddle Width'
-        + '<tr><td><input id=particle-color type=color><td>Particle Color'
-        + '<tr><td><input class=mini id=particle-max min=1 step=1 type=number><td>Particle Limit'
-        + '<tr><td><input class=mini id=particle-speed step=any type=number><td>&gt; Particle Speed'
-        + '<tr><td><input id=score-decrease type=checkbox><td>Score Decreasable'
-        + '<tr><td><input class=mini id=score-goal min=1 step=1 type=number><td>Score Goal'
-        + '<tr><td><input class=mini id=spawner-count min=1 step=1 type=number><td>*2 Spawners'
-        + '<tr><td><input class=mini id=spawner-distance step=any type=number><td>Spawner Minimum X'
-        + '<tr><td><input id=spawner-mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
-      'title': 'Particleball-2D.htm',
-    });
-    entity_set({
-      'type': 'obstacle',
-    });
-    entity_set({
-      'properties': {
-        'owner': false,
-      },
-      'type': 'particle',
-    });
-    entity_set({
-      'type': 'spawner',
-    });
-    entity_set({
-      'properties': {
-        'goal-x': -100,
-        'paddle-height': 5,
-        'paddle-x': -35,
-        'paddle-x-move': 0,
-        'score': 0,
-        'target': false,
-      },
-      'type': 'player',
-    });
-    canvas_init();
 }
 
 function reset(mode){
