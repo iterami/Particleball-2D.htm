@@ -1,12 +1,8 @@
 'use strict';
 
 function create_obstacle(id, obstacle_x, obstacle_y){
-    const obstacle_height = core_random_integer({
-      'max': core_storage_data['obstacle-size'],
-    }) + 5;
-    const obstacle_width = core_random_integer({
-      'max': core_storage_data['obstacle-size'],
-    }) + 5;
+    const obstacle_height = core_random_integer(core_storage_data['obstacle-size']) + 5;
+    const obstacle_width = core_random_integer(core_storage_data['obstacle-size']) + 5;
 
     entity_create({
       'id': 'obstacle-a' + id,
@@ -79,12 +75,8 @@ function load_data(id){
 
     let loop_counter = core_storage_data['spawner-count'] - 1;
     do{
-        const spawner_x = core_random_integer({
-          'max': gamearea_width_half * 2,
-        }) - gamearea_width_half;
-        const spawner_y = core_random_integer({
-          'max': (gamearea_playerdist - 25) / 4,
-        });
+        const spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
+        const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
         if(Math.abs(spawner_x) < core_storage_data['spawner-distance']){
             spawner_x = core_storage_data['spawner-distance'] * (spawner_x > 0
               ? 1
@@ -116,9 +108,7 @@ function load_data(id){
     if(core_storage_data['obstacle-count'] > 0){
         let loop_counter = Math.floor(core_storage_data['obstacle-count']) - 1;
         do{
-            let obstacle_x = core_random_integer({
-              'max': gamearea_width_half * 2,
-            }) - gamearea_width_half;
+            let obstacle_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
             if(Math.abs(obstacle_x) < core_storage_data['obstacle-distance']){
                 obstacle_x += core_storage_data['obstacle-distance'] * (obstacle_x > 0
                   ? 1
@@ -128,9 +118,7 @@ function load_data(id){
             create_obstacle(
               loop_counter,
               obstacle_x,
-              core_random_integer({
-                'max': (gamearea_playerdist - 25) / 2,
-              })
+              core_random_integer((gamearea_playerdist - 25) / 2)
             );
         }while(loop_counter--);
     }
