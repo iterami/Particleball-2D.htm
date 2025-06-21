@@ -298,7 +298,7 @@ function repo_init(){
         'spawner_mirror': true,
       },
       'storage_controls': true,
-      'storage-menu': '<table><tr><td><input class=mini id=particle_frames min=1 step=1 type=number><td>Frames/Particle'
+      'storage_menu': '<table><tr><td><input class=mini id=particle_frames min=1 step=1 type=number><td>Frames/Particle'
         + '<tr><td><input class=mini id=goal_width min=1 step=any type=number><td>Goal Width'
         + '<tr><td><input class=mini id=gamearea_height min=1 step=any type=number><td>Level Height'
         + '<tr><td><input class=mini id=gamearea_width min=1 step=any type=number><td>Level Width'
