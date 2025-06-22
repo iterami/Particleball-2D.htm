@@ -591,8 +591,8 @@ function repo_logic(){
     }
 
     if(player_controlled){
-        let move_left = core_keys[core_storage_data['move-←']].state;
-        let move_right = core_keys[core_storage_data['move-→']].state;
+        let move_left = core_keys[core_storage_data.move_left].state;
+        let move_right = core_keys[core_storage_data.move_right].state;
         if(core_pointer.down_0){
             if(core_pointer.x - canvas_properties.width_half > paddle_position){
                 move_right = true;
