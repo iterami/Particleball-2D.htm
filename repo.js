@@ -249,6 +249,7 @@ function repo_init(){
       'beforeunload': {
         'todo': function(event){
             if(particle_x_limit > 0){
+                core_escape(true);
                 event.preventDefault();
             }
         },
