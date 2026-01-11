@@ -30,100 +30,6 @@ function create_obstacle(id, obstacle_x, obstacle_y){
     });
 }
 
-function load_data(id){
-    canvas_properties.clearColor = '#3c3c3c';
-    particle_frames = Math.floor(core_storage_data.particle_frames);
-    player_controlled = id === 1;
-
-    const gamearea_height_half = core_storage_data.gamearea_height / 2;
-    const gamearea_width_half = core_storage_data.gamearea_width / 2;
-    particle_x_limit = gamearea_width_half - 2;
-
-    entity_create({
-      'id': 'player_0',
-      'properties': {
-        'color': '#206620',
-        'goal_y': gamearea_height_half + 10,
-        'paddle_y': gamearea_height_half,
-      },
-      'types': [
-        'player',
-      ],
-    });
-    entity_create({
-      'id': 'player_1',
-      'properties': {
-        'color': '#663366',
-        'goal_y': -gamearea_height_half - 30,
-        'paddle_y': -gamearea_height_half - 5,
-      },
-      'types': [
-        'player',
-      ],
-    });
-
-    gamearea_playerdist = Math.abs(entity_entities.player_1.paddle_y) + entity_entities.player_0.paddle_y + 5;
-
-    core_storage_data.spawner_count = Math.floor(Math.max(
-      core_storage_data.spawner_count,
-      1
-    ));
-    core_storage_data.spawner_distance = Math.min(
-      core_storage_data.spawner_distance,
-      core_storage_data.gamearea_width / 2 - 5
-    );
-
-    let loop_counter = core_storage_data.spawner_count - 1;
-    do{
-        const spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
-        const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
-        if(Math.abs(spawner_x) < core_storage_data.spawner_distance){
-            spawner_x = core_storage_data.spawner_distance * (spawner_x > 0
-              ? 1
-              : -1);
-        }
-
-        entity_create({
-          'id': 'spawner_a' + loop_counter,
-          'properties': {
-            'x': spawner_x,
-            'y': spawner_y,
-          },
-          'types': [
-            'spawner',
-          ],
-        });
-        entity_create({
-          'id': 'spawner_b' + loop_counter,
-          'properties': {
-            'x': -spawner_x,
-            'y': -spawner_y,
-          },
-          'types': [
-            'spawner',
-          ],
-        });
-    }while(loop_counter--);
-
-    if(core_storage_data.obstacle_count > 0){
-        let loop_counter = Math.floor(core_storage_data.obstacle_count) - 1;
-        do{
-            let obstacle_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
-            if(Math.abs(obstacle_x) < core_storage_data.obstacle_distance){
-                obstacle_x += core_storage_data.obstacle_distance * (obstacle_x > 0
-                  ? 1
-                  : -1);
-            }
-
-            create_obstacle(
-              loop_counter,
-              obstacle_x,
-              core_random_integer((gamearea_playerdist - 25) / 2)
-            );
-        }while(loop_counter--);
-    }
-}
-
 function repo_drawlogic(){
     canvas.save();
     canvas.translate(
@@ -347,6 +253,100 @@ function repo_init(){
     canvas_init({
       'cursor': 'pointer',
     });
+}
+
+function repo_load(id){
+    canvas_properties.clearColor = '#3c3c3c';
+    particle_frames = Math.floor(core_storage_data.particle_frames);
+    player_controlled = id === 1;
+
+    const gamearea_height_half = core_storage_data.gamearea_height / 2;
+    const gamearea_width_half = core_storage_data.gamearea_width / 2;
+    particle_x_limit = gamearea_width_half - 2;
+
+    entity_create({
+      'id': 'player_0',
+      'properties': {
+        'color': '#206620',
+        'goal_y': gamearea_height_half + 10,
+        'paddle_y': gamearea_height_half,
+      },
+      'types': [
+        'player',
+      ],
+    });
+    entity_create({
+      'id': 'player_1',
+      'properties': {
+        'color': '#663366',
+        'goal_y': -gamearea_height_half - 30,
+        'paddle_y': -gamearea_height_half - 5,
+      },
+      'types': [
+        'player',
+      ],
+    });
+
+    gamearea_playerdist = Math.abs(entity_entities.player_1.paddle_y) + entity_entities.player_0.paddle_y + 5;
+
+    core_storage_data.spawner_count = Math.floor(Math.max(
+      core_storage_data.spawner_count,
+      1
+    ));
+    core_storage_data.spawner_distance = Math.min(
+      core_storage_data.spawner_distance,
+      core_storage_data.gamearea_width / 2 - 5
+    );
+
+    let loop_counter = core_storage_data.spawner_count - 1;
+    do{
+        const spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
+        const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
+        if(Math.abs(spawner_x) < core_storage_data.spawner_distance){
+            spawner_x = core_storage_data.spawner_distance * (spawner_x > 0
+              ? 1
+              : -1);
+        }
+
+        entity_create({
+          'id': 'spawner_a' + loop_counter,
+          'properties': {
+            'x': spawner_x,
+            'y': spawner_y,
+          },
+          'types': [
+            'spawner',
+          ],
+        });
+        entity_create({
+          'id': 'spawner_b' + loop_counter,
+          'properties': {
+            'x': -spawner_x,
+            'y': -spawner_y,
+          },
+          'types': [
+            'spawner',
+          ],
+        });
+    }while(loop_counter--);
+
+    if(core_storage_data.obstacle_count > 0){
+        let loop_counter = Math.floor(core_storage_data.obstacle_count) - 1;
+        do{
+            let obstacle_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
+            if(Math.abs(obstacle_x) < core_storage_data.obstacle_distance){
+                obstacle_x += core_storage_data.obstacle_distance * (obstacle_x > 0
+                  ? 1
+                  : -1);
+            }
+
+            create_obstacle(
+              loop_counter,
+              obstacle_x,
+              core_random_integer((gamearea_playerdist - 25) / 2)
+            );
+        }while(loop_counter--);
+    }
 }
 
 function repo_logic(){
