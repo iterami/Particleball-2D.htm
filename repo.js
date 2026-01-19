@@ -198,6 +198,8 @@ function repo_init(){
         'particle_frames': 1,
         'particle_max': 100,
         'particle_speed': 1.5,
+        'player_0_color': '#206620',
+        'player_1_color': '#663366',
         'score_decrease': false,
         'score_goal': 20,
         'spawner_count': 3,
@@ -220,6 +222,8 @@ function repo_init(){
         + '<tr><td><input id=particle_color type=color><td>Particle Color'
         + '<tr><td><input class=mini id=particle_max min=1 step=1 type=number><td>Particle Limit'
         + '<tr><td><input class=mini id=particle_speed step=any type=number><td>&gt; Particle Speed'
+        + '<tr><td><input id=player_0_color type=color><td>Player 0 Color'
+        + '<tr><td><input id=player_1_color type=color><td>Player 1 Color'
         + '<tr><td><input id=score_decrease type=checkbox><td>Score Decreasable'
         + '<tr><td><input class=mini id=score_goal min=1 step=1 type=number><td>Score Goal'
         + '<tr><td><input class=mini id=spawner_count min=1 step=1 type=number><td>*2 Spawners'
@@ -267,7 +271,7 @@ function repo_load(id){
     entity_create({
       'id': 'player_0',
       'properties': {
-        'color': '#206620',
+        'color': core_storage_data.player_0_color,
         'goal_y': gamearea_height_half + 10,
         'paddle_y': gamearea_height_half,
       },
@@ -278,7 +282,7 @@ function repo_load(id){
     entity_create({
       'id': 'player_1',
       'properties': {
-        'color': '#663366',
+        'color': core_storage_data.player_1_color,
         'goal_y': -gamearea_height_half - 30,
         'paddle_y': -gamearea_height_half - 5,
       },
