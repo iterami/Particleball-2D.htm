@@ -197,7 +197,7 @@ function repo_init(){
         'particle_color': '#dddddd',
         'particle_frames': 1,
         'particle_max': 100,
-        'particle_speed': 1.5,
+        'particle_speed': 1,
         'player_0_color': '#206620',
         'player_1_color': '#663366',
         'score_decrease': false,
