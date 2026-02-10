@@ -454,13 +454,13 @@ function repo_load(id){
 
     let loop_counter = core_storage_data.spawner_count - 1;
     do{
-        const spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
-        const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
+        let spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
         if(Math.abs(spawner_x) < core_storage_data.spawner_distance){
             spawner_x = core_storage_data.spawner_distance * (spawner_x > 0
               ? 1
               : -1);
         }
+        const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
 
         entity_create({
           'id': 'spawner_a' + loop_counter,
