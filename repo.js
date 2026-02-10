@@ -30,6 +30,205 @@ function create_obstacle(id, obstacle_x, obstacle_y){
     });
 }
 
+function draw_obstacle(entity){
+    canvas.fillRect(
+      entity.x,
+      entity.y,
+      entity.width,
+      entity.height
+    );
+}
+
+function draw_particle(entity){
+    canvas_setproperties({
+      'fillStyle': entity.owner === false
+        ? core_storage_data.particle_color
+        : entity_entities[entity.owner].color,
+    });
+    canvas.fillRect(
+      Math.round(entity.x) - 2,
+      Math.round(entity.y) - 2,
+      4,
+      4
+    );
+}
+
+function draw_player(entity){
+    canvas_setproperties({
+      'fillStyle': entity.color,
+    });
+
+    canvas.fillRect(
+      entity.paddle_x,
+      entity.paddle_y,
+      core_storage_data.paddle_width,
+      entity.paddle_height
+    );
+
+    canvas.fillRect(
+      -core_storage_data.goal_width / 2 - 20,
+      entity.goal_y,
+      core_storage_data.goal_width + 40,
+      20
+    );
+
+    canvas_setproperties({
+      'fillStyle': '#fff',
+    });
+    canvas.fillText(
+      entity.score + '/' + core_storage_data.score_goal + (entity.id === winner ? ' WINNER': ''),
+      entity.paddle_x,
+      entity.paddle_y + (entity.id === 'player_0' ? 60 : -35)
+    );
+}
+
+function draw_spawner(entity){
+    canvas.fillRect(
+      entity.x - 4,
+      entity.y - 4,
+      8,
+      8
+    );
+}
+
+function handle_collision(entity, obstacle){
+    if(entity.x >= obstacle.x
+      && entity.x <= obstacle.x + obstacle.width){
+        if(entity.y_speed > 0){
+            if(entity.y > obstacle.y - 2
+              && entity.y < obstacle.y){
+                entity.y_speed *= -core_storage_data.obstacle_multiplier_y;
+            }
+
+        }else if(entity.y > obstacle.y + obstacle.height
+          && entity.y < obstacle.y + obstacle.height + 2){
+            entity.y_speed *= -core_storage_data.obstacle_multiplier_y;
+        }
+
+    }else if(entity.y >= obstacle.y
+      && entity.y <= obstacle.y + obstacle.height){
+        if(entity.x_speed > 0){
+            if(entity.x > obstacle.x - 2
+              && entity.x < obstacle.x){
+                entity.x_speed *= -core_storage_data.obstacle_multiplier_x;
+            }
+
+        }else if(entity.x > obstacle.x + obstacle.width
+          && entity.x < obstacle.x + obstacle.width + 2){
+            entity.x_speed *= -core_storage_data.obstacle_multiplier_x;
+        }
+    }
+}
+
+function move_particle(entity){
+    const player_0 = entity_entities.player_0;
+    const player_1 = entity_entities.player_1;
+
+    if(entity.x_speed > core_storage_data.gamearea_width
+      || entity.y_speed > core_storage_data.gamearea_height){
+        entity_remove({
+          'entities': [
+            entity.id,
+          ],
+        });
+
+        return;
+    }
+
+    if(entity.y + 2 > player_0.goal_y
+      || entity.y - 2 < player_1.goal_y + 20){
+        const id = entity.y + 2 > player_0.goal_y
+          ? 1
+          : 0;
+        let play_audio = false;
+
+        const other = entity_entities['player_' + (1 - id)];
+        if(core_storage_data.score_decrease
+          && other.score > 0){
+            other.score -= 1;
+            play_audio = true;
+        }
+
+        const owner = 'player_' + id;
+        if(entity.owner === owner){
+            entity_entities[owner].score += 1;
+            play_audio = true;
+        }
+
+        entity_remove({
+          'entities': [
+            entity.id,
+          ],
+        });
+
+        if(play_audio){
+            audio_start('boop');
+        }
+
+        return;
+    }
+
+    if(Math.abs(entity.x) < goal_width_half){
+        if(entity.y_speed > 0){
+            if((player_0.target === false || entity.y > entity_entities[player_0.target].y)
+              && entity.y < player_0.paddle_y){
+                player_0.target = entity.id;
+            }
+
+        }else if((player_1.target === false || entity.y < entity_entities[player_1.target].y)
+          && entity.y > player_1.paddle_y){
+            player_1.target = entity.id;
+        }
+    }
+
+    entity_group_modify({
+      'groups': [
+        'obstacle',
+      ],
+      'todo': function(obstacle){
+          handle_collision(entity, obstacle);
+      },
+    });
+
+    if(entity.y > player_1.paddle_y + player_1.paddle_height
+      && entity.y < player_0.paddle_y){
+        if(Math.abs(entity.x) < goal_width_half){
+            if(entity.y > 0){
+                if(entity.x > player_0.paddle_x - 2
+                  && entity.x < player_0.paddle_x + core_storage_data.paddle_width + 2
+                  && entity.y_speed > 0
+                  && entity.y + 2 >= player_0.paddle_y){
+                    if(core_storage_data.paddle_random){
+                        entity.x_speed = Math.random() * (core_storage_data.particle_speed * 2) - core_storage_data.particle_speed;
+                    }
+                    entity.owner = 'player_0';
+                    entity.y_speed *= -1;
+                }
+
+            }else if(entity.x > player_1.paddle_x - 2
+              && entity.x < player_1.paddle_x + core_storage_data.paddle_width + 2
+              && entity.y_speed < 0
+              && entity.y - 2 <= player_1.paddle_y + player_1.paddle_height){
+                if(core_storage_data.paddle_random){
+                    entity.x_speed = Math.random() * (core_storage_data.particle_speed * 2) - core_storage_data.particle_speed;
+                }
+                entity.owner = 'player_1';
+                entity.y_speed *= -1;
+            }
+
+        }else if(Math.abs(entity.x) > particle_x_limit){
+            entity.x_speed *= -1;
+
+        }else if((entity.y_speed < 0 && entity.y - 2 <= player_1.paddle_y + player_1.paddle_height)
+          || (entity.y_speed > 0 && entity.y + 2 >= player_0.paddle_y)){
+            entity.y_speed *= -1;
+        }
+    }
+
+    entity.x += entity.x_speed;
+    entity.y += entity.y_speed;
+}
+
 function repo_drawlogic(){
     canvas.save();
     canvas.translate(
@@ -60,14 +259,7 @@ function repo_drawlogic(){
       'groups': [
         'obstacle',
       ],
-      'todo': function(entity){
-          canvas.fillRect(
-            entity.x,
-            entity.y,
-            entity.width,
-            entity.height
-          );
-      },
+      'todo': draw_obstacle,
     });
 
     canvas_setproperties({
@@ -77,67 +269,21 @@ function repo_drawlogic(){
       'groups': [
         'spawner',
       ],
-      'todo': function(entity){
-          canvas.fillRect(
-            entity.x - 4,
-            entity.y - 4,
-            8,
-            8
-          );
-      },
+      'todo': draw_spawner,
     });
 
     entity_group_modify({
       'groups': [
         'particle',
       ],
-      'todo': function(entity){
-          canvas_setproperties({
-            'fillStyle': entity.owner === false
-              ? core_storage_data.particle_color
-              : entity_entities[entity.owner].color,
-          });
-          canvas.fillRect(
-            Math.round(entity.x) - 2,
-            Math.round(entity.y) - 2,
-            4,
-            4
-          );
-      },
+      'todo': draw_particle,
     });
 
     entity_group_modify({
       'groups': [
         'player',
       ],
-      'todo': function(entity){
-          canvas_setproperties({
-            'fillStyle': entity.color,
-          });
-
-          canvas.fillRect(
-            entity.paddle_x,
-            entity.paddle_y,
-            core_storage_data.paddle_width,
-            entity.paddle_height
-          );
-
-          canvas.fillRect(
-            -core_storage_data.goal_width / 2 - 20,
-            entity.goal_y,
-            core_storage_data.goal_width + 40,
-            20
-          );
-
-          canvas_setproperties({
-            'fillStyle': '#fff',
-          });
-          canvas.fillText(
-            entity.score + '/' + core_storage_data.score_goal + (entity.id === winner ? ' WINNER': ''),
-            entity.paddle_x,
-            entity.paddle_y + (entity.id === 'player_0' ? 60 : -35)
-          );
-      },
+      'todo': draw_player,
     });
 
     canvas.restore();
@@ -173,6 +319,8 @@ function repo_init(){
         },
       },
       'globals': {
+        'goal_width_half': 0,
+        'paddle_x_max': 0,
         'gamearea_playerdist': 0,
         'particle_frames': 0,
         'particle_x_limit': 0,
@@ -266,6 +414,8 @@ function repo_load(id){
 
     const gamearea_height_half = core_storage_data.gamearea_height / 2;
     const gamearea_width_half = core_storage_data.gamearea_width / 2;
+    goal_width_half = core_storage_data.goal_width / 2;
+    paddle_x_max = goal_width_half - core_storage_data.paddle_width;
     particle_x_limit = gamearea_width_half - 2;
 
     entity_create({
@@ -403,9 +553,6 @@ function repo_logic(){
         particle_frames++;
     }
 
-    const goal_width_half = core_storage_data.goal_width / 2;
-    const paddle_x_max = goal_width_half - core_storage_data.paddle_width;
-
     const player_0 = entity_entities.player_0;
     const player_1 = entity_entities.player_1;
     player_0.target = false;
@@ -415,142 +562,7 @@ function repo_logic(){
       'groups': [
         'particle',
       ],
-      'todo': function(entity){
-          if(Math.abs(entity.x) < goal_width_half){
-              if(entity.y_speed > 0){
-                  if((player_0.target === false || entity.y > entity_entities[player_0.target].y)
-                    && entity.y < player_0.paddle_y){
-                      player_0.target = entity.id;
-                  }
-
-              }else if((player_1.target === false || entity.y < entity_entities[player_1.target].y)
-                && entity.y > player_1.paddle_y){
-                  player_1.target = entity.id;
-              }
-          }
-
-          if(entity.y + 2 > player_0.goal_y
-            || entity.y - 2 < player_1.goal_y + 20){
-              let temp_player = 0;
-              if(entity.y + 2 > player_0.goal_y){
-                  temp_player = 1;
-              }
-
-              if(core_storage_data.score_decrease
-                && entity_entities['player_' + (1 - temp_player)].score > 0){
-                  entity_entities['player_' + (1 - temp_player)].score -= 1;
-              }
-
-              if(entity.owner === 'player_' + temp_player){
-                  entity_entities['player_' + temp_player].score += 1;
-              }
-
-              if(player_0.target === entity.id){
-                  player_0.target = false;
-              }
-              if(player_1.target === entity.id){
-                  player_1.target = false;
-              }
-
-              entity_remove({
-                'entities': [
-                  entity.id,
-                ],
-              });
-
-              audio_start('boop');
-
-          }else{
-              let bounce_x = 1;
-              let bounce_y = 1;
-
-              entity_group_modify({
-                'groups': [
-                  'obstacle',
-                ],
-                'todo': function(obstacle){
-                    if(entity.x >= obstacle.x
-                      && entity.x <= obstacle.x + obstacle.width){
-                        if(entity.y_speed > 0){
-                            if(entity.y > obstacle.y - 2
-                              && entity.y < obstacle.y){
-                                bounce_y = -core_storage_data.obstacle_multiplier_y;
-                            }
-
-                        }else if(entity.y > obstacle.y + obstacle.height
-                          && entity.y < obstacle.y + obstacle.height + 2){
-                            bounce_y = -core_storage_data.obstacle_multiplier_y;
-                        }
-
-                    }else if(entity.y >= obstacle.y
-                      && entity.y <= obstacle.y + obstacle.height){
-                        if(entity.x_speed > 0){
-                            if(entity.x > obstacle.x - 2
-                              && entity.x < obstacle.x){
-                                bounce_x = -core_storage_data.obstacle_multiplier_x;
-                            }
-
-                        }else if(entity.x > obstacle.x + obstacle.width
-                          && entity.x < obstacle.x + obstacle.width + 2){
-                            bounce_x = -core_storage_data.obstacle_multiplier_x;
-                        }
-                    }
-                },
-              });
-
-              if(entity.y > player_1.paddle_y + player_1.paddle_height
-                && entity.y < player_0.paddle_y){
-                  if(Math.abs(entity.x) < goal_width_half){
-                      if(entity.y > 0){
-                          if(entity.x > player_0.paddle_x - 2
-                            && entity.x < player_0.paddle_x + core_storage_data.paddle_width + 2
-                            && entity.y_speed > 0
-                            && entity.y + 2 >= player_0.paddle_y){
-                              if(core_storage_data.paddle_random){
-                                  entity.x_speed = Math.random() * (core_storage_data.particle_speed * 2) - core_storage_data.particle_speed;
-                              }
-                              entity.owner = 'player_0';
-                              bounce_y = -1;
-                          }
-
-                      }else if(entity.x > player_1.paddle_x - 2
-                        && entity.x < player_1.paddle_x + core_storage_data.paddle_width + 2
-                        && entity.y_speed < 0
-                        && entity.y - 2 <= player_1.paddle_y + player_1.paddle_height){
-                          if(core_storage_data.paddle_random){
-                              entity.x_speed = Math.random() * (core_storage_data.particle_speed * 2) - core_storage_data.particle_speed;
-                          }
-                          entity.owner = 'player_1';
-                          bounce_y = -1;
-                      }
-
-                  }else if(Math.abs(entity.x) > particle_x_limit){
-                      bounce_x = -1;
-
-                  }else if((entity.y_speed < 0 && entity.y - 2 <= player_1.paddle_y + player_1.paddle_height)
-                    || (entity.y_speed > 0 && entity.y + 2 >= player_0.paddle_y)){
-                      bounce_y = -1;
-                  }
-              }
-
-              entity.x_speed *= bounce_x;
-              entity.y_speed *= bounce_y;
-
-              if(entity.x_speed > core_storage_data.gamearea_width
-                || entity.y_speed > core_storage_data.gamearea_height){
-                  entity_remove({
-                    'entities': [
-                      entity.id,
-                    ],
-                  });
-
-                  return;
-              }
-
-              entity.x += entity.x_speed;
-              entity.y += entity.y_speed;
-          }
-      },
+      'todo': move_particle,
     });
 
     let paddle_position = player_1.paddle_x + core_storage_data.paddle_width / 2;
