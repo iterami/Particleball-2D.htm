@@ -327,7 +327,7 @@ function repo_init(){
         'player_controlled': false,
         'winner': false,
       },
-      'info': '<button id=ai_vs_ai type=button>AI vs AI</button><button id=ai_vs_player type=button>Player vs AI</button>',
+      'info': '<button class=medium id=ai_vs_ai type=button>AI vs AI</button><button class=medium id=ai_vs_player type=button>Player vs AI</button>',
       'menu': true,
       'pointerbinds': {},
       'storage': {
