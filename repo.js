@@ -452,8 +452,7 @@ function repo_load(id){
       core_storage_data.gamearea_width / 2 - 5
     );
 
-    let loop_counter = core_storage_data.spawner_count - 1;
-    do{
+    for(let i = 0; i < core_storage_data.spawner_count; i++){
         let spawner_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
         if(Math.abs(spawner_x) < core_storage_data.spawner_distance){
             spawner_x = core_storage_data.spawner_distance * (spawner_x > 0
@@ -463,7 +462,7 @@ function repo_load(id){
         const spawner_y = core_random_integer((gamearea_playerdist - 25) / 4);
 
         entity_create({
-          'id': 'spawner_a' + loop_counter,
+          'id': 'spawner_a' + i,
           'properties': {
             'x': spawner_x,
             'y': spawner_y,
@@ -473,7 +472,7 @@ function repo_load(id){
           ],
         });
         entity_create({
-          'id': 'spawner_b' + loop_counter,
+          'id': 'spawner_b' + i,
           'properties': {
             'x': -spawner_x,
             'y': -spawner_y,
@@ -482,24 +481,20 @@ function repo_load(id){
             'spawner',
           ],
         });
-    }while(loop_counter--);
+    }
 
-    if(core_storage_data.obstacle_count > 0){
-        let loop_counter = Math.floor(core_storage_data.obstacle_count) - 1;
-        do{
-            let obstacle_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
-            if(Math.abs(obstacle_x) < core_storage_data.obstacle_distance){
-                obstacle_x += core_storage_data.obstacle_distance * (obstacle_x > 0
-                  ? 1
-                  : -1);
-            }
-
-            create_obstacle(
-              loop_counter,
-              obstacle_x,
-              core_random_integer((gamearea_playerdist - 25) / 2)
-            );
-        }while(loop_counter--);
+    for(let i = 0; i < core_storage_data.obstacle_count; i++){
+        let obstacle_x = core_random_integer(gamearea_width_half * 2) - gamearea_width_half;
+        if(Math.abs(obstacle_x) < core_storage_data.obstacle_distance){
+            obstacle_x += core_storage_data.obstacle_distance * (obstacle_x > 0
+              ? 1
+              : -1);
+        }
+        create_obstacle(
+          i,
+          obstacle_x,
+          core_random_integer((gamearea_playerdist - 25) / 2)
+        );
     }
 }
 
