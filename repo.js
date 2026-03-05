@@ -364,7 +364,7 @@ function repo_init(){
         + '<tr><td><input class=mini id=obstacle_count min=0 step=1 type=number><td>*2 Obstacles Count'
         + '<tr><td><input class=mini id=obstacle_distance step=any type=number><td>Obstacle Minimum X'
         + '<tr><td><input class=mini id=obstacle_size step=any type=number><td>+5&lt; Obstacle Size'
-        + '<tr><td><input id=paddle_random type=checkbox><td>Paddles Reflect Randomly'
+        + '<tr><td class=right><input id=paddle_random type=checkbox><td><label for=paddle_random>Paddles Reflect Randomly</label>'
         + '<tr><td><input class=mini id=paddle_speed step=any type=number><td>Paddle Speed'
         + '<tr><td><input class=mini id=paddle_width min=1 step=any type=number><td>Paddle Width'
         + '<tr><td><input id=particle_color type=color><td>Particle Color'
@@ -372,11 +372,11 @@ function repo_init(){
         + '<tr><td><input class=mini id=particle_speed step=any type=number><td>&gt; Particle Speed'
         + '<tr><td><input id=player_0_color type=color><td>Player 0 Color'
         + '<tr><td><input id=player_1_color type=color><td>Player 1 Color'
-        + '<tr><td><input id=score_decrease type=checkbox><td>Score Decreasable'
+        + '<tr><td class=right><input id=score_decrease type=checkbox><td><label for=score_decrease>Score Decreasable</label>'
         + '<tr><td><input class=mini id=score_goal min=1 step=1 type=number><td>Score Goal'
         + '<tr><td><input class=mini id=spawner_count min=1 step=1 type=number><td>*2 Spawners'
         + '<tr><td><input class=mini id=spawner_distance step=any type=number><td>Spawner Minimum X'
-        + '<tr><td><input id=spawner_mirror type=checkbox><td>Spawner Spawns Mirrored</table>',
+        + '<tr><td class=right><input id=spawner_mirror type=checkbox><td><label for=spawner_mirror>Spawner Spawns Mirrored</label></table>',
       'title': 'Particleball-2D.htm',
     });
     entity_set({
