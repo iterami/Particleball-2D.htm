@@ -363,7 +363,7 @@ function repo_init(){
         + '<tr><td><input class=mini id=obstacle_multiplier_y step=any type=number><td>Obstacle Bounce Multiplier Y'
         + '<tr><td><input class=mini id=obstacle_count min=0 step=1 type=number><td>*2 Obstacles Count'
         + '<tr><td><input class=mini id=obstacle_distance step=any type=number><td>Obstacle Minimum X'
-        + '<tr><td><input class=mini id=obstacle_size step=any type=number><td>+5&lt; Obstacle Size'
+        + '<tr><td><input class=mini id=obstacle_size min=0 step=any type=number><td>+5&lt; Obstacle Size'
         + '<tr><td class=right><input id=paddle_random type=checkbox><td><label for=paddle_random>Paddles Reflect Randomly</label>'
         + '<tr><td><input class=mini id=paddle_speed step=any type=number><td>Paddle Speed'
         + '<tr><td><input class=mini id=paddle_width min=1 step=any type=number><td>Paddle Width'
