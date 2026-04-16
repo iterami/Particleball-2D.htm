@@ -290,6 +290,8 @@ function repo_drawlogic(){
 }
 
 function repo_escape(){
+    audio_state_all(!core_menu_open);
+
     if(!entity_entities.player_0
       && !core_menu_open){
         reset(0);
