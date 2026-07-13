@@ -12,9 +12,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
         'x': obstacle_x - obstacle_width / 2,
         'y': obstacle_y - obstacle_height / 2,
       },
-      'types': [
-        'obstacle',
-      ],
+      'types': ['obstacle'],
     });
     entity_create({
       'id': 'obstacle_b' + id,
@@ -24,9 +22,7 @@ function create_obstacle(id, obstacle_x, obstacle_y){
         'x': -obstacle_x - obstacle_width / 2,
         'y': -obstacle_y - obstacle_height / 2,
       },
-      'types': [
-        'obstacle',
-      ],
+      'types': ['obstacle'],
     });
 }
 
@@ -127,9 +123,7 @@ function move_particle(entity){
     if(entity.x_speed > core_storage_data.gamearea_width
       || entity.y_speed > core_storage_data.gamearea_height){
         entity_remove({
-          'entities': [
-            entity.id,
-          ],
+          'entities': [entity.id],
         });
 
         return;
@@ -156,9 +150,7 @@ function move_particle(entity){
         }
 
         entity_remove({
-          'entities': [
-            entity.id,
-          ],
+          'entities': [entity.id],
         });
 
         if(play_audio){
@@ -182,9 +174,7 @@ function move_particle(entity){
     }
 
     entity_group_modify({
-      'groups': [
-        'obstacle',
-      ],
+      'groups': ['obstacle'],
       'todo': function(obstacle){
           handle_collision(entity, obstacle);
       },
@@ -256,9 +246,7 @@ function repo_drawlogic(){
       'fillStyle': '#3c3c3c',
     });
     entity_group_modify({
-      'groups': [
-        'obstacle',
-      ],
+      'groups': ['obstacle'],
       'todo': draw_obstacle,
     });
 
@@ -266,23 +254,17 @@ function repo_drawlogic(){
       'fillStyle': '#476291',
     });
     entity_group_modify({
-      'groups': [
-        'spawner',
-      ],
+      'groups': ['spawner'],
       'todo': draw_spawner,
     });
 
     entity_group_modify({
-      'groups': [
-        'particle',
-      ],
+      'groups': ['particle'],
       'todo': draw_particle,
     });
 
     entity_group_modify({
-      'groups': [
-        'player',
-      ],
+      'groups': ['player'],
       'todo': draw_player,
     });
 
@@ -300,13 +282,11 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
-      'beforeunload': {
-        'todo': function(event){
-            if(particle_x_limit > 0){
-                core_escape(true);
-                event.preventDefault();
-            }
-        },
+      'beforeunload': function(event){
+          if(particle_x_limit > 0){
+              core_escape(true);
+              event.preventDefault();
+          }
       },
       'events': {
         'ai_vs_ai': {
@@ -427,9 +407,7 @@ function repo_load(id){
         'goal_y': gamearea_height_half + 10,
         'paddle_y': gamearea_height_half,
       },
-      'types': [
-        'player',
-      ],
+      'types': ['player'],
     });
     entity_create({
       'id': 'player_1',
@@ -438,9 +416,7 @@ function repo_load(id){
         'goal_y': -gamearea_height_half - 30,
         'paddle_y': -gamearea_height_half - 5,
       },
-      'types': [
-        'player',
-      ],
+      'types': ['player'],
     });
 
     gamearea_playerdist = Math.abs(entity_entities.player_1.paddle_y) + entity_entities.player_0.paddle_y + 5;
@@ -469,9 +445,7 @@ function repo_load(id){
             'x': spawner_x,
             'y': spawner_y,
           },
-          'types': [
-            'spawner',
-          ],
+          'types': ['spawner'],
         });
         entity_create({
           'id': 'spawner_b' + i,
@@ -479,9 +453,7 @@ function repo_load(id){
             'x': -spawner_x,
             'y': -spawner_y,
           },
-          'types': [
-            'spawner',
-          ],
+          'types': ['spawner'],
         });
     }
 
@@ -518,9 +490,7 @@ function repo_logic(){
                 'y': entity_entities[random_spawner].y,
                 'y_speed': y_speed,
               },
-              'types': [
-                'particle',
-              ],
+              'types': ['particle'],
             });
 
             if(core_storage_data.spawner_mirror){
@@ -537,9 +507,7 @@ function repo_logic(){
                     'y': entity_entities[id].y,
                     'y_speed': -y_speed,
                   },
-                  'types': [
-                    'particle',
-                  ],
+                  'types': ['particle'],
                 });
             }
 
@@ -556,9 +524,7 @@ function repo_logic(){
     player_1.target = false;
 
     entity_group_modify({
-      'groups': [
-        'particle',
-      ],
+      'groups': ['particle'],
       'todo': move_particle,
     });
 
@@ -644,9 +610,7 @@ function repo_logic(){
 
     if(winner === false){
         entity_group_modify({
-          'groups': [
-            'player',
-          ],
+          'groups': ['player'],
           'todo': function(entity){
               if(entity.score >= core_storage_data.score_goal){
                   winner = entity.id;
