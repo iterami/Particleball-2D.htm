@@ -282,12 +282,6 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
-      'beforeunload': function(event){
-          if(particle_x_limit > 0){
-              core_escape(true);
-              event.preventDefault();
-          }
-      },
       'events': {
         'ai_vs_ai': {
           'onclick': function(){
